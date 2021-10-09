@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import ServicesStore from './store/ServicesStore';
+import UserStore from './store/UserStore';
+
+export const Context = createContext(null)
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Context.Provider value={{
+    user: new UserStore(),
+    services: new ServicesStore()
+  }}>
     <App />
-  </React.StrictMode>,
+  </Context.Provider>,
   document.getElementById('root')
 );
 

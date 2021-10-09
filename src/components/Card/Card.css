@@ -1,0 +1,32 @@
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgb(108, 110, 243);
+    border-radius: 1rem;
+    margin: 20px 10px 0 20px;
+}
+
+.card h3 {
+    font-size: x-large;
+    padding: 10px 10px;
+    border-bottom: 1px solid rgb(218, 218, 218);;
+}
+
+.card span {
+    padding: 0px 10px 5px 10px;
+}
+
+.card a {
+    padding: 5px 20px 5px 5px;
+    text-decoration: none;
+    text-align: right;
+}
+
+.card:hover {
+    border: 3px solid rgb(108, 110, 243);
+}

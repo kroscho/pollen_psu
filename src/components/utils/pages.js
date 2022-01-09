@@ -8,6 +8,7 @@ export const getPagesArray = (curPage, totalPages) => {
     let start_index = start === 0 ? start + 1 : start;
     let end = start_index + 10 > totalPages ? totalPages : start_index + 10;
     let end_index = start_index === 1 ? end - 1 : end;
+    end_index = end;
 
     console.log(start_index, end_index, totalPages)
 
@@ -15,4 +16,8 @@ export const getPagesArray = (curPage, totalPages) => {
         result.push(i)
     }
     return result;
+}
+
+export const getNumberSearchPage = (page) => {
+    return Math.floor(page / 10) + 1;
 }

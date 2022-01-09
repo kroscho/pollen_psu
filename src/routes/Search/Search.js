@@ -1,19 +1,19 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {InputGroup, Button, FormControl, Dropdown, DropdownButton} from 'react-bootstrap';
+import {InputGroup} from 'react-bootstrap';
 import { Context } from '../../index';
-import CardItem from '../../components/Card/Card'
 import Pagination from '../../components/UI/Pagination/Pagination';
 import './Search.css';
-import axios from 'axios';
-import ItemService from '../../API/ItemService';
 import Loader from '../../components/UI/Loader/Loader';
 import { useFetching } from '../../components/hooks/useFetching';
-import { getPageCount } from '../../components/utils/pages';
+import { getNumberSearchPage, getPageCount } from '../../components/utils/pages';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip';
+import { cardsItems, getResponse, getTitlePage, getTypeSearchChangeName, getTypeSearchChangeTheme, listThemes, TypeSearch, listResources } from './utils';
 
 
 const Search = () => {
 
-    const [resource, setResource] = useState(5);
+    const [resource, setResource] = useState(2);
     const [themes, setThemes] = useState(1);
     const [searchValue, setSearchValue] = useState("");
     const {services} = useContext(Context)
@@ -21,26 +21,46 @@ const Search = () => {
     const [limit, setLimit] = useState(10)
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
-    
+    const [click, setClick] = useState(true)
+    const [typeSearch, setTypeSearch] = useState(TypeSearch.Default)
+    const [totalCountItems, setTotalCountItems] = useState(0)
+    const [searchPages, setSearchPages] = useState([])
 
     const [fetchItems, isDataLoading, itemsError] = useFetching(async () => {
-        const response = await ItemService.getAll(limit, page);
-        setData(response.data);
-        const totalCount = response.headers['x-total-count']
-        setTotalPages(getPageCount(totalCount, limit))
+        console.log("items: ", services.Items)
+        if (searchPages.indexOf(getNumberSearchPage(page)) == -1) {
+            let response = await getResponse(typeSearch, limit, getNumberSearchPage(page), searchValue, themes, services)
+            setSearchPages(getNumberSearchPage(page))
+            console.log("resp: ", response)
+            //setData(response.data);
+            setSearchPages(searchPages.concat(getNumberSearchPage(page)))
+            services.setItems(response.data)
+            setData(services.Items.slice((page-1)*limit, page*limit))
+            setTotalCountItems(response['x-total-count'])
+            setTotalPages(getPageCount(response['x-total-count'], limit))
+        }
+        else {
+            setData(services.Items.slice((page-1)*limit, page*limit))
+        }
     })
 
-    const listThemes = services.Themes.map((item) => {
-        return (
-            <option value={item.id}>{item.name}</option>
-        )
-    })
+    const changeTypeSearchName = (e) => {
+        e.preventDefault()
+        setPage(1)
+        setSearchPages([])
+        services.setItems([])
+        setClick(!click)
+        setTypeSearch(getTypeSearchChangeName(resource))
+    }
 
-    const cardsItems = data.map((item) => {
-        return (
-            <CardItem data={item}></CardItem>
-        )
-    })
+    const changeTypeSearchTheme = (e) => {
+        e.preventDefault()
+        setPage(1)
+        services.setItems([])
+        setSearchPages([])
+        setClick(!click)
+        setTypeSearch(getTypeSearchChangeTheme(resource))
+    }
 
     const changePage = (p) => {
         setPage(p)
@@ -48,7 +68,7 @@ const Search = () => {
 
     useEffect(() => {
         fetchItems()
-    }, [page])
+    }, [page, click])
 
     return (
         <div className="contain">
@@ -57,27 +77,23 @@ const Search = () => {
                     <h2>Фильтры</h2>
                     <h3>Тип ресурса</h3>
                     <select 
-                        style={{width:'75%', height:'30px', border: '1px solid #000000'}}
+                        style={{width: '75%', height:'30px', border: '1px solid #000000'}}
                         value={resource} 
                         onChange={(event) => setResource(event.target.value)}
                     >
-                        <option value="1">Книги</option>
-                        <option value="2">Статьи</option>
-                        <option value="3">Сайты</option>
-                        <option value="4">Авторы</option>
-                        <option value="5">Все</option>
+                        {listResources(services.Resources)}
                     </select>
                     <h3>Поиск по названию</h3>
                     <InputGroup className="mb-3">
                         <input
                             style={{width:'75%', height:'30px', border: '1px solid #000000'}}
-                            placeholder="Search..."
+                            placeholder=""
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                             type="text"
                         />
                         
-                        <button className="st-button">Найти</button>
+                        <button className="st-button" onClick={changeTypeSearchName}>Найти</button>
                     </InputGroup>
                     <h3>Поиск по ключевым словам</h3>
                     <InputGroup className="mb-3">
@@ -86,17 +102,41 @@ const Search = () => {
                             value={themes} 
                             onChange={(event) => setThemes(event.target.value)}
                         >
-                            {listThemes}
+                            {listThemes(services.Themes)}
                         </select>
-                        <button className="st-button">Поиск</button>
+                        <button className="st-button" onClick={changeTypeSearchTheme}>Поиск</button>
                     </InputGroup>
                     <h3>Поиск по дате</h3>
+                    <OverlayTrigger
+                        placement='right'
+                        overlay={
+                            <Tooltip id={`tooltip-right`}>
+                            Покажутся данные, добавленные не раньше выбранной даты.
+                            </Tooltip>
+                        }
+                        >
+                        <label for="inputDate" style={{textDecoration:'underline dotted #000000'}}>Подробнее:</label>
+                    </OverlayTrigger>
+                    <InputGroup className="mb-3" style={{margin: '10px 0'}}>
+                        <input type="date" className="form-control" style={{height: '30px'}}></input>
+                        <button className="st-button">Поиск</button>
+                    </InputGroup>
+                    <h3>Поиск по вашим интересам</h3>
+                    <InputGroup className="mb-3">                        
+                        <button className="st-button">Показать</button>
+                    </InputGroup>
                 </div>
                 <div className="block-right">
-                    <h2>Актуальные данные за 3 дня</h2>
+                    {isDataLoading
+                        ?<h2></h2>
+                        :<h2>{getTitlePage(searchValue, resource, page, totalCountItems, typeSearch, totalPages, services.Resources)}</h2>
+                    }
                     {isDataLoading 
                         ? <div style={{display:'flex', justifyContent:'center'}}><Loader></Loader></div>
-                        : cardsItems
+                        : data
+                            ? cardsItems(data)
+                            :  <div style={{display:'flex', justifyContent:'center'}}>Данные не найдены</div>
+                        
                     }
                     {isDataLoading
                         ? <div></div>

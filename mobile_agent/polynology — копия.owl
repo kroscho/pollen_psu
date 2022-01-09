@@ -1,0 +1,1498 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#"
+     xml:base="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#has_for_ingredient -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#has_for_ingredient"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторВеб-Ресурса -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторВеб-Ресурса">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторКниги -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторКниги">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторСтатьи -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#АвторСтатьи">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ДелитсяНа -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ДелитсяНа">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Имеет -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Имеет">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ИмеетРазновидность -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ИмеетРазновидность">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КнигаНаписанаАвтором -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КнигаНаписанаАвтором">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КнигаНаписанаПро -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КнигаНаписанаПро">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#НаписанаАвтором -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#НаписанаАвтором">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#НаписаноПро -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#НаписаноПро">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПисалПро -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПисалПро">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СайтНаписанАвтором -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СайтНаписанАвтором">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СайтНаписанПро -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СайтНаписанПро">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СтатьяНаписанаАвтором -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СтатьяНаписанаАвтором">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СтатьяНаписанаПро -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СтатьяНаписанаПро">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Count_quotes -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Count_quotes">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_article -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_article">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_book -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_book">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_site -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#URL_site">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_article -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_article">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_book -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_book">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_site -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#rating_site">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Авторы"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Безапертурные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Безапертурные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-оровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-оровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Борозды -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Борозды">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бугорчатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бугорчатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Булавовидная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Булавовидная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ВегетативныеКлетки -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ВегетативныеКлетки">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ГенеративныеКлетки -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ГенеративныеКлетки">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Гладкая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Гладкая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухпоровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухпоровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зернистая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зернистая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лакунарные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лакунарные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лептомы -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лептомы">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Меридиально-слитнобороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Меридиально-слитнобороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Морщинистая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Морщинистая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Мэкзина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Мэкзина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однобороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однобороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однопоровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однопоровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Округлая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Округлая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Палинология -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Палинология">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Перина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Перина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Порово-оровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Порово-оровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Поры -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Поры">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Продолговато-округлая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Продолговато-округлая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Разнобороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Разнобороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеянно-бороздно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеянно-бороздно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-бороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-бороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Руги -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Руги">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СВоздушнымиМешками -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СВоздушнымиМешками">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сайты"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхпродолговатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхпродолговатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснутая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснутая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснуто-сфероидальная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснуто-сфероидальная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сетчатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сетчатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Спирально-апертурные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Спирально-апертурные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснутая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснутая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-округлая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-округлая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-сфероидальная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-сфероидальная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Статьи"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Столбчатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Столбчатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Струйчатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Струйчатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сфероидальная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сфероидальная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздно-поровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздно-поровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздные -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздные">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехпоровые -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехпоровые">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Удлиненно-эллипсоидальная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Удлиненно-эллипсоидальная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормированиеЗерна -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормированиеЗерна">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Шиповатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Шиповатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Щели -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Щели">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзинтина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзинтина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эктзина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эктзина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эллипсоидальная -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эллипсоидальная">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эндкзина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эндкзина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эуинтина -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эуинтина">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроВегетативнойКлетки -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроВегетативнойКлетки">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроГенеративнойКлетки -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроГенеративнойКлетки">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ямчатая -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ямчатая">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#test -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#test">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Книги"/>
+        <URL_book rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://books.google.ru/books?id=I__sSAAACAAJ&amp;dq=%D0%9F%D0%B0%D0%BB%D0%B8%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F+%D0%B2+%D0%B3%D0%B5%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8&amp;hl=ru&amp;sa=X&amp;ved=2ahUKEwjnlKDj3u3vAhXNHXcKHcsSDk44lgEQ6AEwBnoECAIQAQ</URL_book>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Безапертурные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Безапертурные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-оровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-оровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Борозды -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Борозды">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бугорчатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бугорчатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Булавовидная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Булавовидная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ВегетативныеКлетки -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ВегетативныеКлетки">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ГенеративныеКлетки -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ГенеративныеКлетки">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Гладкая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Гладкая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухбороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухпоровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Двухпоровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зернистая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зернистая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-бороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Зонально-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзинтина"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эуинтина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#КлеткиЗерна">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лептомы -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лептомы">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Морщинистая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Морщинистая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Мэкзина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Мэкзина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Перина"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однобороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однобороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однопоровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Однопоровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Округлая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Округлая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Перина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Перина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснуто-сфероидальная"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-сфероидальная"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сфероидальная"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Удлиненно-эллипсоидальная"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эллипсоидальная"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Порово-оровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Порово-оровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Поры -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Поры">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Продолговато-округлая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Продолговато-округлая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Борозды"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Лептомы"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Поры"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Руги"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Щели"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПыльцевыеЗерна"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Разнобороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Разнобороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеянно-бороздно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеянно-бороздно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-бороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-бороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Рассеяно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Руги -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Руги">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СВоздушнымиМешками -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СВоздушнымиМешками">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхпродолговатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхпродолговатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснутая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснутая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснуто-сфероидальная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснуто-сфероидальная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сетчатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сетчатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СложнаяАпертура">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Апертура"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-оровые"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Бороздно-поровые"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Порово-оровые"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Спирально-апертурные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Спирально-апертурные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснутая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснутая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-округлая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-округлая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-сфероидальная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-сфероидальная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Столбчатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Столбчатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Струйчатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Струйчатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сфероидальная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сфероидальная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздно-поровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздно-поровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздные -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехбороздные">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехпоровые -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Трехпоровые">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ТипыПыльцевыхЗеренВЗависимостиОтПолярности"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Удлиненно-эллипсоидальная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Удлиненно-эллипсоидальная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна"/>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Шиповатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Шиповатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Щели -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Щели">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПростаяАпертура"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЭкваториальнаяОсь">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ФормаЗерна"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Округлая"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Продолговато-округлая"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхпродолговатая"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сверхсплюснутая"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснутая"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Сплюснуто-округлая"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Оболочка"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Мэкзина"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эктзина"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эндкзина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзинтина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзинтина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эктзина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эктзина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эллипсоидальная -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эллипсоидальная">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ПолярнаяОсь"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эндкзина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эндкзина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Экзина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эуинтина -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Эуинтина">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Интина"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СоставЗерна"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроВегетативнойКлетки"/>
+        <Имеет rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроГенеративнойКлетки"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроВегетативнойКлетки -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроВегетативнойКлетки">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроГенеративнойКлетки -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#ЯдроГенеративнойКлетки">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ядро"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ямчатая -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#Ямчатая">
+        <rdf:type rdf:resource="http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27#СкульптураЗерна"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.5.20160517-0735) https://github.com/owlcs/owlapi -->
+

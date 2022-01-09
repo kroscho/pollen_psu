@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1619385856934" name="duplicate:http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27" uri="polynology%20—%20копия.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1619385856934" name="duplicate:http://www.semanticweb.org/nikita/ontologies/2021/0/untitled-ontology-27" uri="polynology.owl"/>
+    </group>
+</catalog>

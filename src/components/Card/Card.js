@@ -17,7 +17,7 @@ const CardItem = ({data}) => {
     
     return (
         <div className="card">
-            <h3><a href={data?.url}>{data?.title}</a></h3>
+            <h3><a href={data?.url} target="_blank">{data?.title}</a></h3>
             <span> <b>Авторы:</b></span> 
             <ul className="card__ul"> {listAuthors} </ul> 
             <span><b>Ключевые слова:</b></span> 
@@ -30,7 +30,7 @@ const CardItem = ({data}) => {
                 <span>Дата публикации: {data?.datePublished}</span>
                 <span>Источник: {data?.resourse}</span>
             </div>
-            <a href={data?.url}>Подробнее</a>
+            <a href={data?.url} target="_blank">Подробнее</a>
         </div>
     )
 }

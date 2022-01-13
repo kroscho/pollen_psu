@@ -14,8 +14,19 @@ export default class UserStore {
             { id: "2", name: 'Статьи' },
             { id: "3", name: 'Сайты' },
             { id: "4", name: 'Авторы' },
-            { id: "5", name: 'Все' }
         ]
+
+        const getListYears = () => {
+            let resultList = []
+            let j = 1;
+            for (let i = 2022; i > 1950; i--) {
+                resultList.push({id: j, name: i});
+                j++;
+            }
+            return resultList;
+        }
+
+        this._years = getListYears()
 
         this._items = []
 
@@ -33,12 +44,14 @@ export default class UserStore {
     setItems(items) {
         if (items.length != 0) {
             this._items = this._items.concat(items)
-            console.log("NO")
         }
         else {
-            console.log("YES")
             this._items = []
         }
+    }
+
+    get Years() {
+        return this._years
     }
 
     get Resources() {

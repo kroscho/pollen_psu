@@ -19,7 +19,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -31,7 +30,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -43,7 +41,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -55,7 +52,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -67,7 +63,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -79,7 +74,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -91,7 +85,6 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
         return response.data
     }
 
@@ -103,7 +96,49 @@ export default class ItemService {
                 _title: title
             }
         })
-        console.log("response: ", response.data.data)
+        return response.data
+    }
+
+    static async getActualData(limit=10, page=1) {
+        const response = await axios.get('http://localhost:5000/api/pollen/data_by_date', {
+            params: {
+                _limit: limit,
+                _page: page,
+            }
+        })
+        return response.data
+    }
+
+    static async getArticleByDatePublished(limit=10, page=1, year=2000) {
+        const response = await axios.get('http://localhost:5000/api/pollen/article_by_date_published', {
+            params: {
+                _year: year,
+                _limit: limit,
+                _page: page,
+            }
+        })
+        return response.data
+    }
+
+    static async getBooksByDatePublished(limit=10, page=1, year=2000) {
+        const response = await axios.get('http://localhost:5000/api/pollen/books_by_date_published', {
+            params: {
+                _year: year,
+                _limit: limit,
+                _page: page,
+            }
+        })
+        return response.data
+    }
+
+    static async getWebByDatePublished(limit=10, page=1, year=2000) {
+        const response = await axios.get('http://localhost:5000/api/pollen/web_by_date_published', {
+            params: {
+                _year: year,
+                _limit: limit,
+                _page: page,
+            }
+        })
         return response.data
     }
 

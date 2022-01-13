@@ -19,13 +19,14 @@ import Profile from "./routes/Profile/Profile"
 
 const { Header, Footer, Content } = Layout;
 
-function App() {
+const App = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const handleSignIn = (email: string, password: string) => {
     return auth.signInWithEmailAndPassword(email, password).then((user) => {
       setUser(user);
+      console.log("user: ", user.user?.email)
       return history.push("/add");
     });
   };
@@ -39,7 +40,7 @@ function App() {
   useEffect(() => {
     console.log(history);
     auth.onAuthStateChanged((user) => {
-      setUser(true);
+      setUser(user);
       setLoading(false);
     });
   }, []);
@@ -130,14 +131,21 @@ function App() {
             <ProtectedRoute
               exact
               path="/search"
-              user={true}
+              user={user}
               loading={loading}
               component={Search}
             />
 
             <Route exact path="/archive" component={Archive} />
             <Route exact path="/allergens" component={Allergens} />
-            <Route exact path="/profile" component={Profile} />
+            
+            <Route 
+              exact 
+              path="/profile" 
+              user={user}
+              component={Profile} 
+            />
+            
 
             <Route path="/" exact component={MainPage} />
           </Switch>

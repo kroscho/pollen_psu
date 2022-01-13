@@ -10,8 +10,6 @@ export const getPagesArray = (curPage, totalPages) => {
     let end_index = start_index === 1 ? end - 1 : end;
     end_index = end;
 
-    console.log(start_index, end_index, totalPages)
-
     for (let i=start_index; i<=end_index; i++) {
         result.push(i)
     }

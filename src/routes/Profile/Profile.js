@@ -3,13 +3,15 @@ import { Context } from "../../index"
 import { Table } from "react-bootstrap";
 
 
-const Profile = () => {
+const Profile = (props) => {
     
-    const {user} = useContext(Context)
+    const {userStore} = useContext(Context)
+    console.log("user: ", props.user)
+    //userStore.setUser([{id: "Почта", data: user.user?.email}])
 
-    const listData = user.User.map((item) => {
+    const listData = userStore.User.map((item) => {
         return (
-            <tr>
+            <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>
                     {Array.isArray(item.data) 

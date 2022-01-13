@@ -18,8 +18,17 @@
     text-decoration: none;
 }
 
+.card__li a{
+    color: #000000;
+    font-size: large;
+    padding: 10px 10px;
+    text-decoration: none;
+}
+
 .card h3 {
     line-height: 20px;
+    padding: 10px 10px;
+    font-size: large;
 }
 
 .card span {

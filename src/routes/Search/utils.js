@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React from 'react';
 import ItemService from '../../API/ItemService';
 import CardItem from '../../components/Card/Card';
 import CardAuthor from '../../components/Card/CardAuthor';
@@ -114,6 +114,9 @@ export const getTypeSearchChangeName = (resource) => {
         case "5": 
             typeSrch = TypeSearch.AllByName;
             break;
+        default:
+            typeSrch = TypeSearch.AllByTheme;
+            break;
     }
     return typeSrch;
 }
@@ -136,6 +139,9 @@ export const getTypeSearchChangeTheme = (resource) => {
         case "5": 
             typeSrch = TypeSearch.AllByTheme;
             break;
+        default:
+            typeSrch = TypeSearch.AllByTheme;
+            break;
     }
     return typeSrch;
 }
@@ -149,7 +155,7 @@ export const getTitlePage = (searchValue, resourse, page, total, typeSearch, tot
         }
     })
     let text;
-    if (typeSearch != TypeSearch.ActualData) {
+    if (typeSearch !== TypeSearch.ActualData) {
         text = `Результаты поиска по запросу <<${searchValue}>>, ${resourceText}. \nСтраница: ${page}, Всего страниц: ${totalPages}, Всего найдено: ${total}`
     }
     else {

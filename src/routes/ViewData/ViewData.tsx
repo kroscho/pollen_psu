@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import "../../App.css";
 import "./styles.css";
 import { DatePicker } from "antd";
@@ -87,7 +87,7 @@ function ViewData() {
   };
 
   const renderContent = () => {
-    if (data == undefined) {
+    if (data === undefined) {
       return <div className="informationText">Нет данных на эту дату</div>;
     } else {
       if (!isEmpty(data)) {

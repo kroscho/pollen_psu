@@ -19,7 +19,7 @@ const Search = (props) => {
     const [searchValue, setSearchValue] = useState("");
     const {services} = useContext(Context)
     const [totalPages, setTotalPages] = useState(0)
-    const [limit, setLimit] = useState(10)
+    const limit = 10;
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
     const [click, setClick] = useState(true)
@@ -136,7 +136,7 @@ const Search = (props) => {
                 </div>
                 <div className="block-right">
                     {isDataLoading
-                        ?<h2></h2>
+                        ?""
                         :<h2>{getTitlePage(searchValue, resource, page, totalCountItems, typeSearch, totalPages, services.Resources)}</h2>
                     }
                     {isDataLoading 

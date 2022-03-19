@@ -1,4 +1,5 @@
 import {makeAutoObservable} from 'mobx';
+import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -14,6 +15,29 @@ export default class UserStore {
             { id: "2", name: 'Статьи' },
             { id: "3", name: 'Сайты' },
             { id: "4", name: 'Авторы' },
+        ]
+
+        this._menuTesting = [
+            { id: "1", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
+        ]
+
+        this._menuCourse = [
+            { id: "1", name: 'Информация', link: COURSE_INFO_ROUTE },
+            { id: "2", name: 'Лекции', link: COURSE_LECTIONS_ROUTE },
+            { id: "3", name: 'Тесты', link: COURSE_TESTS_ROUTE },
+            { id: "4", name: 'Литература', link: COURSE_LITERATURE_ROUTE },
+            { id: "5", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
+        ]
+
+        this._menuApp = [
+            { id: "1", name: 'Главная', link: MAIN_ROUTE },
+            { id: "2", name: 'Аллергены', link: ALLERGENS_ROUTE },
+            { id: "3", name: 'Добавление', link: ADD_ROUTE },
+            { id: "4", name: 'Мониторинг', link: VIEW_ROUTE },
+            { id: "5", name: 'Архив', link: ARCHIVE_ROUTE },
+            { id: "6", name: 'Поиск', link: SEARCH_ROUTE },
+            { id: "7", name: 'Тестирование', link: TESTING_ROUTE },
+            { id: "8", name: 'Профиль', link: PROFILE_ROUTE },
         ]
 
         const getListYears = () => {
@@ -48,6 +72,18 @@ export default class UserStore {
         else {
             this._items = []
         }
+    }
+
+    get MenuTesting() {
+        return this._menuTesting
+    }
+
+    get MenuCourse() {
+        return this._menuCourse
+    }
+
+    get MenuApp() {
+        return this._menuApp
     }
 
     get Years() {

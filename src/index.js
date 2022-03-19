@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import ServicesStore from './store/ServicesStore';
 import UserStore from './store/UserStore';
 
-export const Context = createContext(null)
+export const Context = createContext()
 
 ReactDOM.render(
   <Context.Provider value={{

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Router, Switch, Route, Link } from "react-router-dom";
 import { Layout, Button, Menu } from "antd";
 import "antd/dist/antd.css";
@@ -16,24 +16,28 @@ import "./App.css";
 import Archive from "./routes/Archive/Archive";
 import Allergens from "./routes/Allergens/Allergens";
 import Profile from "./routes/Profile/Profile"
+import Testing from "./routes/Testing/Testing";
+import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from "./utils/consts";
+import { Context } from ".";
 
 const { Header, Footer, Content } = Layout;
 
 const App = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const {services} = useContext(Context);
 
   const handleSignIn = (email: string, password: string) => {
     return auth.signInWithEmailAndPassword(email, password).then((user) => {
       setUser(user);
       console.log("user: ", user.user?.email)
-      return history.push("/add");
+      return history.push(SEARCH_ROUTE);
     });
   };
 
   const logOut = () => {
     return auth.signOut().then(() => {
-      return history.push("/login");
+      return history.push(LOGIN_ROUTE);
     });
   };
 
@@ -47,24 +51,35 @@ const App = () => {
 
   const getDefaultKey = () => {
     switch (history.location.pathname) {
-      case "/":
+      case MAIN_ROUTE:
         return "1";
-      case "/allergens":
+      case ALLERGENS_ROUTE:
         return "2";
-      case "/add":
+      case ADD_ROUTE:
         return "3";
-      case "/view":
+      case VIEW_ROUTE:
         return "4";
-      case "/archive":
+      case ARCHIVE_ROUTE:
         return "5";
-      case "/search":
+      case SEARCH_ROUTE:
         return "6";
-      case "/profile":
+      case TESTING_ROUTE:
         return "7";
+      case PROFILE_ROUTE:
+        return "8";
       default:
         return "1";
     }
   };
+
+  const menuItems = services.MenuApp.map((item: any) => {
+    return (
+      <Menu.Item key={item.id}>
+        <Link to={item.link}>{item.name}</Link>
+      </Menu.Item>
+    )
+  })
+
   return (
     <SpeciesContextProvider>
       <Router history={history}>
@@ -77,29 +92,7 @@ const App = () => {
               defaultSelectedKeys={getDefaultKey()}
             >
               {/* defaultSelectedKeys={["1"]} */}
-              <Menu.Item key="1">
-                <Link to="/">Главная</Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/allergens">Аллергены</Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Link to="/add">Добавление</Link>
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Link to="/view">Мониторинг</Link>
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Link to="/archive">Архив</Link>
-              </Menu.Item>
-              <Menu.Item key="6">
-                <Link to="/search">Поиск</Link>
-              </Menu.Item>
-              {user && (
-                <Menu.Item key="7">
-                  <Link to="/profile">Профиль</Link>
-                </Menu.Item>
-              )}
+              {menuItems}
             </Menu>
             {user && (
               <Button type="link" onClick={logOut}>
@@ -109,7 +102,7 @@ const App = () => {
           </Header>
           <Switch>
             <Route
-              path="/login"
+              path={LOGIN_ROUTE}
               exact
               render={() => (
                 <Content>
@@ -118,11 +111,11 @@ const App = () => {
               )}
             />
 
-            <Route path="/view" exact component={ViewData} />
+            <Route path={VIEW_ROUTE} exact component={ViewData} />
 
             <ProtectedRoute
               exact
-              path="/add"
+              path={ADD_ROUTE}
               user={user}
               loading={loading}
               component={AddData}
@@ -130,22 +123,77 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path="/search"
+              path={SEARCH_ROUTE}
               user={user}
               loading={loading}
               component={Search}
             />
 
-            <Route exact path="/archive" component={Archive} />
-            <Route exact path="/allergens" component={Allergens} />
+            <ProtectedRoute
+              exact
+              path={TESTING_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />
+
+            <Route exact path={ARCHIVE_ROUTE} component={Archive} />
+            <Route exact path={ALLERGENS_ROUTE} component={Allergens} />
             
             <Route 
               exact 
-              path="/profile" 
+              path={PROFILE_ROUTE}
               user={user}
               component={Profile} 
             />
-            
+
+            <ProtectedRoute
+              exact
+              path={TESTING_COURSES_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />
+
+            <ProtectedRoute
+              exact
+              path={COURSE_INFO_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />
+
+            <ProtectedRoute
+              exact
+              path={COURSE_TESTS_TEST_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />
+
+            <ProtectedRoute
+              exact
+              path={COURSE_TESTS_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />
+
+            <ProtectedRoute
+              exact
+              path={COURSE_LECTIONS_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />     
+
+            <ProtectedRoute
+              exact
+              path={COURSE_LITERATURE_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />        
 
             <Route path="/" exact component={MainPage} />
           </Switch>

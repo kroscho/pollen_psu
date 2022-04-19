@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from '../utils/consts';
+import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -19,6 +19,7 @@ export default class UserStore {
 
         this._menuTesting = [
             { id: "1", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
+            { id: "2", name: 'Все курсы', link: TESTING_ALL_COURSES_ROUTE },
         ]
 
         this._menuCourse = [
@@ -27,6 +28,7 @@ export default class UserStore {
             { id: "3", name: 'Тесты', link: COURSE_TESTS_ROUTE },
             { id: "4", name: 'Литература', link: COURSE_LITERATURE_ROUTE },
             { id: "5", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
+            { id: "6", name: 'Все курсы', link: TESTING_ALL_COURSES_ROUTE },
         ]
 
         this._menuApp = [
@@ -36,9 +38,42 @@ export default class UserStore {
             { id: "4", name: 'Мониторинг', link: VIEW_ROUTE },
             { id: "5", name: 'Архив', link: ARCHIVE_ROUTE },
             { id: "6", name: 'Поиск', link: SEARCH_ROUTE },
-            { id: "7", name: 'Тестирование', link: TESTING_ROUTE },
+            { id: "7", name: 'Тестирование', link: TESTING_COURSES_ROUTE },
             { id: "8", name: 'Профиль', link: PROFILE_ROUTE },
         ]
+
+        this._routes = {
+            "/testing/courses": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: true}
+            ],
+            "/course/info": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_INFO_ROUTE, title: "Информация о курсе", active: true},
+            ],
+            "/course/lections": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_LECTIONS_ROUTE, title: "Лекции", active: true},
+            ],
+            "/course/tests": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_TESTS_ROUTE, title: "Тесты", active: true},
+            ],
+            "/course/literature": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_LITERATURE_ROUTE, title: "Литература", active: true},
+            ],
+            "/course/tests/test/variants": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_TESTS_ROUTE, title: "Тесты", active: false},
+                {path: COURSE_TESTS_TEST_VARIANTS_ROUTE, title: "Варианты", active: true},
+            ],
+            "/course/tests/test": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_TESTS_ROUTE, title: "Тесты", active: false},
+                {path: COURSE_TESTS_TEST_VARIANTS_ROUTE, title: "Варианты", active: false},
+                {path: COURSE_TESTS_TEST_ROUTE, title: "Тест", active: true},
+            ],
+        }
 
         const getListYears = () => {
             let resultList = []
@@ -100,5 +135,9 @@ export default class UserStore {
 
     get Items() {
         return this._items
+    }
+
+    get Routes() {
+        return this._routes
     }
 }

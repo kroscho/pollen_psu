@@ -8,9 +8,13 @@ export const TESTING_ROUTE = '/testing';
 export const PROFILE_ROUTE = '/profile';
 export const LOGIN_ROUTE = '/login';
 export const TESTING_COURSES_ROUTE = '/testing/courses';
+export const TESTING_ALL_COURSES_ROUTE = '/testing/all_courses';
 export const COURSE_INFO_ROUTE = '/course/info';
 export const COURSE_TESTS_ROUTE = '/course/tests';
 export const COURSE_LECTIONS_ROUTE = '/course/lections';
+export const COURSE_LECTURE_ROUTE = '/course/lectures/lecture';
 export const COURSE_LITERATURE_ROUTE = '/course/literature';
 export const COURSE_TESTS_TEST_ROUTE = '/course/tests/test';
+export const COURSE_TESTS_TEST_EDIT_ROUTE = '/course/tests/test/edit';
+export const COURSE_TESTS_TEST_VARIANTS_ROUTE = '/course/tests/test/variants';
 

@@ -4,31 +4,33 @@ import { Divider } from "antd";
 import { Context } from "../../..";
 import {Row, Col, ListGroup, Button} from "react-bootstrap"
 import history from "../../../services/history";
-import { COURSE_TESTS_TEST_VARIANTS_ROUTE } from "../../../utils/consts";
+import { COURSE_LECTURE_ROUTE } from "../../../utils/consts";
 import { isAdmin } from "../../utils/testing";
 import { FormOutlined } from '@ant-design/icons';
-import CreateTestForm from "../ModalForms/CreateTestModule";
 import CreateModule from "../ModalForms/CreateModule";
+import CreateLectureForm from "../ModalForms/CreateLectureForm";
 
-const CourseTests = () => {
+const CourseLections = () => {
     const {userStore} = useContext(Context)
     const curCourse = userStore.CurCourse;
     const user = userStore.User;
 
-    const [isCreateTestFormVisible, setIsCreateTestFormVisible] = useState(false)
+    const [isCreateLectureFormVisible, setIsCreateLectureFormVisible] = useState(false)
     const [isCreateModuleFormVisible, setIsCreateModuleFormVisible] = useState(false)
 
-    let listTests = []
+    let listLectures = []
     let listModules = []
 
-    const handleTest = (module, test) => {
+    const handleLecture = (module, lecture) => {
         userStore.setCurModule(module);
-        userStore.setCurTest(test);
-        history.push(COURSE_TESTS_TEST_VARIANTS_ROUTE);
+        userStore.setCurLecture(lecture);
+        history.push(COURSE_LECTURE_ROUTE);
     }
 
-    const handleCreateTest = () => {
-        setIsCreateTestFormVisible(true)
+    const handleCreateLecture = (module) => {
+        console.log(module)
+        userStore.setCurModule(module);
+        setIsCreateLectureFormVisible(true)
     }
 
     const handleCreateModule = () => {
@@ -36,18 +38,26 @@ const CourseTests = () => {
     }
 
     if (curCourse.modules) {
-        listTests = (module) => {
-            return module.tests.map((test) => {
+        listLectures = (module) => {
+            if (module.lectures.length === 0) {
                 return (
-                    <div  
-                        key={test.id} 
-                        style={{cursor: 'pointer', verticalAlign: 'baseline'}} 
-                        onClick={() => handleTest(module, test)}
-                    > 
-                        <FormOutlined/> {test.name}
+                    <div>
+                        Материалов нет
                     </div>
                 )
-            })
+            } else {
+                return module.lectures.map((lecture) => {
+                    return (
+                        <div  
+                            key={lecture.id} 
+                            style={{cursor: 'pointer', verticalAlign: 'baseline'}} 
+                            onClick={() => handleLecture(module, lecture)}
+                        > 
+                            <FormOutlined/> {lecture.title}
+                        </div>
+                    )
+                })
+            }
         }
 
         listModules = curCourse.modules.map((item) => {
@@ -60,19 +70,19 @@ const CourseTests = () => {
                 >
                     <div className="ms-2 me-auto">
                         <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">{item.title}</Divider>
-                        {listTests(item)}
+                        {listLectures(item)}
                     </div>
                     { isAdmin(user)
                         ?   <Button 
                             style={{verticalAlign: "bottom"}} 
                             variant="outline-success"
-                            onClick={handleCreateTest}
+                            onClick={() => handleCreateLecture(item)}
                             >
-                                Создать тест
+                                Добавить лекцию
                             </Button>
                         : null
                     }
-                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible}></CreateTestForm>                
+                    <CreateLectureForm isVisible={isCreateLectureFormVisible} setIsVisible={setIsCreateLectureFormVisible}></CreateLectureForm>                
                 </ListGroup.Item>
             )
         })
@@ -86,15 +96,12 @@ const CourseTests = () => {
                         style={{color: 'rgb(76 86 96)', fontSize: '24px'}}
                         orientation="left"
                     >
-                        { (curCourse.modules[0] && curCourse.modules[0].tests && curCourse.modules[0].tests.length !== 0)
-                            ? "Тесты:"
-                            : "Тестов нет"
-                        }
+                        Лекции
                     </Divider>
                     {listModules}
                     { isAdmin(user)
                         ?   <Button 
-                            style={{verticalAlign: "bottom", marginTop: "20px"}} 
+                            style={{verticalAlign: "bottom"}} 
                             variant="outline-success"
                             onClick={handleCreateModule}
                             >
@@ -114,4 +121,4 @@ const CourseTests = () => {
     }
 }
 
-export default CourseTests;
+export default CourseLections;

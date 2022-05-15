@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from '../utils/consts';
+import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -53,6 +53,11 @@ export default class UserStore {
             "/course/lections": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
                 {path: COURSE_LECTIONS_ROUTE, title: "Лекции", active: true},
+            ],
+            "/course/lectures/lecture": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_LECTIONS_ROUTE, title: "Лекции", active: false},
+                {path: COURSE_LECTURE_ROUTE, title: "Лекция", active: true},
             ],
             "/course/tests": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 

@@ -37,7 +37,6 @@ const CourseTestVariants = () => {
     }
 
     const handleVariant = (variant) => {
-        console.log(variant)
         userStore.setCurVariant(variant);
         setActiveVariant(variant.id)
     }

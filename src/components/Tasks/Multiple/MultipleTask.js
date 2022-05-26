@@ -7,9 +7,9 @@ const MultipleTask = (props) => {
         console.log('checked = ', checkedValues);
     }
 
-    const listAnswers = props.task.answers.map((item) => {
+    const listAnswers = props.task.answers.map((item, ind) => {
         return (
-            <Checkbox key={item.id} value={item.answer}>{item.answer}</Checkbox>
+            <Checkbox key={ind} value={item.answer}>{item.answer}</Checkbox>
         )
     })
     

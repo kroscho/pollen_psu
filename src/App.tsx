@@ -17,7 +17,7 @@ import Archive from "./routes/Archive/Archive";
 import Allergens from "./routes/Allergens/Allergens";
 import Profile from "./routes/Profile/Profile"
 import Testing from "./routes/Testing/Testing";
-import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE } from "./utils/consts";
+import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTING_ROUTE, TESTING_TESTS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE, VIEW_ROUTE } from "./utils/consts";
 import { Context } from ".";
 
 const { Header, Footer, Content } = Layout;
@@ -165,7 +165,7 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path={COURSE_INFO_ROUTE}
+              path={TESTING_TESTS_ROUTE}
               user={user}
               loading={loading}
               component={Testing}
@@ -173,7 +173,7 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path={COURSE_TESTS_TEST_ROUTE}
+              path={TESTING_INFO_ROUTE}
               user={user}
               loading={loading}
               component={Testing}
@@ -181,7 +181,7 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path={COURSE_TESTS_TEST_EDIT_ROUTE}
+              path={TESTING_MATERIALS_ROUTE}
               user={user}
               loading={loading}
               component={Testing}
@@ -189,7 +189,7 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path={COURSE_TESTS_TEST_VARIANTS_ROUTE}
+              path={TESTS_TEST_ROUTE}
               user={user}
               loading={loading}
               component={Testing}
@@ -197,35 +197,11 @@ const App = () => {
 
             <ProtectedRoute
               exact
-              path={COURSE_TESTS_ROUTE}
+              path={TESTS_TEST_ATTEMPT_ROUTE}
               user={user}
               loading={loading}
               component={Testing}
             />
-
-            <ProtectedRoute
-              exact
-              path={COURSE_LECTIONS_ROUTE}
-              user={user}
-              loading={loading}
-              component={Testing}
-            />    
-
-            <ProtectedRoute
-              exact
-              path={COURSE_LECTURE_ROUTE}
-              user={user}
-              loading={loading}
-              component={Testing}
-            />     
-
-            <ProtectedRoute
-              exact
-              path={COURSE_LITERATURE_ROUTE}
-              user={user}
-              loading={loading}
-              component={Testing}
-            />        
 
             <Route path="/" exact component={MainPage} />
           </Switch>

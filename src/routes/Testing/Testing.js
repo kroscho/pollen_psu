@@ -4,32 +4,25 @@ import './index.css';
 import { Layout, Menu } from 'antd';
 import { Breadcrumb } from 'react-bootstrap'
 import { Router, Switch, Route, Link } from "react-router-dom";
-import Courses from '../../components/Courses/Courses';
 import { UserOutlined } from '@ant-design/icons';
 import history from '../../services/history';
 import { Context } from '../..';
-import { COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE } from '../../utils/consts';
-import { isMenuCourses } from '../../components/utils/testing';
+import { COURSE_INFO_ROUTE, COURSE_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTING_ROUTE, TESTING_TESTS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from '../../utils/consts';
 import CourseInfo from '../../components/Course/CourseInfo/CourseInfo';
 import CourseTests from '../../components/Course/CourseTests/CourseTests';
 import CourseTest from '../../components/Course/CourseTest/CourseTest';
 import CourseTestVariants from '../../components/Course/CourseTestVariants/CourseTestVariants';
-import TestEdit from '../../components/Course/ModalForms/CourseTestEdit';
-import CoursesAll from '../../components/Courses/CoursesAll';
-import CourseLections from '../../components/Course/CourseLections/CourseLections';
 import CourseLecture from '../../components/Course/CourseLecture/CourseLecture';
 
 const { Header, Content, Sider } = Layout;
 
 const Testing = () => {
     
-    const {services, userStore} = useContext(Context)
+    const {services} = useContext(Context)
 
-    const curCourse = userStore.CurCourse;
     const routes = services.Routes[history.location.pathname];
-    console.log(curCourse.title)
 
-    const menuItems = isMenuCourses() ? services.MenuTesting : services.MenuCourse;
+    const menuItems = services.MenuTesting;
     const menuItemsList = menuItems.map((item) => {
         return (
             <Menu.Item key={item.link} icon={<UserOutlined />}>
@@ -69,12 +62,6 @@ const Testing = () => {
                     console.log(collapsed, type);
                 }}
                 >
-                    <div className="logo">
-                        {isMenuCourses()
-                            ? ""
-                            : curCourse.title 
-                        }
-                    </div>
                     <Menu 
                         theme="dark" 
                         mode="inline" 
@@ -92,38 +79,26 @@ const Testing = () => {
                         </Breadcrumb>
                         <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                             <Switch>
+                                <Route exact path={TESTING_INFO_ROUTE}>
+                                    <CourseInfo/>
+                                </Route>
+                                <Route exact path={TESTING_TESTS_ROUTE}>
+                                    <CourseTests/>
+                                </Route>
+                                <Route exact path={TESTING_MATERIALS_ROUTE}>
+                                    <CourseLecture/>
+                                </Route>
+                                <Route exact path={TESTS_TEST_ATTEMPT_ROUTE}>
+                                    <CourseTest/>
+                                </Route>
+                                <Route exact path={TESTS_TEST_ROUTE}>
+                                    <CourseTestVariants/>
+                                </Route>
                                 <Route exact path={COURSE_INFO_ROUTE}>
                                     <CourseInfo/>
                                 </Route>
                                 <Route exact path={COURSE_TESTS_ROUTE}>
                                     <CourseTests/>
-                                </Route>
-                                <Route exact path={COURSE_LECTIONS_ROUTE}>
-                                    <CourseLections/>
-                                </Route>
-                                <Route exact path={COURSE_LECTURE_ROUTE}>
-                                    <CourseLecture/>
-                                </Route>
-                                <Route exact path={COURSE_LITERATURE_ROUTE}>
-                                    <Courses/>
-                                </Route>
-                                <Route exact path={TESTING_COURSES_ROUTE}>
-                                    <Courses/>
-                                </Route>
-                                <Route exact path={TESTING_ALL_COURSES_ROUTE}>
-                                    <CoursesAll/>
-                                </Route>
-                                <Route exact path={COURSE_TESTS_TEST_ROUTE}>
-                                    <CourseTest/>
-                                </Route>
-                                <Route exact path={COURSE_TESTS_TEST_EDIT_ROUTE}>
-                                    <TestEdit/>
-                                </Route>
-                                <Route exact path={COURSE_TESTS_TEST_VARIANTS_ROUTE}>
-                                    <CourseTestVariants/>
-                                </Route>
-                                <Route exact path={TESTING_ROUTE}>
-                                    <Courses/>
                                 </Route>
                             </Switch>
                         </div>

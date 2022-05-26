@@ -8,9 +8,13 @@ import os, sys
 path_dir = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(path_dir)
 
-
 from services.spqrqlQueries.main import SparqlQueries
 from src.utils import typeData
+
+path_dir = (os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(path_dir)
+
+from testing.sparqlQueries.main import TestingService
 
 app = Flask(__name__)
 CORS(app)
@@ -206,8 +210,80 @@ def api_get_web_by_date_published():
     print(response)
     return response
 
+@app.post('/api/create_test')
+def api_create_test():
+    _newTest = request.get_json()
+    print("New test: ", _newTest['createdTest'])
+    _newTest = _newTest['createdTest']
+    ont = TestingService()
+    isExistNameTest = ont.checkNameTest(testName=_newTest['nameTest'])
+    if isExistNameTest:
+        return make_response(json.dumps({
+            'statusCode': 422,
+            'error': 'Тест с таким названием уже существует'
+        })), 422
+    ont.createTest(_newTest)
+    return make_response(json.dumps({
+        'statusCode': 200,
+        'data': "Тест успешно создан",
+    })), 200
 
+@app.get('/api/get_tests')
+def api_get_tests():
+    ont = TestingService()
+    data = ont.getTests()
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
 
+@app.get('/api/get_test_with_answers')
+def api_get_test_with_answers():
+    ont = TestingService()
+    _testName = request.args.get('_testName', '').replace(' ', '_')
+    print("NAME: ", _testName)
+    data = ont.getTestWithAnswers(_testName)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/update_test')
+def api_update_test():
+    ont = TestingService()
+    _updatedTest = request.get_json()
+    print("Updated test: ", _updatedTest.get('updatedTest'))
+    _updatedTest = _updatedTest.get('updatedTest')
+    print("Upd Name: ", _updatedTest.get('nameTest'))
+    ont.updateTest(_updatedTest)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print("response: ", response)
+    return response
+
+@app.post('/api/delete_test')
+def api_delete_test():
+    ont = TestingService()
+    _deletedTest = request.get_json()
+    print("Deleted test: ", _deletedTest.get('deletedTest'))
+    _deletedTest = _deletedTest.get('deletedTest')
+    print("Del Name: ", _deletedTest.get('nameTest'))
+    ont.deleteTest(_deletedTest)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print("response: ", response)
+    return response
 
 app.env = 'development'
 

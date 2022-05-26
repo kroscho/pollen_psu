@@ -1,14 +1,19 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { Form, Input, Button, Space, Switch } from 'antd';
+import { Form, Input, Button, Space, Switch, Checkbox } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const EditTask = ({field, form}) => {
-  
-    if (form.getFieldsValue().tasks) {
+const EditTask = ({field, form, tasks}) => {
+    const onChange = (checked) => {
+        console.log(`switch to ${checked}`);
+    };
+    if (form.getFieldsValue().tasks || tasks) {
+        if (form.getFieldsValue().tasks) {
+            tasks = form.getFieldsValue().tasks
+        }
         let questionType = ""
-        if (form.getFieldsValue().tasks[field.key] && form.getFieldsValue().tasks[field.key].type) {
-            questionType = form.getFieldsValue().tasks[field.key].type
+        if (tasks[field.key] && tasks[field.key].type) {
+            questionType = tasks[field.key].type
         } else {
             questionType = "1"
         }
@@ -16,22 +21,25 @@ const EditTask = ({field, form}) => {
         if (questionType == "2" || questionType == "3") {
             return (
                 <Form.List name={[field.name, 'answers']}>
-                    {(fields, { add, remove }) => (
+                    {(fields = fields[field.key].answers, { add, remove }) => (
                     <>
-                        {fields.map((field, index) => (
-                        <Space key={field.key} style={{display: 'flex', justifyContent: 'center'}} align="baseline">
+                        {fields.map((fld, index) => (
+                        <Space key={fld.key} style={{display: 'flex', justifyContent: 'center'}} align="baseline">
                             <Form.Item
-                            {...field.restField}
-                            name={[field.name, 'answer']}
+                            {...fld.restField}
+                            name={[fld.name, 'answer']}
                             label={"Ответ " + index + ":"} 
                             rules={[{ required: true, message: 'Не заполнен ответ' }]}
                             >
                             <Input style={{borderRadius: '10px'}} />
                             </Form.Item>
-                            <Form.Item name={[field.name, 'correct']} label="Верный" valuePropName="checked">
-                                <Switch />
+                            <Form.Item
+                                name={[fld.name, 'correct']}
+                                valuePropName="checked"
+                            >
+                                <Checkbox>Верный</Checkbox>
                             </Form.Item>
-                            <MinusCircleOutlined onClick={() => remove(field.name)} />
+                            <MinusCircleOutlined onClick={() => remove(fld.name)} />
                         </Space>
                         ))}
                         <Form.Item>

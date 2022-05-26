@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import { Form, Radio, Space } from "antd";
 
-const SingleTask = (props) => {
+const SingleTask = ({task}) => {
     
     const [value, setValue] = useState('')
-    
+    let listAnswers = []
+
+    const logicalAnswers = [{"answer": "Да"}, {"answer": "Нет"}]
+
     const onChange = (e) => {
         setValue(e.target.value)
     };
 
-    const listAnswers = props.task.answers.map((item) => {
-        return (
-            <Radio key={item.id} value={item.id}>{item.answer}</Radio>
-        )
-    })
+    if (task.answers.length === 0) {
+        listAnswers = logicalAnswers.map((item, ind) => {
+            return (
+                <Radio key={ind} value={ind}>{item.answer}</Radio>
+            )
+        })
+    } else {
+        listAnswers = task.answers.map((item, ind) => {
+            return (
+                <Radio key={ind} value={ind}>{item.answer}</Radio>
+            )
+        })
+    }
     
     return (
         <Form.Item 
-            label={props.task.question} 
+            label={task.question} 
             required tooltip="This is a required field"
             style={{borderBottomStyle: "solid", color: "rgb(216 162 162 / 13%)"}}
         >

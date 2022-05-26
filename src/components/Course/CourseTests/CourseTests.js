@@ -1,84 +1,59 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import 'antd/dist/antd.css';
 import { Divider } from "antd";
 import { Context } from "../../..";
-import {Row, Col, ListGroup, Button} from "react-bootstrap"
+import {Row, Col, Button} from "react-bootstrap"
 import history from "../../../services/history";
-import { COURSE_TESTS_TEST_VARIANTS_ROUTE } from "../../../utils/consts";
+import { TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from "../../../utils/consts";
 import { isAdmin } from "../../utils/testing";
 import { FormOutlined } from '@ant-design/icons';
 import CreateTestForm from "../ModalForms/CreateTestModule";
-import CreateModule from "../ModalForms/CreateModule";
+import { useFetching } from "../../hooks/useFetching";
+import TestingApi from "../../../API/TestingApi";
+import Loader from "../../UI/Loader/Loader";
 
 const CourseTests = () => {
-    const {userStore} = useContext(Context)
-    const curCourse = userStore.CurCourse;
+    const {userStore, services} = useContext(Context)
     const user = userStore.User;
-
+    //const tests = services.Tests;
     const [isCreateTestFormVisible, setIsCreateTestFormVisible] = useState(false)
-    const [isCreateModuleFormVisible, setIsCreateModuleFormVisible] = useState(false)
-
+    const [tests, setTests] = useState([])
     let listTests = []
-    let listModules = []
 
-    const handleTest = (module, test) => {
-        userStore.setCurModule(module);
+    const [fetchTests, isDataLoading, itemsError] = useFetching(async () => {
+        let response = await TestingApi.getTests()
+        setTests(response.data)
+        console.log(response.data)
+    })
+
+    useEffect(() => {
+        fetchTests()
+    }, [])
+
+    const handleTest = (test) => {
         userStore.setCurTest(test);
-        history.push(COURSE_TESTS_TEST_VARIANTS_ROUTE);
+        history.push(TESTS_TEST_ROUTE);
     }
 
     const handleCreateTest = () => {
         setIsCreateTestFormVisible(true)
     }
 
-    const handleCreateModule = () => {
-        setIsCreateModuleFormVisible(true)
-    }
-
-    if (curCourse.modules) {
-        listTests = (module) => {
-            return module.tests.map((test) => {
-                return (
-                    <div  
-                        key={test.id} 
-                        style={{cursor: 'pointer', verticalAlign: 'baseline'}} 
-                        onClick={() => handleTest(module, test)}
-                    > 
-                        <FormOutlined/> {test.name}
-                    </div>
-                )
-            })
-        }
-
-        listModules = curCourse.modules.map((item) => {
+    if (tests) {
+        listTests = tests.map((test, ind) => {
             return (
-                <ListGroup.Item 
-                    as="li"
-                    className="d-flex justify-content-between align-items-start"
-                    style={{color: '#6287ab'}}
-                    key={item.id}
-                >
-                    <div className="ms-2 me-auto">
-                        <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">{item.title}</Divider>
-                        {listTests(item)}
-                    </div>
-                    { isAdmin(user)
-                        ?   <Button 
-                            style={{verticalAlign: "bottom"}} 
-                            variant="outline-success"
-                            onClick={handleCreateTest}
-                            >
-                                Создать тест
-                            </Button>
-                        : null
-                    }
-                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible}></CreateTestForm>                
-                </ListGroup.Item>
+                <div  
+                    key={ind} 
+                    style={{cursor: 'pointer', verticalAlign: 'baseline', marginTop: '20px'}} 
+                    onClick={() => handleTest(test)}
+                > 
+                    <FormOutlined/> {test.nameTest}
+                </div>
             )
         })
     }
 
-    if (curCourse.modules) {
+    const View = () => {
         return (
             <Row>
                 <Col xs={10}>
@@ -86,32 +61,37 @@ const CourseTests = () => {
                         style={{color: 'rgb(76 86 96)', fontSize: '24px'}}
                         orientation="left"
                     >
-                        { (curCourse.modules[0] && curCourse.modules[0].tests && curCourse.modules[0].tests.length !== 0)
+                        { (listTests.length !== 0)
                             ? "Тесты:"
                             : "Тестов нет"
                         }
                     </Divider>
-                    {listModules}
+                    {listTests}
                     { isAdmin(user)
                         ?   <Button 
-                            style={{verticalAlign: "bottom", marginTop: "20px"}} 
+                            style={{verticalAlign: "bottom", marginTop: '20px'}} 
                             variant="outline-success"
-                            onClick={handleCreateModule}
+                            onClick={handleCreateTest}
                             >
-                                Добавить модуль
+                                Создать тест
                             </Button>
                         : null
-                    }             
+                    }
+                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible}></CreateTestForm>                             
                 </Col>
-                <CreateModule isVisible={isCreateModuleFormVisible} setIsVisible={setIsCreateModuleFormVisible}></CreateModule>
             </Row>
         )
-    } 
-    else {
-        return (
-            <Divider orientation="center">Выберите курс</Divider>
-        )
     }
+
+    const spinner = isDataLoading ? <Loader/> : null;
+    const content = !(isDataLoading || itemsError) ? <View/> : null;
+
+    return (
+        <>
+            {spinner}
+            {content}
+        </>
+    )
 }
 
 export default CourseTests;

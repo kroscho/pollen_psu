@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE } from '../utils/consts';
+import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE, TESTING_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTS_TEST_ROUTE, TESTS_TEST_ATTEMPT_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -17,9 +17,15 @@ export default class UserStore {
             { id: "4", name: 'Авторы' },
         ]
 
-        this._menuTesting = [
+        this._menuTesting1 = [
             { id: "1", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
             { id: "2", name: 'Все курсы', link: TESTING_ALL_COURSES_ROUTE },
+        ]
+
+        this._menuTesting = [
+            { id: "1", name: 'Информация', link: TESTING_INFO_ROUTE },
+            { id: "2", name: 'Тесты', link: TESTING_TESTS_ROUTE },
+            { id: "3", name: 'Материалы', link: TESTING_MATERIALS_ROUTE },
         ]
 
         this._menuCourse = [
@@ -42,9 +48,212 @@ export default class UserStore {
             { id: "8", name: 'Профиль', link: PROFILE_ROUTE },
         ]
 
+        this._tests = [
+            {
+                id: "1", 
+                name: "Тест 1. Название",
+                variants: [
+                    {
+                        id: "1",
+                        name: "Вариант 1",
+                        tasks: [
+                            {
+                                id: "1",
+                                type: "single",
+                                question: "Вопрос 1",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "2",
+                                type: "multiple",
+                                question: "Вопрос 2",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "3",
+                                type: "truefalse",
+                                question: "Вопрос 3",
+                                answers: [
+                                    {id: "1", answer: "Да"},
+                                    {id: "2", answer: "Нет"},
+                                ]
+                            },
+                            {
+                                id: "4",
+                                type: "text",
+                                question: "Вопрос 4",
+                                answers: [],
+                            },
+                        ]
+                    },
+                    {
+                        id: "2",
+                        name: "Вариант 2",
+                        tasks: [
+                            {
+                                id: "1",
+                                type: "multiple",
+                                question: "Вопрос 1",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "2",
+                                type: "single",
+                                question: "Вопрос 2",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "3",
+                                type: "truefalse",
+                                question: "Вопрос 3",
+                                answers: [
+                                    {id: "1", answer: "Да"},
+                                    {id: "2", answer: "Нет"},
+                                ]
+                            },
+                            {
+                                id: "4",
+                                type: "text",
+                                question: "Вопрос 4",
+                                answers: [],
+                            },
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "2", 
+                attempts: 2,
+                name: "Тест 2. Название",
+                variants: [
+                    {
+                        id: "1",
+                        name: "Вариант 1",
+                        tasks: [
+                            {
+                                id: "1",
+                                type: "single",
+                                question: "Вопрос 1",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "2",
+                                type: "multiple",
+                                question: "Вопрос 2",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "3",
+                                type: "truefalse",
+                                question: "Вопрос 3",
+                                answers: [
+                                    {id: "1", answer: "Да"},
+                                    {id: "2", answer: "Нет"},
+                                ]
+                            },
+                            {
+                                id: "4",
+                                type: "text",
+                                question: "Вопрос 4",
+                                answers: [],
+                            },
+                        ]
+                    },
+                    {
+                        id: "2",
+                        name: "Вариант 2",
+                        tasks: [
+                            {
+                                id: "1",
+                                type: "multiple",
+                                question: "Вопрос 1",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "2",
+                                type: "single",
+                                question: "Вопрос 2",
+                                answers: [
+                                    {id: "1", answer: "Ответ 1"},
+                                    {id: "2", answer: "Ответ 2"},
+                                    {id: "3", answer: "Ответ 3"},
+                                    {id: "4", answer: "Ответ 4"},
+                                ]
+                            },
+                            {
+                                id: "3",
+                                type: "truefalse",
+                                question: "Вопрос 3",
+                                answers: [
+                                    {id: "1", answer: "Да"},
+                                    {id: "2", answer: "Нет"},
+                                ]
+                            },
+                            {
+                                id: "4",
+                                type: "text",
+                                question: "Вопрос 4",
+                                answers: [],
+                            },
+                        ]
+                    }
+                ]
+            }
+        ]
+
         this._routes = {
-            "/testing/courses": [
-                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: true}
+            "/testing/info": [
+                {path: TESTING_INFO_ROUTE, title: "Информация", active: true},
+            ],
+            "/testing/tests": [
+                {path: TESTING_TESTS_ROUTE, title: "Тесты", active: true},
+            ],
+            "/testing/materials": [
+                {path: TESTING_MATERIALS_ROUTE, title: "Материалы", active: true},
+            ],
+            "/testing/tests/test": [
+                {path: TESTING_TESTS_ROUTE, title: "Тесты", active: false},
+                {path: TESTS_TEST_ROUTE, title: "Тест", active: true},
+            ],
+            "/testing/tests/test/attempt": [
+                {path: TESTING_TESTS_ROUTE, title: "Тесты", active: false},
+                {path: TESTS_TEST_ROUTE, title: "Тест", active: false},
+                {path: TESTS_TEST_ATTEMPT_ROUTE, title: "Попытка", active: true},                
             ],
             "/course/info": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
@@ -114,6 +323,10 @@ export default class UserStore {
         }
     }
 
+    setTests(items) {
+        this._tests = items
+    }
+
     get MenuTesting() {
         return this._menuTesting
     }
@@ -144,5 +357,9 @@ export default class UserStore {
 
     get Routes() {
         return this._routes
+    }
+
+    get Tests() {
+        return this._tests
     }
 }

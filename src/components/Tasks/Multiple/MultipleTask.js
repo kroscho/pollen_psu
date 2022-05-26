@@ -1,13 +1,13 @@
 import React from "react";
 import { Form, Checkbox, Space } from "antd";
 
-const MultipleTask = (props) => {
+const MultipleTask = ({task, field}) => {
     
     function onChange(checkedValues) {
         console.log('checked = ', checkedValues);
     }
 
-    const listAnswers = props.task.answers.map((item, ind) => {
+    const listAnswers = task.answers.map((item, ind) => {
         return (
             <Checkbox key={ind} value={item.answer}>{item.answer}</Checkbox>
         )
@@ -15,9 +15,9 @@ const MultipleTask = (props) => {
     
     return (
         <Form.Item 
-            label={props.task.question} 
-            required tooltip="This is a required field"
-            style={{borderBottomStyle: "solid", color: "rgb(216 162 162 / 13%)"}}
+            name={[field.name, "answer"]}
+            label={task.question}
+            rules={[{ required: true, message: 'Не заполнен ответ' }]}
         >
             <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
                 <Space direction="vertical">

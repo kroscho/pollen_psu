@@ -15,7 +15,7 @@ const EditTask = ({field, form, tasks}) => {
         if (tasks[field.key] && tasks[field.key].type) {
             questionType = tasks[field.key].type
         } else {
-            questionType = "1"
+            questionType = "1" 
         }
         console.log("questionType: ", questionType)
         if (questionType == "2" || questionType == "3") {

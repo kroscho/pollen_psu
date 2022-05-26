@@ -280,17 +280,6 @@
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
-<Группа_заданий rdf:about="#группа_заданий2">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_group_of_task rdf:resource="#тест2"/>
-</Группа_заданий>
-
-<Тест rdf:about="#тест2">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_group_of_task rdf:resource="#группа_заданий2"/>
-  <testName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UNIX</testName>
-</Тест>
-
 <Вопрос rdf:about="#вопрос5">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
@@ -403,95 +392,9 @@
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
-<Задание rdf:about="#задание7">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий2"/>
-  <task_has_answer rdf:resource="#ответ24"/>
-  <task_has_answer rdf:resource="#ответ25"/>
-  <task_has_answer rdf:resource="#ответ26"/>
-  <task_has_answer rdf:resource="#ответ27"/>
-  <task_has_question rdf:resource="#единственный4"/>
-</Задание>
-
-<Ответ rdf:about="#ответ24">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#единственный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AA</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ25">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_correct_answer_of rdf:resource="#единственный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DD</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ26">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#единственный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FFR</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ27">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#единственный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GG</textAnswer>
-</Ответ>
-
-<Единственный rdf:about="#единственный4">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_correct_answer rdf:resource="#ответ25"/>
-  <has_wrong_answer rdf:resource="#ответ24"/>
-  <has_wrong_answer rdf:resource="#ответ26"/>
-  <has_wrong_answer rdf:resource="#ответ27"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">вопрос_1</textQuestion>
-</Единственный>
-
 <Вопрос rdf:about="#вопрос33">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
-
-<Задание rdf:about="#задание8">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий2"/>
-  <task_has_answer rdf:resource="#ответ28"/>
-  <task_has_answer rdf:resource="#ответ29"/>
-  <task_has_answer rdf:resource="#ответ30"/>
-  <task_has_answer rdf:resource="#ответ31"/>
-  <task_has_question rdf:resource="#множественный4"/>
-</Задание>
-
-<Ответ rdf:about="#ответ28">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#множественный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RER</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ29">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_correct_answer_of rdf:resource="#множественный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ответD</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ30">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#множественный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OPP</textAnswer>
-</Ответ>
-
-<Ответ rdf:about="#ответ31">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_correct_answer_of rdf:resource="#множественный4"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">HH</textAnswer>
-</Ответ>
-
-<Множественный rdf:about="#множественный4">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_correct_answer rdf:resource="#ответ29"/>
-  <has_correct_answer rdf:resource="#ответ31"/>
-  <has_wrong_answer rdf:resource="#ответ28"/>
-  <has_wrong_answer rdf:resource="#ответ30"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">вопрос_2</textQuestion>
-</Множественный>
 
 <Вопрос rdf:about="#вопрос34">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>

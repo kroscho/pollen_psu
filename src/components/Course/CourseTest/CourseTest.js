@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import 'antd/dist/antd.css';
 import { Context } from "../../..";
 import { Button} from "react-bootstrap"
-import { Divider, Form } from "antd";
+import { Divider, Form, Space } from "antd";
 import SingleTask from "../../Tasks/Single/SingleTask";
 import MultipleTask from "../../Tasks/Multiple/MultipleTask";
 import TextTask from "../../Tasks/Text/TextTask";
 import { LOGICAL_TASK_TYPE, MULTIPLE_TASK_TYPE, SINGLE_TASK_TYPE } from "../../../utils/consts";
+import Task from "../../Tasks/Task/Task";
 
 const CourseTest = () => {
     const {userStore} = useContext(Context)
@@ -40,9 +41,32 @@ const CourseTest = () => {
                 layout="vertical"
                 onFinish={onFinish} 
                 autoComplete="off"
+                initialValues={{
+                    ["nameTest"]: curTest.nameTest,
+                    ["tasks"]: curTest.tasks,
+                }}
             >
                 <Divider orientation="center">{curTest.nameTest}</Divider>
-                {listTasks}
+                <Form.List name="tasks">
+                    {(fields) => (
+                    <>
+                        {fields.map(field => (
+                            <Form.Item
+                                style={{borderTop: '1px solid'}}
+                                shouldUpdate={(prevValues, curValues) =>
+                                    prevValues.nameTest !== curValues.nameTest || prevValues.type !== curValues.type
+                                }
+                            >
+                            {() => (
+                                <>
+                                    <Task tasks={curTest.tasks} form={form} field={field}></Task>
+                                </>
+                            )}
+                            </Form.Item>
+                        ))}
+                    </>
+                    )}
+                </Form.List>
                 <Form.Item>
                     <Button type="primary">Завершить тест</Button>
                 </Form.Item>

@@ -8,3 +8,7 @@
   width: 500px;
   height: 192px;
 }
+
+.loginError {
+  color: red;
+}

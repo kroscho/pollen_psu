@@ -7,12 +7,13 @@ import { Router, Switch, Route, Link } from "react-router-dom";
 import { UserOutlined } from '@ant-design/icons';
 import history from '../../services/history';
 import { Context } from '../..';
-import { COURSE_INFO_ROUTE, COURSE_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTING_ROUTE, TESTING_TESTS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from '../../utils/consts';
+import { COURSE_INFO_ROUTE, COURSE_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTING_ROUTE, TESTING_TESTS_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from '../../utils/consts';
 import CourseInfo from '../../components/Course/CourseInfo/CourseInfo';
 import CourseTests from '../../components/Course/CourseTests/CourseTests';
 import CourseTest from '../../components/Course/CourseTest/CourseTest';
 import CourseTestVariants from '../../components/Course/CourseTestVariants/CourseTestVariants';
 import CourseLecture from '../../components/Course/CourseLecture/CourseLecture';
+import AttemptsDetails from '../../components/Course/AttemptsDetails/AttemptsDetails';
 
 const { Header, Content, Sider } = Layout;
 
@@ -99,6 +100,9 @@ const Testing = () => {
                                 </Route>
                                 <Route exact path={COURSE_TESTS_ROUTE}>
                                     <CourseTests/>
+                                </Route>
+                                <Route exact path={TESTS_TEST_ATTEMPTS_DETAILS_ROUTE}>
+                                    <AttemptsDetails/>
                                 </Route>
                             </Switch>
                         </div>

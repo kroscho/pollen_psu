@@ -42,4 +42,36 @@ export default class TestingApi {
         const response = await axios.post('http://localhost:5000/api/delete_test', { deletedTest })
         return response.data
     }
+
+    static async getResultAttempt(answers, user) {
+        console.log("answers: ", answers)
+        console.log("user", user)
+        const response = await axios.post('http://localhost:5000/api/get_result_attempt', { answers, user })
+        return response.data
+    }
+
+    static async createUser(user) {
+        console.log("user: ", user)
+        const response = await axios.post('http://localhost:5000/api/create_user', { user })
+        return response.data
+    }
+
+    static async getUser(user_uid) {
+        const response = await axios.get('http://localhost:5000/api/get_user', {
+            params: {
+                _uid: user_uid,
+            }
+        })
+        return response.data
+    }
+
+    static async getAttempts(user_uid, nameTest) {
+        const response = await axios.get('http://localhost:5000/api/get_attempts', {
+            params: {
+                _uid: user_uid,
+                _nameTest: nameTest,
+            }
+        })
+        return response.data
+    }
 }

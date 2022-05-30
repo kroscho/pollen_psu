@@ -7,5 +7,5 @@ export const isMenuCourses = () => {
 } 
 
 export const isAdmin = (user) => {
-    return user[3].data === "admin"; 
+    return user.role === "admin"; 
 }

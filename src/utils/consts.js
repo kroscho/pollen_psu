@@ -13,6 +13,7 @@ export const TESTING_INFO_ROUTE = '/testing/info';
 export const TESTS_TEST_ROUTE = '/testing/tests/test';
 export const TESTS_TEST_EDIT_ROUTE = '/testing/tests/test/edit';
 export const TESTS_TEST_ATTEMPT_ROUTE = '/testing/tests/test/attempt';
+export const TESTS_TEST_ATTEMPTS_DETAILS_ROUTE = '/testing/tests/test/attempts_details';
 
 
 export const TESTING_COURSES_ROUTE = '/testing/courses';

@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Modal, Button, Form, Input, Space, Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Context } from '../../..';
-import EditTask from '../EditTask/EditTask';
+import EditTask from '../Task/EditTask';
 import TestingApi from '../../../API/TestingApi';
 import { useFetching } from '../../hooks/useFetching';
 import Loader from '../../UI/Loader/Loader';
@@ -58,8 +58,8 @@ const TestEdit = ({isVisible, setIsVisible}) => {
     const onFinish = values => {
         const isEqual = deepEqual(values, curTest)
         if (!isEqual) {
+            values["prevNameTest"] = curTest.nameTest;
             userStore.setCurTest(values);
-            //setCurTest(values)
             fetchUpdate()
         }
         console.log('Received values of form:', values);

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import 'antd/dist/antd.css';
 import { Modal, Button, Form, Input, Space, Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import EditTask from '../EditTask/EditTask';
+import EditTask from '../Task/EditTask';
 import Loader from '../../UI/Loader/Loader';
 import { useFetching } from '../../hooks/useFetching';
 import { Context } from '../../..';

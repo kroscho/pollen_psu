@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import 'antd/dist/antd.css';
 import { Context } from "../../..";
 import {Button} from "react-bootstrap"
 import history from "../../../services/history";
-import { TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from "../../../utils/consts";
+import { TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from "../../../utils/consts";
 import { isAdmin } from "../../utils/testing";
 import TestEdit from "../ModalForms/CourseTestEdit";
 import ErrorMessage from "../../UI/ErrorMessage/ErrorMessage";
@@ -14,10 +14,22 @@ import { Row } from "antd";
 
 const CourseTestVariants = () => {
     const {userStore} = useContext(Context)
+    const [attempts, setAttempts] = useState([])
     const curTest = userStore.CurTest;
     const user = userStore.User;
 
     const [isEsitTestFormVisible, setIsEditTestFormVisible] = useState(false)
+
+    const [fetchAttempts, isAttemptsLoading, attemptsError] = useFetching(async () => {
+        let response = await TestingApi.getAttempts(userStore.User.uid, userStore.CurTest.nameTest)
+        setAttempts(response.data)
+        userStore.setCurAttempts(response.data)
+        console.log(response.data)
+    })
+
+    useEffect(() => {
+        fetchAttempts()
+    }, [])
 
     const [fetchDelete, isDeleteLoading, deleteError] = useFetching(async () => {
         let response = await TestingApi.deleteTest(userStore.CurTest);
@@ -27,6 +39,10 @@ const CourseTestVariants = () => {
 
     const handleStartTest = () => {
         history.push(TESTS_TEST_ATTEMPT_ROUTE);
+    }
+
+    const handleViewDetails = () => {
+        history.push(TESTS_TEST_ATTEMPTS_DETAILS_ROUTE);
     }
 
     const onEditTest = () => {
@@ -49,6 +65,19 @@ const CourseTestVariants = () => {
                         Начать попытку
                     </Button>
                 </Row>
+                <Row style={{lineHeight: "0.8", margin: "0 30px 30px 30px"}} >
+                    Совершено попыток: {attempts.length}
+                    { attempts.length != 0
+                        ? <Button 
+                            style={{lineHeight: "0.8", margin: "0px 30px"}} 
+                            variant="outline-success"
+                            onClick={handleViewDetails}
+                        >
+                            Посмотреть подробно
+                        </Button>
+                        : null
+                    }
+                </Row>
                 <Row>
                     { isAdmin(user)
                         ? <Button onClick={onEditTest} style={{lineHeight: "0.8", marginLeft: "30px"}} variant="outline-secondary">Редактировать тест</Button>
@@ -64,9 +93,9 @@ const CourseTestVariants = () => {
         )
     }
 
-    const spinner = isDeleteLoading ? <Loader/> : null;
-    const errorMessage = deleteError ? <ErrorMessage message={deleteError} /> : null;
-    const content = !(isDeleteLoading || deleteError) ? <View/> : null;
+    const spinner = isAttemptsLoading ? <Loader/> : null;
+    const errorMessage = attemptsError ? <ErrorMessage message={attemptsError} /> : null;
+    const content = !(isAttemptsLoading || attemptsError) ? <View/> : null;
 
     return (
         <>

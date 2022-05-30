@@ -3,6 +3,8 @@ import { Form, Checkbox, Space } from "antd";
 
 const MultipleTask = ({task, field}) => {
     
+    const numberTask = field.key + 1
+
     function onChange(checkedValues) {
         console.log('checked = ', checkedValues);
     }
@@ -16,8 +18,7 @@ const MultipleTask = ({task, field}) => {
     return (
         <Form.Item 
             name={[field.name, "answer"]}
-            label={task.question}
-            rules={[{ required: true, message: 'Не заполнен ответ' }]}
+            label={numberTask + ". " + task.question}
         >
             <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
                 <Space direction="vertical">

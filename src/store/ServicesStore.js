@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE, TESTING_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTS_TEST_ROUTE, TESTS_TEST_ATTEMPT_ROUTE } from '../utils/consts';
+import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE, TESTING_TESTS_ROUTE, TESTING_INFO_ROUTE, TESTING_MATERIALS_ROUTE, TESTS_TEST_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -45,7 +45,6 @@ export default class UserStore {
             { id: "5", name: 'Архив', link: ARCHIVE_ROUTE },
             { id: "6", name: 'Поиск', link: SEARCH_ROUTE },
             { id: "7", name: 'Тестирование', link: TESTING_COURSES_ROUTE },
-            { id: "8", name: 'Профиль', link: PROFILE_ROUTE },
         ]
 
         this._tests = [
@@ -249,6 +248,11 @@ export default class UserStore {
             "/testing/tests/test": [
                 {path: TESTING_TESTS_ROUTE, title: "Тесты", active: false},
                 {path: TESTS_TEST_ROUTE, title: "Тест", active: true},
+            ],
+            "/testing/tests/test/attempts_details": [
+                {path: TESTING_TESTS_ROUTE, title: "Тесты", active: false},
+                {path: TESTS_TEST_ROUTE, title: "Тест", active: false},
+                {path: TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, title: "Попытки", active: true},
             ],
             "/testing/tests/test/attempt": [
                 {path: TESTING_TESTS_ROUTE, title: "Тесты", active: false},

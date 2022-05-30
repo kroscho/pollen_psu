@@ -14,19 +14,26 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-function LoginForm({ onSubmit }: any) {
+function LoginForm({ onSignIn, onRegIn, errorMessage, setErrorMessage }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [typeLog, setTypeLog] = useState(true)
 
-  const handleRegIn = () => {
-    return auth.createUserWithEmailAndPassword(email, password)
-      .catch((error) => { console.log(error) });
+  const handleSign = () => {
+    onSignIn(email, password);
   };
 
-  const handleSubmit = () => {
-    onSubmit(email, password);
+  const handleReg = () => {
+    const userObj = {email: email, password: password, firstName: firstName, lastName: lastName}
+    onRegIn(userObj);
   };
+
+  const onChangeTypeLog = () => {
+    setTypeLog(!typeLog)
+    setErrorMessage("")
+  }
 
   if (typeLog) {
     return (
@@ -36,8 +43,14 @@ function LoginForm({ onSubmit }: any) {
             {...layout}
             name="basic"
             initialValues={{ remember: true }}
-            onFinish={handleSubmit}
+            onFinish={handleSign}
           >
+            <Form.Item 
+              name="error"
+              style={{color: 'red', justifyContent: 'flex-end'}}
+            >
+              {errorMessage}
+            </Form.Item>
             <Form.Item
               label="Email"
               name="email"
@@ -68,7 +81,7 @@ function LoginForm({ onSubmit }: any) {
               <Button type="primary" htmlType="submit">
                 Войти
               </Button>
-              <div>Или <a onClick={() => setTypeLog(!typeLog)} >зарегистрироваться сейчас!</a></div>
+              <div>Или <a onClick={() => onChangeTypeLog()} >зарегистрироваться сейчас!</a></div>
             </Form.Item>
           </Form>
         </div>
@@ -83,8 +96,38 @@ function LoginForm({ onSubmit }: any) {
             {...layout}
             name="basic"
             initialValues={{ remember: true }}
-            onFinish={handleRegIn}
+            onFinish={handleReg}
           >
+             <Form.Item 
+              name="error"
+              style={{color: 'red', justifyContent: 'flex-end'}}
+            >
+              {errorMessage}
+            </Form.Item>
+            <Form.Item
+              label="Имя"
+              name="firstName"
+              rules={[{ required: true, message: "Введите имя" }]}
+            >
+              <Input
+                required
+                type={"firstname"}
+                value={firstName}
+                onChange={(event) => setFirstName(event.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Фамилия"
+              name="lastName"
+              rules={[{ required: true, message: "Введите фамилию" }]}
+            >
+              <Input
+                required
+                type={"lastName"}
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
+              />
+            </Form.Item>
             <Form.Item
               label="Email"
               name="email"
@@ -115,7 +158,7 @@ function LoginForm({ onSubmit }: any) {
               <Button type="primary" htmlType="submit">
                 Зарегистрироваться
               </Button>
-              <div>Или <a onClick={() => setTypeLog(!typeLog)} >войдите сейчас!</a></div>
+              <div>Или <a onClick={() => onChangeTypeLog()} >войдите сейчас!</a></div>
             </Form.Item>
           </Form>
         </div>

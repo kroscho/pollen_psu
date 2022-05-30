@@ -54,7 +54,10 @@
   <rdfs:range rdf:resource="#Рейтинг"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="#has_task"/>
+<owl:ObjectProperty rdf:about="#has_task">
+  <rdfs:domain rdf:resource="#Элемент_теста"/>
+  <rdfs:range rdf:resource="#Задание"/>
+</owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#has_test_element">
   <rdfs:domain rdf:resource="#Попытка_прохождения_теста"/>
@@ -133,6 +136,8 @@
 
 <owl:DatatypeProperty rdf:about="#Test"/>
 
+<owl:DatatypeProperty rdf:about="#User"/>
+
 <owl:DatatypeProperty rdf:about="#dateAndTime">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Попытка_прохождения_теста"/>
@@ -142,18 +147,47 @@
 
 <owl:DatatypeProperty rdf:about="#Попытка"/>
 
+<owl:DatatypeProperty rdf:about="#email">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Пользователь"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#User"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#firstName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Пользователь"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#User"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#lastName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Пользователь"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#User"/>
+</owl:DatatypeProperty>
+
 <owl:DatatypeProperty rdf:about="#percentCompleteOfTest">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Попытка_прохождения_теста"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#real"/>
   <rdfs:subPropertyOf rdf:resource="#Попытка"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#rightAnswer">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Ответ"/>
+  <rdfs:domain rdf:resource="#ОтветыСтудента"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   <rdfs:subPropertyOf rdf:resource="#Попытка"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#role">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Пользователь"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#User"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#succesfullAttempt">
@@ -180,6 +214,7 @@
 <owl:DatatypeProperty rdf:about="#textAnswer">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Ответ"/>
+  <rdfs:domain rdf:resource="#ОтветыСтудента"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdfs:subPropertyOf rdf:resource="#Task"/>
 </owl:DatatypeProperty>
@@ -196,6 +231,13 @@
   <rdfs:domain rdf:resource="#Попытка_прохождения_теста"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
   <rdfs:subPropertyOf rdf:resource="#Попытка"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#uid">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Пользователь"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#User"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#value">
@@ -238,7 +280,7 @@
   <rdfs:subClassOf rdf:resource="#Предметная_область"/>
 </owl:Class>
 
-<owl:Class rdf:about="#Предметная_область"/>
+<owl:Class rdf:about="#ОтветыСтудента"/>
 
 <owl:Class rdf:about="#Единственный">
   <rdfs:subClassOf rdf:resource="#Вопрос"/>
@@ -256,6 +298,8 @@
   <rdfs:subClassOf rdf:resource="#Предметная_область"/>
 </owl:Class>
 
+<owl:Class rdf:about="#Предметная_область"/>
+
 <owl:Class rdf:about="#Соответсвие">
   <rdfs:subClassOf rdf:resource="#Вопрос"/>
 </owl:Class>
@@ -263,6 +307,46 @@
 <owl:Class rdf:about="#Текстовый">
   <rdfs:subClassOf rdf:resource="#Вопрос"/>
 </owl:Class>
+
+<Единственный rdf:about="#единственный1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что делать?</textQuestion>
+</Единственный>
+
+<Логический rdf:about="#логический1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Кто ты?</textQuestion>
+</Логический>
+
+<Множественный rdf:about="#множественный1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Почему все так грустно?</textQuestion>
+</Множественный>
+
+<Пользователь rdf:about="#пользователь1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">nike04@mail.ru</email>
+  <firstName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Никита</firstName>
+  <lastName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Гришин</lastName>
+  <role rdf:datatype="http://www.w3.org/2001/XMLSchema#string">admin</role>
+  <uid rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1</uid>
+</Пользователь>
+
+<Текстовый rdf:about="#текстовый1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что такое апертура?</textQuestion>
+</Текстовый>
+
+<Тест rdf:about="#тест1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <has_group_of_task rdf:resource="#группа_заданий1"/>
+  <testName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Морфология пыльцевых зерен</testName>
+</Тест>
+
+<Группа_заданий rdf:about="#группа_заданий1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_group_of_task rdf:resource="#тест1"/>
+</Группа_заданий>
 
 <Вопрос rdf:about="#вопрос1">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
@@ -284,271 +368,298 @@
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
+<Задание rdf:about="#задание6">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_question rdf:resource="#текстовый5"/>
+</Задание>
+
 <Вопрос rdf:about="#вопрос6">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
+
+<Текстовый rdf:about="#текстовый5">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">На какие две группы модно разделить все апертуры?</textQuestion>
+</Текстовый>
+
+<Задание rdf:about="#задание7">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_question rdf:resource="#текстовый6"/>
+</Задание>
 
 <Вопрос rdf:about="#вопрос7">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
+<Текстовый rdf:about="#текстовый6">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Чем сложная апертура отличается от простой? Приведи примеры сложных и простых апертур.</textQuestion>
+</Текстовый>
+
+<Задание rdf:about="#задание8">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_answer rdf:resource="#ответ1"/>
+  <task_has_answer rdf:resource="#ответ2"/>
+  <task_has_answer rdf:resource="#ответ3"/>
+  <task_has_answer rdf:resource="#ответ4"/>
+  <task_has_question rdf:resource="#единственный4"/>
+</Задание>
+
 <Вопрос rdf:about="#вопрос8">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
+
+<Единственный rdf:about="#единственный4">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <has_correct_answer rdf:resource="#ответ1"/>
+  <has_wrong_answer rdf:resource="#ответ2"/>
+  <has_wrong_answer rdf:resource="#ответ3"/>
+  <has_wrong_answer rdf:resource="#ответ4"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Как называется оболочка пыльцевого зерна?</textQuestion>
+</Единственный>
+
+<Ответ rdf:about="#ответ1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_correct_answer_of rdf:resource="#единственный4"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Спородерма</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ2">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный4"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Экзина</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ3">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный4"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Периспорий</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ4">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный4"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Экзоспорий</textAnswer>
+</Ответ>
+
+<Задание rdf:about="#задание9">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_answer rdf:resource="#ответ5"/>
+  <task_has_answer rdf:resource="#ответ6"/>
+  <task_has_answer rdf:resource="#ответ7"/>
+  <task_has_answer rdf:resource="#ответ8"/>
+  <task_has_question rdf:resource="#единственный5"/>
+</Задание>
 
 <Вопрос rdf:about="#вопрос9">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
+<Единственный rdf:about="#единственный5">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <has_correct_answer rdf:resource="#ответ7"/>
+  <has_wrong_answer rdf:resource="#ответ5"/>
+  <has_wrong_answer rdf:resource="#ответ6"/>
+  <has_wrong_answer rdf:resource="#ответ8"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Как называется апертура, у которой отношение длины к ширине больше или равно 2?</textQuestion>
+</Единственный>
+
+<Ответ rdf:about="#ответ5">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный5"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Пора</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ6">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный5"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ора</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ7">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_correct_answer_of rdf:resource="#единственный5"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Борозда</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ8">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#единственный5"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Лептома</textAnswer>
+</Ответ>
+
+<Задание rdf:about="#задание10">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_question rdf:resource="#текстовый7"/>
+</Задание>
+
 <Вопрос rdf:about="#вопрос10">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
+
+<Текстовый rdf:about="#текстовый7">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">К какой группе апертур относится ора?</textQuestion>
+</Текстовый>
+
+<Задание rdf:about="#задание11">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_answer rdf:resource="#ответ9"/>
+  <task_has_answer rdf:resource="#ответ10"/>
+  <task_has_answer rdf:resource="#ответ11"/>
+  <task_has_answer rdf:resource="#ответ12"/>
+  <task_has_question rdf:resource="#единственный6"/>
+</Задание>
 
 <Вопрос rdf:about="#вопрос11">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
-<Вопрос rdf:about="#вопрос12">
+<Единственный rdf:about="#единственный6">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
+  <has_correct_answer rdf:resource="#ответ9"/>
+  <has_wrong_answer rdf:resource="#ответ10"/>
+  <has_wrong_answer rdf:resource="#ответ11"/>
+  <has_wrong_answer rdf:resource="#ответ12"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что такое лептома?</textQuestion>
+</Единственный>
 
-<Вопрос rdf:about="#вопрос13">
+<Ответ rdf:about="#ответ9">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
+  <is_correct_answer_of rdf:resource="#единственный6"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Истончённая область спородермы на дистальной стороне п.з., выполняет функцию апертуры, характерна для голосеменных</textAnswer>
+</Ответ>
 
-<Вопрос rdf:about="#вопрос14">
+<Ответ rdf:about="#ответ10">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
+  <is_wrong_answer_of rdf:resource="#единственный6"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Поверхность зерна, ограниченная двумя соседними бороздами (порами)</textAnswer>
+</Ответ>
 
-<Вопрос rdf:about="#вопрос15">
+<Ответ rdf:about="#ответ11">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
+  <is_wrong_answer_of rdf:resource="#единственный6"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Внутренняя часть сложной апертуры, имеющая округлую или эллипсоидальную форму</textAnswer>
+</Ответ>
 
-<Вопрос rdf:about="#вопрос16">
+<Ответ rdf:about="#ответ12">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
+  <is_wrong_answer_of rdf:resource="#единственный6"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Простая апертура изогнутой формы</textAnswer>
+</Ответ>
 
-<Вопрос rdf:about="#вопрос17">
+<Задание rdf:about="#задание12">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос18">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос19">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос20">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос21">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос22">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос23">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос24">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос25">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос26">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос27">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос28">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос29">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос30">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос31">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос32">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос33">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос34">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Тест rdf:about="#тест3">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_group_of_task rdf:resource="#группа_заданий3"/>
-  <testName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Test 10</testName>
-</Тест>
-
-<Группа_заданий rdf:about="#группа_заданий3">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_group_of_task rdf:resource="#тест3"/>
-</Группа_заданий>
-
-<Вопрос rdf:about="#вопрос35">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос36">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос37">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос38">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос39">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос40">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос41">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос42">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос43">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Вопрос rdf:about="#вопрос44">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Задание rdf:about="#задание16">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий3"/>
-  <task_has_answer rdf:resource="#ответ42"/>
-  <task_has_answer rdf:resource="#ответ43"/>
-  <task_has_answer rdf:resource="#ответ44"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_answer rdf:resource="#ответ13"/>
+  <task_has_answer rdf:resource="#ответ14"/>
+  <task_has_answer rdf:resource="#ответ15"/>
+  <task_has_answer rdf:resource="#ответ16"/>
   <task_has_question rdf:resource="#единственный7"/>
 </Задание>
 
-<Вопрос rdf:about="#вопрос45">
+<Вопрос rdf:about="#вопрос12">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
 <Единственный rdf:about="#единственный7">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_correct_answer rdf:resource="#ответ43"/>
-  <has_wrong_answer rdf:resource="#ответ42"/>
-  <has_wrong_answer rdf:resource="#ответ44"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что делать?</textQuestion>
+  <has_correct_answer rdf:resource="#ответ14"/>
+  <has_wrong_answer rdf:resource="#ответ13"/>
+  <has_wrong_answer rdf:resource="#ответ15"/>
+  <has_wrong_answer rdf:resource="#ответ16"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Как называется центральное утолщение поровой или бороздной мембраны?</textQuestion>
 </Единственный>
 
-<Ответ rdf:about="#ответ42">
+<Ответ rdf:about="#ответ13">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
   <is_wrong_answer_of rdf:resource="#единственный7"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ничего</textAnswer>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Мезокольпиум</textAnswer>
 </Ответ>
 
-<Ответ rdf:about="#ответ43">
+<Ответ rdf:about="#ответ14">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
   <is_correct_answer_of rdf:resource="#единственный7"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ждать</textAnswer>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Оперкулюм</textAnswer>
 </Ответ>
 
-<Ответ rdf:about="#ответ44">
+<Ответ rdf:about="#ответ15">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
   <is_wrong_answer_of rdf:resource="#единственный7"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Терпеть</textAnswer>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Мезопориум</textAnswer>
 </Ответ>
 
-<Задание rdf:about="#задание17">
+<Ответ rdf:about="#ответ16">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий3"/>
-  <task_has_answer rdf:resource="#ответ45"/>
-  <task_has_answer rdf:resource="#ответ46"/>
-  <task_has_question rdf:resource="#множественный7"/>
-</Задание>
-
-<Вопрос rdf:about="#вопрос46">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-</Вопрос>
-
-<Множественный rdf:about="#множественный7">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <has_correct_answer rdf:resource="#ответ46"/>
-  <has_wrong_answer rdf:resource="#ответ45"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Почему все так грустно?</textQuestion>
-</Множественный>
-
-<Ответ rdf:about="#ответ45">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_wrong_answer_of rdf:resource="#множественный7"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Не знаю</textAnswer>
+  <is_wrong_answer_of rdf:resource="#единственный7"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Апопориум</textAnswer>
 </Ответ>
 
-<Ответ rdf:about="#ответ46">
+<Задание rdf:about="#задание13">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_correct_answer_of rdf:resource="#множественный7"/>
-  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">А как еще то</textAnswer>
-</Ответ>
-
-<Задание rdf:about="#задание18">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий3"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_answer rdf:resource="#ответ17"/>
+  <task_has_answer rdf:resource="#ответ18"/>
   <task_has_question rdf:resource="#логический2"/>
 </Задание>
 
-<Вопрос rdf:about="#вопрос47">
+<Вопрос rdf:about="#вопрос13">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
 <Логический rdf:about="#логический2">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Кто ты?</textQuestion>
+  <has_correct_answer rdf:resource="#ответ17"/>
+  <has_wrong_answer rdf:resource="#ответ18"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Может ли пыльцевое зерно быть без апертуры?</textQuestion>
 </Логический>
 
-<Задание rdf:about="#задание19">
+<Ответ rdf:about="#ответ17">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <is_task_of rdf:resource="#группа_заданий3"/>
-  <task_has_question rdf:resource="#текстовый3"/>
+  <is_correct_answer_of rdf:resource="#логический2"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Да</textAnswer>
+</Ответ>
+
+<Ответ rdf:about="#ответ18">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_wrong_answer_of rdf:resource="#логический2"/>
+  <textAnswer rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Нет</textAnswer>
+</Ответ>
+
+<Задание rdf:about="#задание14">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_question rdf:resource="#текстовый8"/>
 </Задание>
 
-<Вопрос rdf:about="#вопрос48">
+<Вопрос rdf:about="#вопрос14">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
 </Вопрос>
 
-<Текстовый rdf:about="#текстовый3">
+<Текстовый rdf:about="#текстовый8">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
-  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что ты делаешь?</textQuestion>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Что такое скульптура п.з., приведи примеры нескольких типов структур?</textQuestion>
+</Текстовый>
+
+<Задание rdf:about="#задание15">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_task_of rdf:resource="#группа_заданий1"/>
+  <task_has_question rdf:resource="#текстовый9"/>
+</Задание>
+
+<Вопрос rdf:about="#вопрос15">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+</Вопрос>
+
+<Текстовый rdf:about="#текстовый9">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <textQuestion rdf:datatype="http://www.w3.org/2001/XMLSchema#string">На какие слои можно подразделить экзину?</textQuestion>
 </Текстовый>
 
 

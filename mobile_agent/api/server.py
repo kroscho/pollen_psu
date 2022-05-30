@@ -285,6 +285,85 @@ def api_delete_test():
     print("response: ", response)
     return response
 
+@app.post('/api/get_result_attempt')
+def api_get_result_attempt():
+    ont = TestingService()
+    _answers = request.get_json()
+    _answers = _answers.get('answers')
+    _user = request.get_json()
+    _user = _user.get('user')
+    print("Test Name: ", _answers['nameTest'], _user["firstName"])
+    data = ont.getResultAttempt(_answers, _user)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/create_user')
+def api_create_user():
+    ont = TestingService()
+    _user = request.get_json()
+    _user = _user.get('user')
+    print("Email: ", _user['email'])
+    ont.createUser(_user)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_user')
+def api_get_user():
+    ont = TestingService()
+    _uid = request.args.get('_uid', '').replace(' ', '_')
+    print("Uid: ", _uid)
+    data = ont.getUser(_uid)
+    print("User: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_attempts')
+def api_get_attempts():
+    ont = TestingService()
+    _uid = request.args.get('_uid', '').replace(' ', '_')
+    _nameTest = request.args.get('_nameTest', '').replace(' ', '_')
+    print("Uid TestName: ", _uid, _nameTest)
+    data = ont.getAttempts(_uid, _nameTest)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_last_attempt')
+def api_get_last_attempts():
+    ont = TestingService()
+    _uid = request.args.get('_uid', '').replace(' ', '_')
+    _nameTest = request.args.get('_nameTest', '').replace(' ', '_')
+    print("Uid TestName: ", _uid, _nameTest)
+    data = ont.getAttempts(_uid, _nameTest)
+    print("data: ", data[-1])
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data[-1],
+    })), 200
+    print(response)
+    return response     
+
 app.env = 'development'
 
 app.run(port=5000, host='0.0.0.0', debug=True)

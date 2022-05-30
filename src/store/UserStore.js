@@ -3,7 +3,7 @@ import {makeAutoObservable} from 'mobx';
 export default class UserStore {
     constructor() {
         this._isAuth = false
-        this._user = [
+        this._user1 = [
             {id: "Имя", data: "Nikita Grishin"},
             {id: "Возраст", data: 21},
             {id: "Почта", data: "kros@mail.ru"},
@@ -420,6 +420,14 @@ export default class UserStore {
                 }
             ]}
         ]
+        this._user = {
+            userObj: "пользователь1",
+            firstName: "Никита",
+            lastName: "Гришин",
+            email: "nike04@mail.ru",
+            role: "admin",
+            uid: "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1",
+        }
         this._allCourses = [
             {
                 id: "1",
@@ -1310,10 +1318,14 @@ export default class UserStore {
         ]
         this._curCourse = {}
         this._curTest = {}
+        this._curAttempt = {}
+        this._curAttempts = []
         this._curVariant = {}
         this._curModule = {}
         this._curLecture = {}
         this._cartAmount = 0
+        this._curNewUser = {}
+        this._uid = ""
         makeAutoObservable(this)
     }
 
@@ -1322,6 +1334,10 @@ export default class UserStore {
     }
     setUser(user) {
         this._user = user
+    }
+
+    setCurNewUser(newUser) {
+        this._curNewUser = newUser
     }
 
     setAllCourses(item) {
@@ -1360,6 +1376,18 @@ export default class UserStore {
         this._curVariant = item
     }
 
+    setCurAttempt(item) {
+        this._curAttempt = item
+    }
+
+    setUID(uid) {
+        this._uid = uid
+    }
+
+    setCurAttempts(attempts) {
+        this._curAttempts = attempts
+    }
+
     get isAuth() {
         return this._isAuth
     }
@@ -1393,6 +1421,22 @@ export default class UserStore {
 
     get CurVariant() {
         return this._curVariant
+    }
+
+    get CurAttempt() {
+        return this._curAttempt
+    }
+
+    get CurNewUser() {
+        return this._curNewUser
+    }
+
+    get CurUID() {
+        return this._uid
+    }
+
+    get CurAttempts() {
+        return this._curAttempts
     }
 
 }

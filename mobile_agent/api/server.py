@@ -529,6 +529,34 @@ def api_edit_profile():
     print(response)
     return response
 
+@app.get('/api/get_users')
+def api_get_users():
+    ont = TestingService()
+    data = ont.getUsers()
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/edit_role')
+def api_edit_role():
+    ont = TestingService()
+    _item = request.get_json()
+    _item = _item.get('user')
+    print("User: ", _item)
+    ont.editRole(_item)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
 app.env = 'development'
 
 app.run(port=5000, host='0.0.0.0', debug=True)

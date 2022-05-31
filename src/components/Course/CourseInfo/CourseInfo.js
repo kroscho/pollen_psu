@@ -153,7 +153,7 @@ const CourseInfo = () => {
                     </Col>
                     <Col>
                         <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">Студенты:</Divider>
-                        <UsersList users={students}/>
+                        <UsersList isEdit={false} users={students}/>
                     </Col>
                 </Row>
                 {isSubscribe()

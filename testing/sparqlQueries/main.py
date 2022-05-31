@@ -565,9 +565,31 @@ class TestingService:
             role = re.sub(r'.*#',"", role)
             email = str(itemUser['email'].toPython())
             email = re.sub(r'.*#',"", email)
-            userItem = {"userObj": userObj, "firstName": firstName, "lastName": lastName, "email": email, "role": role, "uid": uid}
+            userItem = {"userObj": userObj, "firstName": firstName, "lastName": lastName, "email": email, "role": role, "uid": uid, "fullName": firstName + " " + lastName}
         
         return userItem
+
+    def getUsers(self):
+        query = queries.getUsers()
+        resultUsers = self.graph.query(query)
+        listUsers = []
+        for itemUser in resultUsers:
+            uid = str(itemUser['uid'].toPython())
+            uid = re.sub(r'.*#',"", uid)
+            userObj = str(itemUser['userObj'].toPython())
+            userObj = re.sub(r'.*#',"", userObj)
+            firstName = str(itemUser['firstName'].toPython())
+            firstName = re.sub(r'.*#',"", firstName)
+            lastName = str(itemUser['lastName'].toPython())
+            lastName = re.sub(r'.*#',"", lastName)
+            role = str(itemUser['role'].toPython())
+            role = re.sub(r'.*#',"", role)
+            email = str(itemUser['email'].toPython())
+            email = re.sub(r'.*#',"", email)
+            userItem = {"userObj": userObj, "firstName": firstName, "lastName": lastName, "email": email, "role": role, "uid": uid, "fullName": firstName + " " + lastName}
+            listUsers.append(userItem)        
+        
+        return listUsers
     
     def getAttempts(self, user_uid, nameTest):
         print("UID NAMETEST: ", user_uid, nameTest)
@@ -766,12 +788,28 @@ class TestingService:
             class Пользователь(Thing):
                 pass
         
-        user = Пользователь(userItem["uid"])
+        userPrev = self.getUser(userItem["uid"])
+        userObj = userPrev["userObj"]
+        user = Пользователь(userObj)
 
         user.firstName = userItem["firstName"]
         user.lastName = userItem["lastName"]
         
         print("Профиль изменен!")
+        self.onto.save(self.path)
+
+    def editRole(self, userItem):
+        with self.onto:
+            class Пользователь(Thing):
+                pass
+        
+        user = self.getUser(userItem["uid"])
+        userObj = user["userObj"]
+        user = Пользователь(userObj)
+
+        user.role = userItem["role"]
+        
+        print("Роль изменена!")
         self.onto.save(self.path)
 
 

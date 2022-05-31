@@ -150,4 +150,15 @@ export default class TestingApi {
         return response.data
     }
 
+    static async getUsers() {
+        const response = await axios.get('http://localhost:5000/api/get_users')
+        return response.data
+    }
+
+    static async editRole(user) {
+        console.log("user: ", user)
+        const response = await axios.post('http://localhost:5000/api/edit_role', { user })
+        return response.data
+    }
+
 }

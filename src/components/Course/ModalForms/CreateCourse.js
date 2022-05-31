@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Form, Input, Upload } from 'antd';
+import { Modal, Button, Form, Input, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import TestingApi from '../../../API/TestingApi';
+import { useFetching } from '../../hooks/useFetching';
+import { Context } from '../../..';
 
 const layout = {
     labelCol: {
@@ -18,9 +21,24 @@ const tailLayout = {
     },
 };
 
-const CreateCourse = ({isVisible, setIsVisible}) => {
+const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
     
     const [url, setUrl] = useState("")
+    const [form] = Form.useForm();
+    const {userStore} = useContext(Context)
+
+    const [fetchCreateCourse, isCreateLoading, createError] = useFetching(async () => {
+        let response = await TestingApi.createCourse(userStore.CurNewCourse);
+        console.log(response.data)
+        if (response.data === "ok") {
+            message.success('Курс создан успешно');
+        }
+        userStore.setCurTest({})
+        if (update) {
+            setUpdate(!update)
+        }
+        setIsVisible(false)
+    })
 
     const handleOk = () => {
         setIsVisible(false);
@@ -30,13 +48,11 @@ const CreateCourse = ({isVisible, setIsVisible}) => {
         setIsVisible(false);
     };
 
-    const [form] = Form.useForm();
-
     const onReset = () => {
         form.resetFields();
     };
     
-      const onFill = () => {
+    const onFill = () => {
         form.setFieldsValue({
           name: 'Курс1',
           description: 'Описание Курса1',
@@ -54,6 +70,8 @@ const CreateCourse = ({isVisible, setIsVisible}) => {
             students: [],
             modules: [],
         }
+        userStore.setCurNewCourse(item)
+        fetchCreateCourse()
         console.log(item)
     };
 
@@ -74,7 +92,7 @@ const CreateCourse = ({isVisible, setIsVisible}) => {
 
     return (
         <>
-        <Modal title="Создание модуля" visible={isVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="Создание курса" visible={isVisible} onOk={handleOk} onCancel={handleCancel}>
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                 <Form.Item
                     name="name"

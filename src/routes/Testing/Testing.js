@@ -8,7 +8,7 @@ import Courses from '../../components/Courses/Courses';
 import { UserOutlined } from '@ant-design/icons';
 import history from '../../services/history';
 import { Context } from '../..';
-import { COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE } from '../../utils/consts';
+import { COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE } from '../../utils/consts';
 import { isMenuCourses } from '../../components/utils/testing';
 import CourseInfo from '../../components/Course/CourseInfo/CourseInfo';
 import CourseTests from '../../components/Course/CourseTests/CourseTests';
@@ -18,6 +18,7 @@ import TestEdit from '../../components/Course/ModalForms/CourseTestEdit';
 import CoursesAll from '../../components/Courses/CoursesAll';
 import CourseLections from '../../components/Course/CourseLections/CourseLections';
 import CourseLecture from '../../components/Course/CourseLecture/CourseLecture';
+import AttemptsDetails from '../../components/Course/AttemptsDetails/AttemptsDetails';
 
 const { Header, Content, Sider } = Layout;
 
@@ -58,6 +59,12 @@ const Testing = () => {
 
     return (
         <Router history={history}>
+            <div className="logo">
+                {isMenuCourses()
+                    ? ""
+                    : userStore.CurCourse.courseName 
+                }
+            </div>
             <Layout>
                 <Sider
                 breakpoint="lg"
@@ -69,12 +76,6 @@ const Testing = () => {
                     console.log(collapsed, type);
                 }}
                 >
-                    <div className="logo">
-                        {isMenuCourses()
-                            ? ""
-                            : curCourse.title 
-                        }
-                    </div>
                     <Menu 
                         theme="dark" 
                         mode="inline" 
@@ -113,8 +114,11 @@ const Testing = () => {
                                 <Route exact path={TESTING_ALL_COURSES_ROUTE}>
                                     <CoursesAll/>
                                 </Route>
-                                <Route exact path={COURSE_TESTS_TEST_ROUTE}>
+                                <Route exact path={TESTS_TEST_ATTEMPT_ROUTE}>
                                     <CourseTest/>
+                                </Route>
+                                <Route exact path={TESTS_TEST_ATTEMPTS_DETAILS_ROUTE}>
+                                    <AttemptsDetails/>
                                 </Route>
                                 <Route exact path={COURSE_TESTS_TEST_EDIT_ROUTE}>
                                     <TestEdit/>

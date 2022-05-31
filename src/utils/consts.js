@@ -18,3 +18,12 @@ export const COURSE_TESTS_TEST_ROUTE = '/course/tests/test';
 export const COURSE_TESTS_TEST_EDIT_ROUTE = '/course/tests/test/edit';
 export const COURSE_TESTS_TEST_VARIANTS_ROUTE = '/course/tests/test/variants';
 
+export const TESTS_TEST_ATTEMPT_ROUTE = '/course/tests/test/attempt';
+export const TESTS_TEST_ATTEMPTS_DETAILS_ROUTE = '/course/tests/test/attempts_details';
+
+
+export const TEXT_TASK_TYPE = "1"
+export const SINGLE_TASK_TYPE = "2"
+export const MULTIPLE_TASK_TYPE = "3"
+export const LOGICAL_TASK_TYPE = "4"
+

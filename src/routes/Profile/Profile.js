@@ -1,42 +1,49 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import { Context } from "../../index"
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
+import { Col, Divider, Row } from "antd";
+import ProfileEdit from "../../components/Course/ModalForms/ProfileEdit";
 
 
-const Profile = (props) => {
+const Profile = () => {
     
-    const {userStore} = useContext(Context)
-    console.log("user: ", props.user)
-    //userStore.setUser([{id: "Почта", data: user.user?.email}])
+    const {userStore} = useContext(Context);
+    const [isProfileEditFormVisible, setIsProfileEditFormVisible] = useState(false)
+    const user = userStore.User;
 
-    const listData = userStore.User.map((item) => {
-        return (
-            <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>
-                    {Array.isArray(item.data) 
-                        ? item.data.map((it) => it + "|     ")
-                        : item.data
-                    }
-                </td>
-                
-            </tr>
-        )
-    })
+    const handleEditProfile = () => {
+        setIsProfileEditFormVisible(true)
+    }
 
     return (
         <div className="contain">
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                    <th>#</th>
-                    <th>Данные</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listData}
-                </tbody>
-            </Table>
+            <Row>
+                <Col xs={9}>
+                    <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">Мои данные</Divider>
+                    <Table striped bordered>
+                        <tbody>
+                            <tr>
+                                <th>Имя</th>
+                                <td>{user.firstName}</td>
+                            </tr>
+                            <tr>
+                                <th>Фамилия</th>
+                                <td>{user.lastName}</td>
+                            </tr>
+                            <tr>
+                                <th>Роль</th>
+                                <td>{user.role}</td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>{user.email}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                    <Button onClick={handleEditProfile} style={{marginLeft: "5px"}} variant="outline-secondary">Редактировать профиль</Button>
+                </Col>
+            </Row>
+            <ProfileEdit isVisible={isProfileEditFormVisible} setIsVisible={setIsProfileEditFormVisible}></ProfileEdit>
         </div>
     );
 }

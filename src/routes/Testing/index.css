@@ -1,10 +1,10 @@
 .logo {
   height: 32px;
-  margin: 16px;
-  background: #ffffff;
+  margin: 1px auto;
   text-align: center;
-  color: rgb(24 144 255); 
-  font-size: 20px;
+  color: #212529;
+  font-size: 22px;
+  font-weight: bolder;
 }
 
 .site-layout-sub-header-background {

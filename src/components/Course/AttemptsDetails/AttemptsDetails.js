@@ -2,19 +2,31 @@ import React, { useContext, useEffect, useState } from "react";
 import 'antd/dist/antd.css';
 import { Context } from "../../..";
 import { Button} from "react-bootstrap"
-import { Col, Divider, Form, Input, Row, Select, Space } from "antd";
+import { Col, Divider, Form, Input, message, Row, Space } from "antd";
 import { FormOutlined } from '@ant-design/icons';
 import AttemptTask from "../Task/AttemptTask";
+import { useFetching } from "../../hooks/useFetching";
+import TestingApi from "../../../API/TestingApi";
+import ErrorMessage from "../../UI/Messages/ErrorMessage";
+import Loader from "../../UI/Loader/Loader";
 
-const AttemptsDetails = () => {
+const AttemptsDetails = ({onUpdate, isCheck}) => {
     const {userStore} = useContext(Context)
     const curTest = userStore.CurTest;
-    console.log("CUrTest: ", curTest)
     const [viewDetails, setViewDetails] = useState(false)
     const [curAttempt, setCurAttempt] = useState({})
     const curAttempts = userStore.CurAttempts;
     const [form] = Form.useForm();
     let listAttempts = []
+    
+    const [fetchEditAttempt, isEditLoading, editError] = useFetching(async () => {
+        let response = await TestingApi.editAttempt(userStore.CurEditAttempt);
+        if (response.data === "ok") {
+            message.success('Попытка проверена успешно');
+        }
+        onUpdate()
+        console.log(response.data)
+    })
 
     const handleAttempt = (attempt) => {
         setCurAttempt(attempt)
@@ -22,8 +34,19 @@ const AttemptsDetails = () => {
         setViewDetails(true)
     }
 
+    const onFinish = values => {
+        values.testName = curAttempt.testName
+        values["testObj"] = curAttempt.testObj
+        values["attemptObj"] = curAttempt.attemptObj
+        //console.log("CUrAttempt: ", curAttempt)
+        userStore.setCurEditAttempt(values)
+        fetchEditAttempt()
+        console.log('Received values of form:', values);
+    };
+
     if (curAttempts) {
         listAttempts = curAttempts.map((attempt, ind) => {
+            console.log("Checked: ", attempt.checked)
             return (
                 <div  
                     key={ind} 
@@ -31,6 +54,10 @@ const AttemptsDetails = () => {
                     onClick={() => handleAttempt(attempt)}
                 > 
                     <FormOutlined/> Попытка {ind+1}
+                    { attempt.checked === "True"
+                        ? <span> -  Проверено</span> 
+                        : <span> -  Не проверено</span>
+                    }
                 </div>
             )
         })
@@ -54,7 +81,7 @@ const AttemptsDetails = () => {
         if (!viewDetails) {
             return (
                 <Row>
-                    <Col xs={10}>
+                    <Col style={{border: '1px solid #cbcccd'}} xs={10}>
                         {listAttempts}                           
                     </Col>
                 </Row>
@@ -63,23 +90,25 @@ const AttemptsDetails = () => {
             return (
                 <Form 
                 form={form} 
-                name="dynamic_form_nest_item"  
+                name="dynamic_form_nest_item"
+                style={{border: '1px solid #cbcccd'}}
+                onFinish={onFinish} 
                 autoComplete="off"
                 initialValues={{
-                    ["nameTest"]: curAttempt.nameTest,
+                    ["testName"]: curAttempt.nameTest,
                     ["tasks"]: curAttempt.tasks,
                     ["answers"]: curAttempt.tasks,
                 }}
                 >
                     <Form.Item>
-                        <Button onClick={() => setViewDetails(false)}>Вернуться к списку попыток</Button>
+                        <Button style={{margin: '10px 0 0 30px'}} onClick={() => setViewDetails(false)}>Вернуться к списку попыток</Button>
                     </Form.Item>
-                    <Form.Item name="nameTest">
+                    <Form.Item name="testName">
                         <Divider 
                             style={{color: 'rgb(76 86 96)', fontSize: '22px'}}
                             orientation="center"
                         >
-                            {curAttempt.nameTest}
+                            {curAttempt.testName}
                         </Divider>
                         <Divider 
                             style={styleResultTest(curAttempt.percentComplete)}
@@ -103,11 +132,12 @@ const AttemptsDetails = () => {
                                     <>
                                         <Form.Item 
                                         name={[field.name, 'question']} 
-                                        label="Вопрос" 
+                                        label="Вопрос"
+                                        style={{fontWeight: 'bolder'}}
                                         >
-                                            <Input />
+                                            <Input style={{border: '2px solid #000000'}}/>
                                         </Form.Item>
-                                        <AttemptTask tasks={curAttempt.tasks} form={form} field={field}></AttemptTask>
+                                        <AttemptTask isCheck={isCheck} tasks={curAttempt.tasks} form={form} field={field}></AttemptTask>
                                     </>
                                 )}
                                 </Form.Item>
@@ -116,14 +146,28 @@ const AttemptsDetails = () => {
                         </>
                         )}
                     </Form.List>
+                    { isCheck
+                        ?   <Form.Item>
+                                <Button style={{margin: '0 0 10px 30px'}} type="primary" htmltype="submit">
+                                    Завершить проверку
+                                </Button>
+                            </Form.Item> 
+                        :   null
+                    }
                 </Form>
             )
         }
     }
 
+    const spinner = isEditLoading ? <Loader/> : null;
+    const errorMessage = editError ? <ErrorMessage message={editError} /> : null;
+    const content = !(isEditLoading || editError) ? <View/> : null;
+
     return (
         <>
-            <View></View>
+            {spinner}
+            {errorMessage}
+            {content}
         </>
     )
 }

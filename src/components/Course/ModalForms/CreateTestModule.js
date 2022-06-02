@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Form, Input, Space, Select } from 'antd';
+import { Modal, Button, Form, Input, Space, Select, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import EditTask from '../Task/EditTask';
 import Loader from '../../UI/Loader/Loader';
@@ -16,7 +16,7 @@ const types = [
     { value: '4', label: 'Истина/ложь' },
 ];
 
-const CreateTestForm = ({isVisible, setIsVisible}) => {
+const CreateTestForm = ({isVisible, setIsVisible, onUpdate}) => {
     const {userStore} = useContext(Context)
     const [form] = Form.useForm();
     const handleOk = () => {
@@ -30,6 +30,13 @@ const CreateTestForm = ({isVisible, setIsVisible}) => {
     const [fetchCreate, isCreateLoading, createError] = useFetching(async () => {
         const item = {test: userStore.CurTest, module: userStore.CurModule}
         let response = await TestingApi.createTest(item);
+        if (response.data === "ok") {
+            message.success('Тест создан успешно');
+        }
+        let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
+        userStore.setCurCourse(response1.data)
+        onUpdate()
+        setIsVisible(false)
         console.log(response.data)
     })
 

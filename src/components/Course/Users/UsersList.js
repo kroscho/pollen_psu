@@ -6,7 +6,7 @@ import RoleEdit from "../ModalForms/EditRole";
 import { isAdmin } from "../../utils/testing";
 import { Context } from "../../..";
 
-const UsersList = ({onUpdateUsers, isEdit, users}) => {
+const UsersList = ({onUpdateUsers, isEdit, isCheck, handleCheckAttempts, users}) => {
     const {userStore} = useContext(Context)
     const [isEditRoleFormVisible, setIsEditRoleFormVisible] = useState(false)
     const [userEdit, setUserEdit] = useState({})
@@ -45,6 +45,10 @@ const UsersList = ({onUpdateUsers, isEdit, users}) => {
                 />
                 { isAdmin(user) && isEdit
                     ? <Button onClick={() => handleEditRole(item)} style={{marginLeft: "5px"}} variant="outline-success">Изменить роль</Button>
+                    : null
+                }
+                { isAdmin(user) && isCheck
+                    ? <Button onClick={() => handleCheckAttempts(item)} style={{marginLeft: "5px"}} variant="outline-success">Проверить попытки</Button>
                     : null
                 }
                 </List.Item>

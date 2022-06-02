@@ -19,6 +19,12 @@ const MultipleTask = ({task, field}) => {
         <Form.Item 
             name={[field.name, "answer"]}
             label={numberTask + ". " + task.question}
+            rules={[
+                {
+                required: true,
+                message: 'Заполните поле',
+                },
+            ]}
         >
             <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
                 <Space direction="vertical">

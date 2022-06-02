@@ -8,7 +8,7 @@ import TestingApi from '../../../API/TestingApi';
 import Loader from '../../UI/Loader/Loader';
 import ErrorMessage from '../../UI/Messages/ErrorMessage';
 
-const CreateModule = ({isVisible, setIsVisible, setCurCourse}) => {
+const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
     
     const [url, setUrl] = useState("")
     const [form] = Form.useForm();
@@ -23,7 +23,7 @@ const CreateModule = ({isVisible, setIsVisible, setCurCourse}) => {
         }
         let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
         userStore.setCurCourse(response1.data)
-        setCurCourse(userStore.CurCourse)
+        onUpdate()
         console.log(response.data)
         userStore.setCurModule({})
         setIsVisible(false);

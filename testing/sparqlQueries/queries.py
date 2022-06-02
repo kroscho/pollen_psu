@@ -74,12 +74,15 @@ def getUsers():
 # запрос на получение попыток пользователя
 def getAttempts(userObj, testObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?attemptObj ?percentComplete ?succesfull " \
+            "SELECT ?attemptObj ?percentComplete ?succesfull ?checked ?sumScore ?maxScore " \
             "WHERE { " \
             "tst:%s tst:has_attempt_to_pass_test ?attemptObj. " \
             "?attemptObj tst:relates_to_test tst:%s. " \
             "?attemptObj tst:percentCompleteOfTest ?percentComplete. " \
             "?attemptObj tst:succesfullAttempt ?succesfull. " \
+            "?attemptObj tst:checked ?checked. " \
+            "?attemptObj tst:sumScore ?sumScore. " \
+            "?attemptObj tst:maxScore ?maxScore. " \
             "}" % (userObj, testObj)
     return query
 
@@ -95,11 +98,12 @@ def getTestElements(attemptObj):
 # запрос на получение ответов элемента теста и их корректность
 def getAnswersAndCorrectByTestElem(testElementObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?answerObj ?correct ?textAnswer " \
+            "SELECT ?answerObj ?correct ?textAnswer ?score " \
             "WHERE { " \
             "tst:%s tst:has_answer ?answerObj. " \
             "?answerObj tst:rightAnswer ?correct. " \
             "?answerObj tst:textAnswer ?textAnswer. " \
+            "?answerObj tst:score ?score. " \
             "}" % (testElementObj)
     return query
 

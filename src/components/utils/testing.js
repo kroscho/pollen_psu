@@ -13,3 +13,9 @@ export const isAdmin = (user) => {
 export function deepEqual(obj1, obj2){
     return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
+
+export const getWordAnswer = (index) => {
+    const listWords = ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "i)", "j)", "k)", "l)"]
+    console.log(listWords[index])
+    return listWords[index]
+}

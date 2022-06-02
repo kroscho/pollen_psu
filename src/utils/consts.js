@@ -20,6 +20,7 @@ export const COURSE_TESTS_TEST_VARIANTS_ROUTE = '/course/tests/test/variants';
 
 export const TESTS_TEST_ATTEMPT_ROUTE = '/course/tests/test/attempt';
 export const TESTS_TEST_ATTEMPTS_DETAILS_ROUTE = '/course/tests/test/attempts_details';
+export const TESTS_TEST_CHECK_WORKS_ROUTE = '/course/tests/test/check_works';
 
 
 export const TEXT_TASK_TYPE = "1"

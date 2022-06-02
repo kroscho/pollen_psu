@@ -3,14 +3,14 @@ import 'antd/dist/antd.css';
 import { Context } from "../../..";
 import {Button} from "react-bootstrap"
 import history from "../../../services/history";
-import { TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ROUTE } from "../../../utils/consts";
+import { COURSE_TESTS_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE, TESTS_TEST_ROUTE } from "../../../utils/consts";
 import { isAdmin } from "../../utils/testing";
 import TestEdit from "../ModalForms/CourseTestEdit";
 import ErrorMessage from "../../UI/Messages/ErrorMessage";
 import Loader from "../../UI/Loader/Loader";
 import { useFetching } from "../../hooks/useFetching";
 import TestingApi from "../../../API/TestingApi";
-import { Row } from "antd";
+import { Divider, Row } from "antd";
 
 const CourseTestVariants = () => {
     const {userStore} = useContext(Context)
@@ -28,6 +28,7 @@ const CourseTestVariants = () => {
     })
 
     const [fetchTest, isTestLoading, testError] = useFetching(async () => {
+        console.log("CurTest: ", userStore.CurTest)
         let response = await TestingApi.getTest(userStore.CurTest.testName)
         userStore.setCurTest(response.data)
         console.log(response.data)
@@ -41,7 +42,10 @@ const CourseTestVariants = () => {
     const [fetchDelete, isDeleteLoading, deleteError] = useFetching(async () => {
         let response = await TestingApi.deleteTest(userStore.CurTest);
         console.log(response.data)
+        let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
+        userStore.setCurCourse(response1.data)
         userStore.setCurTest({})
+        history.push(COURSE_TESTS_ROUTE);
     })
 
     const handleStartTest = () => {
@@ -50,6 +54,10 @@ const CourseTestVariants = () => {
 
     const handleViewDetails = () => {
         history.push(TESTS_TEST_ATTEMPTS_DETAILS_ROUTE);
+    }
+
+    const handleCheckWorksStudents = () => {
+        history.push(TESTS_TEST_CHECK_WORKS_ROUTE);
     }
 
     const onEditTest = () => {
@@ -63,6 +71,16 @@ const CourseTestVariants = () => {
     const View = () => {
         return (
             <>
+                <Divider orientation="left">{curTest.testName}</Divider>
+                <Row>
+                    <Button 
+                        style={{lineHeight: "0.8", margin: "30px 30px"}} 
+                        variant="outline-success"
+                        onClick={handleCheckWorksStudents}
+                    >
+                        Проверить работы студентов
+                    </Button>
+                </Row>
                 <Row>
                     <Button 
                         style={{lineHeight: "0.8", margin: "30px 30px"}} 
@@ -95,7 +113,10 @@ const CourseTestVariants = () => {
                         : null
                     }
                 </Row>
-                <TestEdit isVisible={isEsitTestFormVisible} setIsVisible={setIsEditTestFormVisible}></TestEdit>
+                { !isTestLoading
+                    ? <TestEdit isVisible={isEsitTestFormVisible} setIsVisible={setIsEditTestFormVisible}></TestEdit>
+                    : null
+                }
             </>
         )
     }

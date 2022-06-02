@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import { Form, Input, Space, Checkbox, Button } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { TEXT_TASK_TYPE } from '../../../utils/consts';
+import { getWordAnswer } from '../../utils/testing';
 
 const EditTask = ({field, form, tasks}) => {
 
@@ -27,7 +28,7 @@ const EditTask = ({field, form, tasks}) => {
                             <Form.Item
                             {...fld.restField}
                             name={[fld.name, 'answer']}
-                            label={"Ответ " + index + ":"} 
+                            label={getWordAnswer(index)} 
                             rules={[{ required: true, message: 'Не заполнен ответ' }]}
                             >
                             <Input style={{borderRadius: '10px'}} />

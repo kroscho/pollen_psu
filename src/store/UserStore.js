@@ -1326,6 +1326,7 @@ export default class UserStore {
         this._cartAmount = 0
         this._curNewUser = {}
         this._curNewCourse = {}
+        this._curEditAttempt = {}
         this._uid = ""
         makeAutoObservable(this)
     }
@@ -1343,6 +1344,10 @@ export default class UserStore {
 
     setCurNewCourse(newCourse) {
         this._curNewCourse = newCourse
+    }
+
+    setCurEditAttempt(attempt) {
+        this._curEditAttempt = attempt
     }
 
     setAllCourses(item) {
@@ -1447,6 +1452,10 @@ export default class UserStore {
 
     get CurAttempts() {
         return this._curAttempts
+    }
+
+    get CurEditAttempt() {
+        return this._curEditAttempt
     }
 
 }

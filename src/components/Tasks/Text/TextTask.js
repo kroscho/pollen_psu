@@ -9,6 +9,12 @@ const TextTask = ({field, task}) => {
             name={[field.name, 'answer']}
             label={numberTask + ". " + task.question} 
             style={{borderBottomStyle: "solid", color: "rgb(216 162 162 / 13%)"}}
+            rules={[
+                {
+                required: true,
+                message: 'Заполните поле',
+                },
+            ]}
         >
             <Input placeholder="input placeholder" />
         </Form.Item>

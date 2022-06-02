@@ -433,14 +433,14 @@ class TestingService:
     def getTestWithAnswers(self, testName):
         tests = self.getTestsWithAnswers()
         for test in tests:
-            if test['testName'].replace(" ", "_") == testName.replace(" ", "_"):
+            if test['testName'] == testName:
                 return test
         return {}
 
      # получение даты прохождения теста в виде объекта
     def getNowDate(self):
         now = datetime.now()
-        strDate = datetime(now.year, now.month, now.day, 0, 0, 0).isoformat()
+        strDate = datetime(now.year, now.month, now.day, now.hour, now.minute, now.second).isoformat()
         objDate = datetime.strptime(strDate,"%Y-%m-%dT%H:%M:%S")
         return objDate
 
@@ -503,18 +503,23 @@ class TestingService:
                         textAnswer = re.sub(r'.*#',"", textAnswer)
                     newAnsw = ОтветыСтудента()
                     answ_correct = result["correct"][j]
+                    newAnsw.score = 1 if answ_correct else 0
                     newAnsw.rightAnswer = answ_correct
                     newAnsw.textAnswer = textAnswer
                     newTestElement.has_answer.append(newAnsw)
             else:
                 newAnsw = ОтветыСтудента()
+                newAnsw.score = 0
                 newAnsw.rightAnswer = False
                 newAnsw.textAnswer = userAnswers[i]["answer"]
                 newTestElement.has_answer.append(newAnsw)
         succesfullAttempt = False
         if sum / len(tasks) > 0.3:
             succesfullAttempt = True
+        newAttempt.maxScore = len(tasks)
+        newAttempt.sumScore = sum
         newAttempt.succesfullAttempt = succesfullAttempt
+        newAttempt.checked = False
         newAttempt.dateAndTime = self.getNowDate()
         newAttempt.percentCompleteOfTest = sum / len(tasks)
 
@@ -591,6 +596,21 @@ class TestingService:
         
         return listUsers
     
+    def getUsersWhoPassedTheTest(self, testName):
+        print("testName: ", testName)
+        users = self.getUsers()
+        
+        listUsers = []
+        for user in users:
+            listAttempts = self.getAttempts(user["uid"], testName)
+            if listAttempts:
+                user["attempts"] = listAttempts
+                listUsers.append(user)
+
+        print(listUsers)
+        return listUsers
+
+
     def getAttempts(self, user_uid, nameTest):
         print("UID NAMETEST: ", user_uid, nameTest)
         user = self.getUser(user_uid)
@@ -610,8 +630,12 @@ class TestingService:
             percentComplete = re.sub(r'.*#',"", percentComplete)
             succesfull = str(itemAttempt['succesfull'].toPython())
             succesfull = re.sub(r'.*#',"", succesfull)
+            checked = str(itemAttempt['checked'].toPython())
+            checked = re.sub(r'.*#',"", checked)
             testCopy["percentComplete"] = percentComplete
             testCopy["succesfull"] = succesfull
+            testCopy["checked"] = checked
+            testCopy["attemptObj"] = attemptObj
             query = queries.getTestElements(attemptObj)
             resultTestElements = self.graph.query(query)
             i = 0
@@ -629,15 +653,18 @@ class TestingService:
                     answText = re.sub(r'.*#',"", answText)
                     correctAnsw = str(itemAnswByTestElem['correct'].toPython())
                     correctAnsw = re.sub(r'.*#',"", correctAnsw)
+                    answScore = str(itemAnswByTestElem['score'].toPython())
+                    answScore = re.sub(r'.*#',"", answScore)
                     correctAnsw = True if correctAnsw == "True" else False
                     if taskType == "1":
-                        answersCopy = [{"answerObj": answObj, "answer": answText, "correct": False, "correctByUser": correctAnsw}]
+                        answersCopy = [{"answerObj": answObj, "answer": answText, "correct": False, "correctByUser": correctAnsw, "score": answScore}]
                         print("ASNWERSCOPY: ", answersCopy)
                     for j in range(len(answersCopy)):
                         if answersCopy[j]['answer'] == answText:
                             answersCopy[j]["correctByUser"] = correctAnsw
                         if "correctByUser" not in answersCopy[j]:
                             answersCopy[j]["correctByUser"] = None
+                        answersCopy[j]["score"] = answScore
                     testCopy["tasks"][i]["answers"] = answersCopy
                 i += 1
             listAttempts.append(testCopy)
@@ -810,6 +837,33 @@ class TestingService:
         user.role = userItem["role"]
         
         print("Роль изменена!")
+        self.onto.save(self.path)
+
+    def editAttempt(self, attemptItem):
+        with self.onto:
+            class Попытка_прохождения_теста(Thing):
+                pass
+            class ОтветыСтудента(Thing):
+                pass
+        
+        attemptObj = attemptItem["attemptObj"]
+        attempt = Попытка_прохождения_теста(attemptObj)
+
+        attempt.checked = True
+
+        for task in attemptItem["tasks"]:
+            if task["type"] == "1":
+                for answer in task["answers"]:
+                    answerObj = ОтветыСтудента(answer["answerObj"])
+                    prevAnswerScore = answerObj.score
+                    print("prevAnswerScore: ", prevAnswerScore)
+                    answerObj.score = answer["score"]
+                    if prevAnswerScore != answer["score"]:
+                        attempt.sumScore -= prevAnswerScore
+                        attempt.sumScore += float(answer["score"])
+                        attempt.percentCompleteOfTest = attempt.sumScore / attempt.maxScore  
+        
+        print("Попытка изменена!")
         self.onto.save(self.path)
 
 

@@ -25,6 +25,12 @@ const SingleTask = ({field, task}) => {
         <Form.Item 
             name={[field.name, "answer"]}  
             label={numberTask + ". " + task.question}
+            rules={[
+                {
+                required: true,
+                message: 'Заполните поле',
+                },
+            ]}
         >
             <Radio.Group>
                 <Space direction="vertical">

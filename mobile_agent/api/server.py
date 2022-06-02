@@ -227,7 +227,7 @@ def api_create_test():
     ont.createTest(test, module)
     return make_response(json.dumps({
         'statusCode': 200,
-        'data': "Тест успешно создан",
+        'data': "ok",
     })), 200
 
 @app.post('/api/create_course')
@@ -274,7 +274,7 @@ def api_get_tests():
 @app.get('/api/get_test')
 def api_get_test():
     ont = TestingService()
-    _testName = request.args.get('_testName', '').replace(' ', '_')
+    _testName = request.args.get('_testName', '')
     print("NAME: ", _testName)
     data = ont.getTest(_testName)
     
@@ -299,7 +299,7 @@ def api_get_all_courses():
 @app.get('/api/get_test_with_answers')
 def api_get_test_with_answers():
     ont = TestingService()
-    _testName = request.args.get('_testName', '').replace(' ', '_')
+    _testName = request.args.get('_testName', '')
     print("NAME: ", _testName)
     data = ont.getTestWithAnswers(_testName)
     
@@ -332,7 +332,7 @@ def api_delete_test():
     _deletedTest = request.get_json()
     print("Deleted test: ", _deletedTest.get('deletedTest'))
     _deletedTest = _deletedTest.get('deletedTest')
-    print("Del Name: ", _deletedTest.get('nameTest'))
+    print("Del Name: ", _deletedTest.get('testName'))
     ont.deleteTest(_deletedTest)
     
     response = make_response(json.dumps({
@@ -425,8 +425,8 @@ def api_get_user():
 @app.get('/api/get_attempts')
 def api_get_attempts():
     ont = TestingService()
-    _uid = request.args.get('_uid', '').replace(' ', '_')
-    _nameTest = request.args.get('_nameTest', '').replace(' ', '_')
+    _uid = request.args.get('_uid', '')
+    _nameTest = request.args.get('_nameTest', '')
     print("Uid TestName: ", _uid, _nameTest)
     data = ont.getAttempts(_uid, _nameTest)
     print("data: ", data)
@@ -441,8 +441,8 @@ def api_get_attempts():
 @app.get('/api/get_last_attempt')
 def api_get_last_attempts():
     ont = TestingService()
-    _uid = request.args.get('_uid', '').replace(' ', '_')
-    _nameTest = request.args.get('_nameTest', '').replace(' ', '_')
+    _uid = request.args.get('_uid', '')
+    _nameTest = request.args.get('_nameTest', '')
     print("Uid TestName: ", _uid, _nameTest)
     data = ont.getAttempts(_uid, _nameTest)
     print("data: ", data[-1])
@@ -457,7 +457,7 @@ def api_get_last_attempts():
 @app.get('/api/get_user_courses')
 def api_get_user_courses():
     ont = TestingService()
-    _uid = request.args.get('_uid', '').replace(' ', '_')
+    _uid = request.args.get('_uid', '')
     print("Uid: ", _uid,)
     data = ont.getUserCourses(_uid)
     print("data: ", data)
@@ -542,6 +542,21 @@ def api_get_users():
     print(response)
     return response
 
+@app.get('/api/get_users_who_passed_the_test')
+def api_get_users_who_passed_the_test():
+    ont = TestingService()
+    _testName = request.args.get('_testName', '')
+    print("courseObj: ", _testName,)
+    data = ont.getUsersWhoPassedTheTest(_testName)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
 @app.post('/api/edit_role')
 def api_edit_role():
     ont = TestingService()
@@ -549,6 +564,21 @@ def api_edit_role():
     _item = _item.get('user')
     print("User: ", _item)
     ont.editRole(_item)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/edit_attempt')
+def api_edit_attempt():
+    ont = TestingService()
+    _item = request.get_json()
+    _item = _item.get('attempt')
+    print("Attempt: ", _item)
+    ont.editAttempt(_item)
     
     response = make_response(json.dumps({
         'statusCode': 200,

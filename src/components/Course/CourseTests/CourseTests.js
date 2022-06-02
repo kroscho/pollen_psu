@@ -17,6 +17,7 @@ import ErrorMessage from "../../UI/Messages/ErrorMessage";
 const CourseTests = () => {
     const {userStore} = useContext(Context)
     const [curCourse, setCurCourse] = useState(userStore.CurCourse);
+    const [update, setUpdate] = useState(false);
     const user = userStore.User;
 
     const [isCreateTestFormVisible, setIsCreateTestFormVisible] = useState(false)
@@ -33,15 +34,21 @@ const CourseTests = () => {
         }
         let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
         userStore.setCurCourse(response1.data)
-        setCurCourse(userStore.CurCourse)
+        onUpdate()
         console.log(response.data)
     })
 
+    const onUpdate = () => {
+        setCurCourse(userStore.CurCourse)
+    }
+
     useEffect(() => {
-        console.log("Effect")
+        console.log("update")
+        onUpdate()
     }, [curCourse])
 
     const handleTest = (module, test) => {
+        console.log("Handle Test: ", test)
         userStore.setCurModule(module);
         userStore.setCurTest(test);
         history.push(COURSE_TESTS_TEST_VARIANTS_ROUTE);
@@ -108,7 +115,7 @@ const CourseTests = () => {
                             </Button>
                         : null
                     }
-                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible}></CreateTestForm>                
+                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible} onUpdate={onUpdate}></CreateTestForm>                
                 </ListGroup.Item>
             )
         })
@@ -140,7 +147,7 @@ const CourseTests = () => {
                             : null
                         }   
                     </Col>
-                    <CreateModule isVisible={isCreateModuleFormVisible} setIsVisible={setIsCreateModuleFormVisible} setCurCourse={setCurCourse}></CreateModule>
+                    <CreateModule isVisible={isCreateModuleFormVisible} setIsVisible={setIsCreateModuleFormVisible} onUpdate={onUpdate}></CreateModule>
                 </Row>
             )
         } 

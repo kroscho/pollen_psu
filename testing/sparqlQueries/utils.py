@@ -1,3 +1,10 @@
+import difflib
+import difflib
+from lib2to3.pgen2 import token
+import nltk
+import pymorphy2
+import string
+
 def getTypeTaskValue(typeStr):
     if typeStr == "Текстовый":
         return "1"
@@ -52,3 +59,76 @@ def checkAnswer(trueTask, userTask):
                 result["sum"] = result["sum"] / len(correctAnswers)
             return result
         return {"sum": 0, "answerObj": [], "correct": []}
+
+def similarity(s1, s2):
+    normalized1 = s1.lower()
+    normalized2 = s2.lower()
+    matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
+    return matcher.ratio()
+
+stop_words = nltk.corpus.stopwords.words('russian')
+stop_words += ['—']
+stop_words += list(string.punctuation)
+stop_words = set(stop_words)
+
+# токенизация текстов
+def tokenized_texts(texts):
+    tokenized_text = []
+    for text in texts:
+        tokens = nltk.word_tokenize(text)
+        tokens = [i for i in tokens if (i not in string.punctuation)]
+        tokens = [i for i in tokens if (i not in stop_words)]
+        tokenized_text.append(tokens)
+
+    return tokenized_text
+
+def normalized_texts(texts):
+    morph = pymorphy2.MorphAnalyzer()
+    for text_i in range(len(texts)):
+        for token_j in range(len(texts[text_i])):
+            texts[text_i][token_j] = morph.parse(texts[text_i][token_j])[0].normal_form
+    return texts
+
+def getTokensFromTexts(texts):
+    tokens = tokenized_texts(texts)
+    tokens = normalized_texts(tokens)
+    return tokens
+
+def findTermByName(name, terms):
+    for t in terms:
+        if t["term"] == name:
+            return t
+    return None
+
+def getPrevTerm(term, terms):
+    if term["moveToPrev"] == "True":
+        t = findTermByName(term["prevTerm"], terms)
+        return getPrevTerm(t, terms)
+    else:
+        return term
+                
+
+def getTermFromText(tokens, terms):
+    listTerms = []
+
+    for word in tokens:
+        for term in terms:
+            if "_" in term["term"]:
+                tokensTerm = getTokensFromTexts([term["term"].replace("_", " ")])
+                if len(list(filter(lambda i: i in tokens, tokensTerm[0]))) == len(tokensTerm[0]):
+                    term["similarity"] = 1.0
+                    listTerms.append(term)
+                    break
+            else:
+                simil = similarity(term["term"], word)
+                if simil > 0.7:
+                    term["similarity"] = simil
+                    print(term["term"], word)
+                    listTerms.append(term)
+                if simil == 1.0:
+                    break
+    if listTerms:
+        listTerms.sort(key=lambda x: x["similarity"], reverse=True)
+        return getPrevTerm(listTerms[0], terms)
+    else:
+        return None

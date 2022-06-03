@@ -12,8 +12,6 @@ const AttemptTask = ({field, tasks, isCheck}) => {
         questionType = TEXT_TASK_TYPE
     }
 
-    console.log("QuestType: ", questionType)
-
     const getStyleInput = (answ) => {
         let styleInput = {borderRadius: '10px', borderColor: "black"}
         if (answ?.correctByUser == undefined) {

@@ -14,6 +14,7 @@ export const COURSE_TESTS_ROUTE = '/course/tests';
 export const COURSE_LECTIONS_ROUTE = '/course/lections';
 export const COURSE_LECTURE_ROUTE = '/course/lectures/lecture';
 export const COURSE_LITERATURE_ROUTE = '/course/literature';
+export const COURSE_TERMS_ROUTE = '/course/terms';
 export const COURSE_TESTS_TEST_ROUTE = '/course/tests/test';
 export const COURSE_TESTS_TEST_EDIT_ROUTE = '/course/tests/test/edit';
 export const COURSE_TESTS_TEST_VARIANTS_ROUTE = '/course/tests/test/variants';

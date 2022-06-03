@@ -17,7 +17,7 @@ const EditTask = ({field, form, tasks}) => {
         } else {
             questionType = TEXT_TASK_TYPE
         }
-        console.log("questionType: ", questionType)
+        
         if (questionType !== TEXT_TASK_TYPE) {
             return (
                 <Form.List name={[field.name, 'answers']}>

@@ -30,15 +30,14 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
 
     const handleAttempt = (attempt) => {
         setCurAttempt(attempt)
-        console.log("Cur Attempt: ", curAttempt)
         setViewDetails(true)
     }
 
     const onFinish = values => {
         values.testName = curAttempt.testName
+        values["userObj"] = userStore.User.userObj
         values["testObj"] = curAttempt.testObj
         values["attemptObj"] = curAttempt.attemptObj
-        //console.log("CUrAttempt: ", curAttempt)
         userStore.setCurEditAttempt(values)
         fetchEditAttempt()
         console.log('Received values of form:', values);
@@ -46,7 +45,6 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
 
     if (curAttempts) {
         listAttempts = curAttempts.map((attempt, ind) => {
-            console.log("Checked: ", attempt.checked)
             return (
                 <div  
                     key={ind} 

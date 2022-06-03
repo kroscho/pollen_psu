@@ -587,6 +587,21 @@ def api_edit_attempt():
     print(response)
     return response
 
+@app.get('/api/get_terms_by_user')
+def api_get_terms_by_user():
+    ont = TestingService()
+    _userObj = request.args.get('_userObj', '')
+    print("userObj: ", _userObj)
+    data = ont.getTermsByUser(_userObj)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
 app.env = 'development'
 
 app.run(port=5000, host='0.0.0.0', debug=True)

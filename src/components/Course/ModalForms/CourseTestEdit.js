@@ -141,7 +141,7 @@ const TestEdit = ({isVisible, setIsVisible}) => {
     }
 
     const spinner = isDataLoading ? <Loader/> : null;
-    const content = !(isDataLoading || testError) ? <View/> : null;
+    const content = !(isDataLoading || isUpdateLoading || testError || updateError) ? <View/> : null;
 
     return (
         <>

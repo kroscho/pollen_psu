@@ -169,3 +169,41 @@ def getTestsOfModule(moduleObj):
             "?testObj tst:has_group_of_task ?groupTasks. " \
             "}" % (moduleObj)
     return query
+
+# запрос на получение терминов у области
+def getTermsOfField(fieldObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?term ?prevTerm ?moveToPrev " \
+            "WHERE { " \
+            "?term tst:isTermOf tst:%s. " \
+            "?term tst:hasPrevTerm ?prevTerm. " \
+            "?term tst:moveToPrev ?moveToPrev. " \
+            "}" % (fieldObj)
+    return query
+
+# запрос на получение термина у задания
+def getTermByTask(taskObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?term " \
+            "WHERE { " \
+            "tst:%s tst:hasTerm ?term. " \
+            "}" % (taskObj)
+    return query
+
+# запрос на получение терминов, которые студент знает
+def getKnownTermsByUser(userObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?term " \
+            "WHERE { " \
+            "tst:%s tst:knownTerm ?term. " \
+            "}" % (userObj)
+    return query
+
+# запрос на получение терминов, которые студент знает
+def getUnknownTermsByUser(userObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?term " \
+            "WHERE { " \
+            "tst:%s tst:unknownTerm ?term. " \
+            "}" % (userObj)
+    return query

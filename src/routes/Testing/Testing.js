@@ -8,7 +8,7 @@ import Courses from '../../components/Courses/Courses';
 import { UserOutlined } from '@ant-design/icons';
 import history from '../../services/history';
 import { Context } from '../..';
-import { COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE } from '../../utils/consts';
+import { COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TERMS_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE } from '../../utils/consts';
 import { isMenuCourses } from '../../components/utils/testing';
 import CourseInfo from '../../components/Course/CourseInfo/CourseInfo';
 import CourseTests from '../../components/Course/CourseTests/CourseTests';
@@ -20,6 +20,7 @@ import CourseLections from '../../components/Course/CourseLections/CourseLection
 import CourseLecture from '../../components/Course/CourseLecture/CourseLecture';
 import AttemptsDetails from '../../components/Course/AttemptsDetails/AttemptsDetails';
 import CheckWorks from '../../components/Course/CheckWorsk/CheckWorks';
+import TermsPage from '../../components/Course/Terms/Terms';
 
 const { Header, Content, Sider } = Layout;
 
@@ -129,6 +130,9 @@ const Testing = () => {
                                 </Route>
                                 <Route exact path={TESTS_TEST_CHECK_WORKS_ROUTE}>
                                     <CheckWorks/>
+                                </Route>
+                                <Route exact path={COURSE_TERMS_ROUTE}>
+                                    <TermsPage/>
                                 </Route>
                                 <Route exact path={TESTING_ROUTE}>
                                     <Courses/>

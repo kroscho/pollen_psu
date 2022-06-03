@@ -16,6 +16,5 @@ export function deepEqual(obj1, obj2){
 
 export const getWordAnswer = (index) => {
     const listWords = ["a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "i)", "j)", "k)", "l)"]
-    console.log(listWords[index])
     return listWords[index]
 }

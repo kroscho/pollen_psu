@@ -17,7 +17,7 @@ import Archive from "./routes/Archive/Archive";
 import Allergens from "./routes/Allergens/Allergens";
 import Profile from "./routes/Profile/Profile"
 import Testing from "./routes/Testing/Testing";
-import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE, VIEW_ROUTE } from "./utils/consts";
+import { ADD_ROUTE, ALLERGENS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LECTURE_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TERMS_ROUTE, COURSE_TESTS_ROUTE, COURSE_TESTS_TEST_EDIT_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE, VIEW_ROUTE } from "./utils/consts";
 import { Context } from ".";
 import TestingApi from "./API/TestingApi";
 import { useFetching } from "./components/hooks/useFetching";
@@ -303,7 +303,14 @@ const App = () => {
               user={user}
               loading={loading}
               component={Testing}
-            />      
+            />   
+            <ProtectedRoute
+              exact
+              path={COURSE_TERMS_ROUTE}
+              user={user}
+              loading={loading}
+              component={Testing}
+            />       
 
             <Route path="/" exact component={MainPage} />
           </Switch>

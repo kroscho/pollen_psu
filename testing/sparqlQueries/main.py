@@ -12,7 +12,7 @@ print(path_dir)
 
 from testing.sparqlQueries.config import config
 import testing.sparqlQueries.queries as queries
-from testing.sparqlQueries.utils import checkAnswer, checkCorrectAnswer, getTypeTaskValue
+from testing.sparqlQueries.utils import checkAnswer, checkCorrectAnswer, getTermFromText, getTokensFromTexts, getTypeTaskValue
 
 # тип ответа на вопрос
 class typeTask(Enum):
@@ -55,6 +55,8 @@ class TestingService:
                 pass
             class Ответ(Задание):
                 pass
+            class Термин(Thing):
+                pass
 
         newTest = Тест()
         newGroupOfTasks = Группа_заданий()
@@ -62,6 +64,7 @@ class TestingService:
 
         newTest.testName = test['testName']
         listTasks = test['tasks']
+        term = {}
 
         for task in listTasks:
             newTask = Задание()
@@ -70,6 +73,7 @@ class TestingService:
             if tTask == typeTask.Text.value:
                 newQuestion = Текстовый()
                 newQuestion.textQuestion = task['question']
+                term = self.getTermByTask(task)
             else:
                 if tTask == typeTask.Single.value:
                     newQuestion = Единственный()
@@ -79,6 +83,7 @@ class TestingService:
                     newQuestion = Логический()
 
                 newQuestion.textQuestion = task['question']
+                term = self.getTermByTask(task)
                 if "answers" in task:
                     listAnswers = task['answers']
                     for answ in listAnswers:
@@ -93,6 +98,9 @@ class TestingService:
                         newTask.task_has_answer.append(newAnswer)
             newTask.task_has_question = newQuestion
             newTask.is_task_of.append(newGroupOfTasks)
+            if term:
+                termObj = Термин(term["term"])
+                newTask.hasTerm = termObj
         
         newTest.has_group_of_task.append(newGroupOfTasks)
         newGroupOfTasks.is_group_of_task.append(newTest)
@@ -154,31 +162,26 @@ class TestingService:
         with self.onto:
             class Тест(Thing):
                 pass
-
             class Группа_заданий(Thing):
                 pass
-
             class Задание(Thing):
                 pass
-                
             class Вопрос(Задание):
                 pass
-
             class Единственный(Вопрос):
                 pass
-
             class Множественный(Вопрос):
                 pass
-
             class Текстовый(Вопрос):
                 pass
-
             class Логический(Вопрос):
                 pass
-
             class Ответ(Задание):
                 pass
+            class Термин(Thing):
+                pass
         
+        term = {}
         query = queries.getTestsNames()
         resultsTests = self.graph.query(query)
         for itemTest in resultsTests:
@@ -205,6 +208,7 @@ class TestingService:
                 if tTask == typeTask.Text.value:
                     newQuestion = Текстовый()
                     newQuestion.textQuestion = task['question']
+                    term = self.getTermByTask(task)
                 else:
                     if tTask == typeTask.Single.value:
                         newQuestion = Единственный()
@@ -214,6 +218,7 @@ class TestingService:
                         newQuestion = Логический()
 
                     newQuestion.textQuestion = task['question']
+                    term = self.getTermByTask(task)
                     if "answers" in task:
                         listAnswers = task['answers']
                         for answ in listAnswers:
@@ -228,6 +233,9 @@ class TestingService:
                             newTask.task_has_answer.append(newAnswer)
                 newTask.task_has_question = newQuestion
                 newTask.is_task_of.append(groupTaskObj)
+                if term:
+                    termObj = Термин(term["term"])
+                    newTask.hasTerm = termObj
 
         print("Тест изменен!")
         self.onto.save(self.path)
@@ -454,22 +462,13 @@ class TestingService:
                 pass 
             class Пользователь(Thing):
                 pass
-            class Вопрос(Задание):
-                pass
-            class Единственный(Вопрос):
-                pass
-            class Множественный(Вопрос):
-                pass
-            class Текстовый(Вопрос):
-                pass
-            class Логический(Вопрос):
-                pass
-            class Ответ(Задание):
-                pass
             class Попытка_прохождения_теста(Thing):
                 pass
             class Элемент_теста(Thing):
                 pass
+            class Термин(Thing):
+                pass
+
         trueAnswers = test['tasks']
 
         testObj = test["testObj"]
@@ -483,15 +482,29 @@ class TestingService:
         newAttempt.is_attempt_to_pass_test_of.append(user)
         newAttempt.relates_to_test.append(test)
         sum = 0
+        termsScores = {}
         for i in range(len(tasks)):
+            term = ""
             newTestElement = Элемент_теста()
             newAttempt.has_test_element.append(newTestElement)
             newTestElement.is_test_element_of.append(newAttempt)
-            task = Задание(tasks[i]["taskObj"])
+            taskObj = tasks[i]["taskObj"]
+            task = Задание(taskObj)
+            query = queries.getTermByTask(taskObj)
+            resultTerm = self.graph.query(query)
+            for itemTerm in resultTerm:
+                termObj = str(itemTerm['term'].toPython())
+                termObj = re.sub(r'.*#',"", termObj)
+                if termObj != "":
+                    if termObj not in termsScores:
+                        termsScores[termObj] = {"sum": 0, "sumScore": 0}
+                    else:
+                        termsScores[termObj]["sum"] += 1
             newTestElement.has_task.append(task)
-            if userAnswers[i]["type"] != "1":
+            if userAnswers[i]["type"] != typeTask.Text.value:
                 result = checkAnswer(trueAnswers[i], userAnswers[i])
-                print("RESULT SUM: ", result["sum"])
+                if termObj != "":
+                    termsScores[termObj]["sumScore"] += sum
                 sum += result["sum"]
                 for j in range(len(result["answerObj"])):
                     #answ = Ответ(result["answerObj"][j])
@@ -513,6 +526,16 @@ class TestingService:
                 newAnsw.rightAnswer = False
                 newAnsw.textAnswer = userAnswers[i]["answer"]
                 newTestElement.has_answer.append(newAnsw)
+        
+        for termObj, term in termsScores.items():
+            print("TermObj: ", termObj)
+            termItem = Термин(termObj)
+            if term["sum"] != 0:
+                if term["sumScore"] / term["sum"] > 0.6:
+                    user.knownTerm.append(termItem)
+                else:
+                    user.unknownTerm.append(termItem)
+        
         succesfullAttempt = False
         if sum / len(tasks) > 0.3:
             succesfullAttempt = True
@@ -845,27 +868,226 @@ class TestingService:
                 pass
             class ОтветыСтудента(Thing):
                 pass
+            class Пользователь(Thing):
+                pass
+            class Термин(Thing):
+                pass
         
         attemptObj = attemptItem["attemptObj"]
+        userObj = attemptItem["userObj"]
+        user = Пользователь(userObj)
         attempt = Попытка_прохождения_теста(attemptObj)
 
         attempt.checked = True
-
-        for task in attemptItem["tasks"]:
-            if task["type"] == "1":
-                for answer in task["answers"]:
+        
+        termsScores = {}
+        for taskItem in attemptItem["tasks"]:
+            taskObj = taskItem["taskObj"]
+            query = queries.getTermByTask(taskObj)
+            resultTerm = self.graph.query(query)
+            termObj = ""
+            for itemTerm in resultTerm:
+                termObj = str(itemTerm['term'].toPython())
+                termObj = re.sub(r'.*#',"", termObj)
+                if termObj != "":
+                    if termObj not in termsScores:
+                        termsScores[termObj] = {"sum": 1, "sumScore": 0}
+                    else:
+                        termsScores[termObj]["sum"] += 1
+            if taskItem["type"] == typeTask.Text.value:
+                for answer in taskItem["answers"]:
                     answerObj = ОтветыСтудента(answer["answerObj"])
                     prevAnswerScore = answerObj.score
                     print("prevAnswerScore: ", prevAnswerScore)
                     answerObj.score = answer["score"]
                     if prevAnswerScore != answer["score"]:
-                        attempt.sumScore -= prevAnswerScore
+                        attempt.sumScore -= float(prevAnswerScore)
                         attempt.sumScore += float(answer["score"])
-                        attempt.percentCompleteOfTest = attempt.sumScore / attempt.maxScore  
+                        attempt.percentCompleteOfTest = attempt.sumScore / attempt.maxScore
+                    if termObj != "":
+                        termsScores[termObj]["sumScore"] += float(answer["score"])
+            elif taskItem["type"] != typeTask.Multiple.value:
+                for answer in taskItem["answers"]:
+                    if answer["correctByUser"] == True:
+                        if termObj != "":
+                            termsScores[termObj]["sumScore"] += float(answer["score"])
+                        break
+            elif taskItem["type"] == typeTask.Multiple.value:
+                sum = 0
+                maxSum = 0
+                for answer in taskItem["answers"]:
+                    if answer["correctByUser"] == True:
+                        maxSum += 1
+                        sum += 1
+                    elif answer["correctByUser"] == False:
+                        maxSum += 1
+                if termObj != "":
+                    termsScores[termObj]["sumScore"] += (sum / maxSum)
+
+        print("TERMSCORES: ", termsScores)
+        for termObj, term in termsScores.items():
+            print("TermObj: ", termObj)
+            termItem = Термин(termObj)
+            if term["sum"] != 0:
+                if term["sumScore"] / term["sum"] > 0.6:
+                    try:
+                        user.unknownTerm.remove(termItem)
+                    except Exception:
+                        print('Нельзя удалить несуществующее')
+                    user.knownTerm.append(termItem)
+                else:
+                    try:
+                        user.knownTerm.remove(termItem)
+                    except Exception:
+                        print('Нельзя удалить несуществующее')
+                    user.unknownTerm.append(termItem)
         
         print("Попытка изменена!")
         self.onto.save(self.path)
 
+    def getTermsOfField(self, fieldObj):
+        query = queries.getTermsOfField(fieldObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+        for itemTerm in resultTerms:
+            term = str(itemTerm['term'].toPython())
+            term = re.sub(r'.*#',"", term)
+            prevTerm = str(itemTerm['prevTerm'].toPython())
+            prevTerm = re.sub(r'.*#',"", prevTerm)
+            moveToPrev = str(itemTerm['moveToPrev'].toPython())
+            moveToPrev = re.sub(r'.*#',"", moveToPrev)
+            item = {"term": term, "prevTerm": prevTerm, "moveToPrev": moveToPrev}
+            listTerms.append(item)
+        
+        #print(listTerms)
+        return listTerms
+
+    def getTermByTask(self, task):
+        tokens = getTokensFromTexts([task["question"]])
+        terms = self.getTermsOfField("палинология")
+        print(tokens)
+        term = getTermFromText(tokens[0], terms)
+        print(term)
+        return term
+
+    def getKnownTermsByUser(self, userObj):
+        query = queries.getKnownTermsByUser(userObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+        for itemTerm in resultTerms:
+            term = str(itemTerm['term'].toPython())
+            term = re.sub(r'.*#',"", term)
+            listTerms.append(term)
+        
+        return listTerms
+
+    def getUnknownTermsByUser(self, userObj):
+        query = queries.getUnknownTermsByUser(userObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+        for itemTerm in resultTerms:
+            term = str(itemTerm['term'].toPython())
+            term = re.sub(r'.*#',"", term)
+            listTerms.append(term)
+        
+        return listTerms
+
+    def getTermsByUser(self, userObj):
+        knownTerms = self.getKnownTermsByUser(userObj)
+        unknownTerms = self.getUnknownTermsByUser(userObj)
+        item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms}
+        return item
+
+    def createTerms(self):
+        with self.onto:
+            class Предметная_область(Thing):
+                pass
+            class Область(Предметная_область):
+                pass
+            class Термин(Предметная_область):
+                pass
+
+        listTerms = [
+            {"область": "палинология", "term": "палинология", "prevTerm": "", "moveToPrev": False},
+            {"область": "палинология", "term": "морфологические_характеристики", "prevTerm": "", "moveToPrev": False},
+            {"область": "палинология", "term": "апертура", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "простая апертура", "prevTerm": "апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "сложная апертура", "prevTerm": "апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "борозды", "prevTerm": "простая апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "лептомы", "prevTerm": "простая апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "поры", "prevTerm": "простая апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "руги", "prevTerm": "простая апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "щели", "prevTerm": "простая апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "бороздо-оровые", "prevTerm": "сложная апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "бороздо-поровые", "prevTerm": "сложная апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "порово-оровые", "prevTerm": "сложная апертура", "moveToPrev": True},
+            {"область": "палинология", "term": "оболочка_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "интина", "prevTerm": "оболочка_пыльцевого_зерна", "moveToPrev": True},
+            #{"область": "палинология", "term": "экзина", "prevTerm": "оболочка_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "экзинтина", "prevTerm": "интина", "moveToPrev": True},
+            {"область": "палинология", "term": "эуинтина", "prevTerm": "интина", "moveToPrev": True},
+            #{"область": "палинология", "term": "мэкзина", "prevTerm": "экзина", "moveToPrev": True},
+            #{"область": "палинология", "term": "эктэкзина", "prevTerm": "экзина", "moveToPrev": True},
+            #{"область": "палинология", "term": "эндэкзина", "prevTerm": "экзина", "moveToPrev": True},
+            {"область": "палинология", "term": "скульптура_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "поверхность_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "бугорчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "гладкая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "зернистая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "морщинистая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "сетчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "столбчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "струйчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "шероховатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "шиповватая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "ямчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "полярность_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "неполярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "равнополярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "разнополярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "проекция_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "полярная", "prevTerm": "проекция_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "экваториальная", "prevTerm": "проекция_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "размер_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "мелкие", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "очень мелкие", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "средние", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "крупные", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "очень крупные", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "гигантские", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "форма_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "выпукло-вогнутая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "лопастая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "округлая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "округло-угловатая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "плосковыпуклая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "прямоугольная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "ромбическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "сжато-прямоугольная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "сжато-эллиптическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "сфероидальная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "угловатая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "эллиптическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "клетки_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "вегетативные", "prevTerm": "клетки_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "генеративные", "prevTerm": "клетки_пыльцевого_зерна", "moveToPrev": True},
+            {"область": "палинология", "term": "ядро", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
+            {"область": "палинология", "term": "ядро вегетативной клетки", "prevTerm": "ядро", "moveToPrev": True},
+            {"область": "палинология", "term": "ядро генеративной клетки", "prevTerm": "ядро", "moveToPrev": True},
+        ]
+
+        for item in listTerms:
+            field = Область(item["область"])
+            print(item["term"].replace(" ", "_"))
+            newTerm = Термин(item["term"].replace(" ", "_"))
+            
+            newTerm.isTermOf = field
+            newTerm.moveToPrev = item["moveToPrev"]
+            if item["prevTerm"] != "":
+                prevTerm = Термин(item["prevTerm"].replace(" ", "_"))
+                newTerm.hasPrevTerm = prevTerm
+
+        self.onto.save(self.path) 
 
 def main():
     ont = TestingService()
@@ -874,7 +1096,10 @@ def main():
     #ont.updateTest({})
     #ont.deleteAnswer("ss")
     #ont.getAttempts("Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1", "Test_10")
-    ont.getUser("OUXFGSzNAlOYes3UEbvo33kcGuE3")
+    #ont.getUser("OUXFGSzNAlOYes3UEbvo33kcGuE3")
+    #ont.createTerms()
+    #term = ont.getTermByTask({"question": "6.	Что такое лептома?"})
+
 
 if __name__ == "__main__":
     main()

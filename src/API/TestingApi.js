@@ -177,4 +177,12 @@ export default class TestingApi {
         return response.data
     }
 
+    static async getTermsByUSer(userObj) {
+        const response = await axios.get('http://localhost:5000/api/get_terms_by_user', {
+            params: {
+                _userObj: userObj,
+            }
+        })
+        return response.data
+    }
 }

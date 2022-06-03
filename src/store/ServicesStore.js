@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE } from '../utils/consts';
+import { ADD_ROUTE, ALLERGENS_ROUTE, COURSE_TESTS_TEST_ROUTE, COURSE_TESTS_TEST_VARIANTS_ROUTE, ARCHIVE_ROUTE, COURSE_INFO_ROUTE, COURSE_LECTIONS_ROUTE, COURSE_LITERATURE_ROUTE, COURSE_TESTS_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, SEARCH_ROUTE, TESTING_ALL_COURSES_ROUTE, TESTING_COURSES_ROUTE, TESTING_ROUTE, VIEW_ROUTE, COURSE_LECTURE_ROUTE, TESTS_TEST_ATTEMPT_ROUTE, TESTS_TEST_ATTEMPTS_DETAILS_ROUTE, TESTS_TEST_CHECK_WORKS_ROUTE, COURSE_TERMS_ROUTE } from '../utils/consts';
 
 export default class UserStore {
     constructor() {
@@ -27,8 +27,9 @@ export default class UserStore {
             { id: "2", name: 'Лекции', link: COURSE_LECTIONS_ROUTE },
             { id: "3", name: 'Тесты', link: COURSE_TESTS_ROUTE },
             { id: "4", name: 'Литература', link: COURSE_LITERATURE_ROUTE },
-            { id: "5", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
-            { id: "6", name: 'Все курсы', link: TESTING_ALL_COURSES_ROUTE },
+            { id: "5", name: 'Термины', link: COURSE_TERMS_ROUTE },
+            { id: "6", name: 'Мои курсы', link: TESTING_COURSES_ROUTE },
+            { id: "7", name: 'Все курсы', link: TESTING_ALL_COURSES_ROUTE },
         ]
 
         this._menuApp = [
@@ -62,6 +63,10 @@ export default class UserStore {
             "/course/tests": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
                 {path: COURSE_TESTS_ROUTE, title: "Тесты", active: true},
+            ],
+            "/course/terms": [
+                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
+                {path: COURSE_TERMS_ROUTE, title: "Термины", active: true},
             ],
             "/course/literature": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 

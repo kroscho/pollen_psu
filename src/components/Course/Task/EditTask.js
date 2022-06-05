@@ -30,6 +30,10 @@ const EditTask = ({field, form, tasks}) => {
                             name={[fld.name, 'answer']}
                             label={getWordAnswer(index)} 
                             rules={[{ required: true, message: 'Не заполнен ответ' }]}
+                            shouldUpdate={(prevValues, curValues) =>
+                                prevValues.answer !== curValues.answer
+                            }
+                            
                             >
                             <Input style={{borderRadius: '10px'}} />
                             </Form.Item>

@@ -13,6 +13,7 @@ print(path_dir)
 from testing.sparqlQueries.config import config
 import testing.sparqlQueries.queries as queries
 from testing.sparqlQueries.utils import checkAnswer, checkCorrectAnswer, getTermFromText, getTokensFromTexts, getTypeTaskValue
+from testing.sparqlQueries.autoGeneration import AutoGeneration, typeTemplate
 
 # тип ответа на вопрос
 class typeTask(Enum):
@@ -128,11 +129,15 @@ class TestingService:
                 pass
             class Модуль(Thing):
                 pass
+            class Область(Thing):
+                pass
 
         course = Курс(courseObj)
+        subArea = Область(module["subjectArea"])
         newModule = Модуль()
 
         newModule.nameModule = module['nameModule']
+        newModule.has_subject_area = subArea
         course.has_module.append(newModule)
         newModule.is_module_of.append(course)
         
@@ -815,8 +820,10 @@ class TestingService:
             moduleObj = re.sub(r'.*#',"", moduleObj)
             nameModule = str(itemModule['nameModule'].toPython())
             nameModule = re.sub(r'.*#',"", nameModule)
+            subArea = str(itemModule['subArea'].toPython())
+            subArea = re.sub(r'.*#',"", subArea)
             listTests = self.getTestsOfModule(moduleObj)
-            item = {"moduleObj": moduleObj, "nameModule": nameModule, "tests": listTests}
+            item = {"moduleObj": moduleObj, "nameModule": nameModule, "subjectArea": subArea, "tests": listTests}
             listModules.append(item)
         
         print(listModules)
@@ -860,6 +867,26 @@ class TestingService:
         user.role = userItem["role"]
         
         print("Роль изменена!")
+        self.onto.save(self.path)
+
+    def editModule(self, moduleItem):
+        with self.onto:
+            class Модуль(Thing):
+                pass
+            class Область(Thing):
+                pass
+        
+        moduleObj = moduleItem["moduleObj"]
+        moduleName = moduleItem["nameModule"]
+        subjArea = moduleItem["subjectArea"]
+
+        subjectArea = Область(subjArea)
+        module = Модуль(moduleObj)
+
+        module.has_subject_area = subjectArea
+        module.nameModule = moduleName
+        
+        print("Профиль изменен!")
         self.onto.save(self.path)
 
     def editAttempt(self, attemptItem):
@@ -962,6 +989,23 @@ class TestingService:
         #print(listTerms)
         return listTerms
 
+    def getTermsNormilizeOfField(self, fieldObj):
+        query = queries.getTermsOfField(fieldObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+        listTermsNormalize = []
+        for itemTerm in resultTerms:
+            term = str(itemTerm['term'].toPython())
+            term = re.sub(r'.*#',"", term)
+            termNormalize = str(itemTerm['termNormalize'].toPython())
+            termNormalize = re.sub(r'.*#',"", termNormalize)
+            #item = {"term": term, "termNormalize": termNormalize}
+            listTerms.append(term)
+            listTermsNormalize.append(termNormalize)
+        
+        #print(listTerms)
+        return listTerms, listTermsNormalize
+
     def getTermByTask(self, task):
         tokens = getTokensFromTexts([task["question"]])
         terms = self.getTermsOfField("палинология")
@@ -975,9 +1019,14 @@ class TestingService:
         resultTerms = self.graph.query(query)
         listTerms = []
         for itemTerm in resultTerms:
-            term = str(itemTerm['term'].toPython())
-            term = re.sub(r'.*#',"", term)
-            listTerms.append(term)
+            termObj = str(itemTerm['term'].toPython())
+            termObj = re.sub(r'.*#',"", termObj)
+            subjectArea = str(itemTerm['subjectArea'].toPython())
+            subjectArea = re.sub(r'.*#',"", subjectArea)
+            term = termObj.replace("_", " ")
+            termStr = term[0].upper() + term[1:]
+            item = {"termObj": termObj, "term": termStr, "subjectArea": subjectArea}
+            listTerms.append(item)
         
         return listTerms
 
@@ -986,9 +1035,14 @@ class TestingService:
         resultTerms = self.graph.query(query)
         listTerms = []
         for itemTerm in resultTerms:
-            term = str(itemTerm['term'].toPython())
-            term = re.sub(r'.*#',"", term)
-            listTerms.append(term)
+            termObj = str(itemTerm['term'].toPython())
+            termObj = re.sub(r'.*#',"", termObj)
+            subjectArea = str(itemTerm['subjectArea'].toPython())
+            subjectArea = re.sub(r'.*#',"", subjectArea)
+            term = termObj.replace("_", " ")
+            termStr = term[0].upper() + term[1:]
+            item = {"termObj": termObj, "term": termStr, "subjectArea": subjectArea}
+            listTerms.append(item)
         
         return listTerms
 
@@ -997,6 +1051,23 @@ class TestingService:
         unknownTerms = self.getUnknownTermsByUser(userObj)
         item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms}
         return item
+
+    def getSubjectAreas(self):
+        query = queries.getSubjectAreas()
+        resultAreas = self.graph.query(query)
+        listAreas = []
+        for itemArea in resultAreas:
+            subjAreaObj = str(itemArea['subArea'].toPython())
+            subjAreaObj = re.sub(r'.*#',"", subjAreaObj)
+
+            subjAreaStr = subjAreaObj.replace("_", " ")
+            subjAreaStr = subjAreaStr[0].upper() + subjAreaStr[1:]
+
+            item = {"subjectAreaObj": subjAreaObj, "subjectArea": subjAreaStr}
+            listAreas.append(item)
+        
+        #print(listTerms)
+        return listAreas
 
     def createTerms(self):
         with self.onto:
@@ -1008,72 +1079,742 @@ class TestingService:
                 pass
 
         listTerms = [
-            {"область": "палинология", "term": "палинология", "prevTerm": "", "moveToPrev": False},
-            {"область": "палинология", "term": "морфологические_характеристики", "prevTerm": "", "moveToPrev": False},
-            {"область": "палинология", "term": "апертура", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "простая апертура", "prevTerm": "апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "сложная апертура", "prevTerm": "апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "борозды", "prevTerm": "простая апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "лептомы", "prevTerm": "простая апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "поры", "prevTerm": "простая апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "руги", "prevTerm": "простая апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "щели", "prevTerm": "простая апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "бороздо-оровые", "prevTerm": "сложная апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "бороздо-поровые", "prevTerm": "сложная апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "порово-оровые", "prevTerm": "сложная апертура", "moveToPrev": True},
-            {"область": "палинология", "term": "оболочка_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "интина", "prevTerm": "оболочка_пыльцевого_зерна", "moveToPrev": True},
+            {
+                "область": "палинология", 
+                "term": "палинология",
+                "termNormalize": getTokensFromTexts(["палинология"])[0],
+                "prevTerm": "", 
+                "moveToPrev": False,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": [],
+            },
+            {
+                "область": "палинология", 
+                "term": "морфологические_характеристики", 
+                "termNormalize": getTokensFromTexts(["морфологические_характеристики"])[0],
+                "prevTerm": "", 
+                "moveToPrev": False,
+                "divided_in_groups": ["высшие", "низшие"],
+                "contains": [],
+                "relates_to_the_group": [],    
+            },
+            {
+                "область": "палинология", 
+                "term": "характеристики", 
+                "termNormalize": getTokensFromTexts(["характеристики"])[0],
+                "prevTerm": "", 
+                "moveToPrev": False,
+                "divided_in_groups": ["высшие", "низшие"],
+                "contains": [],
+                "relates_to_the_group": [],    
+            },
+            {
+                "область": "палинология", 
+                "term": "апертура", 
+                "termNormalize": getTokensFromTexts(["апертура"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["простая", "сложная"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические характеристики"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "простая_апертура",
+                "termNormalize": getTokensFromTexts(["простая_апертура"])[0], 
+                "prevTerm": "апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": ["борозды", "лептомы", "поры", "руги", "щели"],
+                "relates_to_the_group": ["апертура"],
+            },
+            {
+                "область": "палинология", 
+                "term": "простая",
+                "termNormalize": getTokensFromTexts(["простая"])[0], 
+                "prevTerm": "апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": ["борозды", "лептомы", "поры", "руги", "щели"],
+                "relates_to_the_group": ["апертура"],
+            },
+            {
+                "область": "палинология", 
+                "term": "сложная_апертура", 
+                "termNormalize": getTokensFromTexts(["сложная_апертура"])[0],
+                "prevTerm": "апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": ["бороздо-оровые", "бороздо-поровые", "порово-оровые"],
+                "relates_to_the_group": ["апертура"],
+            },
+            {
+                "область": "палинология", 
+                "term": "сложная", 
+                "termNormalize": getTokensFromTexts(["сложная"])[0],
+                "prevTerm": "апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": ["бороздо-оровые", "бороздо-поровые", "порово-оровые"],
+                "relates_to_the_group": ["апертура"],
+            },
+            {
+                "область": "палинология", 
+                "term": "борозды", 
+                "termNormalize": getTokensFromTexts(["борозды"])[0],
+                "prevTerm": "простая апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["простая апертура", "апертура"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "лептомы", 
+                "termNormalize": getTokensFromTexts(["лептомы"])[0],
+                "prevTerm": "простая апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["простая апертура", "апертура"],  
+            },
+            {
+                "область": "палинология", 
+                "term": "поры", 
+                "termNormalize": getTokensFromTexts(["поры"])[0],
+                "prevTerm": "простая апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["простая апертура", "апертура"],     
+            },
+            {
+                "область": "палинология", 
+                "term": "руги", 
+                "termNormalize": getTokensFromTexts(["руги"])[0],
+                "prevTerm": "простая апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["простая апертура", "апертура"],     
+            },
+            {
+                "область": "палинология", 
+                "term": "щели", 
+                "termNormalize": getTokensFromTexts(["щели"])[0],
+                "prevTerm": "простая апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["простая апертура", "апертура"],     
+            },
+            {
+                "область": "палинология", 
+                "term": "бороздо-оровые", 
+                "termNormalize": getTokensFromTexts(["бороздо-оровые"])[0],
+                "prevTerm": "сложная апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["сложная апертура", "апертура"],     
+            },
+            {
+                "область": "палинология", 
+                "term": "бороздо-поровые", 
+                "termNormalize": getTokensFromTexts(["бороздо-поровые"])[0],
+                "prevTerm": "сложная апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["сложная апертура", "апертура"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "порово-оровые", 
+                "termNormalize": getTokensFromTexts(["порово-оровые"])[0],
+                "prevTerm": "сложная апертура", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["сложная апертура", "апертура"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "оболочка_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["оболочка_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["интина", "экзина"],
+                "contains": [],
+                "relates_to_the_group": ["оболочка пыльцевого зерна"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "оболочка", 
+                "termNormalize": getTokensFromTexts(["оболочка"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["интина", "экзина"],
+                "contains": [],
+                "relates_to_the_group": ["оболочка пыльцевого зерна"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "интина", 
+                "termNormalize": getTokensFromTexts(["интина"])[0],
+                "prevTerm": "оболочка_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": ["экзинтина", "эуинтина"],
+                "contains": ["экзинтина", "эуинтина"],
+                "relates_to_the_group": ["интина"], 
+            },
             #{"область": "палинология", "term": "экзина", "prevTerm": "оболочка_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "экзинтина", "prevTerm": "интина", "moveToPrev": True},
-            {"область": "палинология", "term": "эуинтина", "prevTerm": "интина", "moveToPrev": True},
+            {
+                "область": "палинология", 
+                "term": "экзинтина", 
+                "termNormalize": getTokensFromTexts(["экзинтина"])[0],
+                "prevTerm": "интина", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["интина"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "эуинтина", 
+                "termNormalize": getTokensFromTexts(["эуинтина"])[0],
+                "prevTerm": "интина", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["интина"],    
+            },
             #{"область": "палинология", "term": "мэкзина", "prevTerm": "экзина", "moveToPrev": True},
             #{"область": "палинология", "term": "эктэкзина", "prevTerm": "экзина", "moveToPrev": True},
             #{"область": "палинология", "term": "эндэкзина", "prevTerm": "экзина", "moveToPrev": True},
-            {"область": "палинология", "term": "скульптура_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "поверхность_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "бугорчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "гладкая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "зернистая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "морщинистая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "сетчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "столбчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "струйчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "шероховатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "шиповватая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "ямчатая", "prevTerm": "cкульптура_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "полярность_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "неполярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "равнополярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "разнополярное", "prevTerm": "полярность_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "проекция_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "полярная", "prevTerm": "проекция_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "экваториальная", "prevTerm": "проекция_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "размер_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "мелкие", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "очень мелкие", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "средние", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "крупные", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "очень крупные", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "гигантские", "prevTerm": "размер_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "форма_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "выпукло-вогнутая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "лопастая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "округлая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "округло-угловатая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "плосковыпуклая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "прямоугольная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "ромбическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "сжато-прямоугольная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "сжато-эллиптическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "сфероидальная", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "угловатая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "эллиптическая", "prevTerm": "форма_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "клетки_пыльцевого_зерна", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "вегетативные", "prevTerm": "клетки_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "генеративные", "prevTerm": "клетки_пыльцевого_зерна", "moveToPrev": True},
-            {"область": "палинология", "term": "ядро", "prevTerm": "морфологические_характеристики", "moveToPrev": False},
-            {"область": "палинология", "term": "ядро вегетативной клетки", "prevTerm": "ядро", "moveToPrev": True},
-            {"область": "палинология", "term": "ядро генеративной клетки", "prevTerm": "ядро", "moveToPrev": True},
+            {
+                "область": "палинология", 
+                "term": "скульптура_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["скульптура_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": [],
+                "contains": ["бугорчатая", "гладкая", "зернистая", "морщинистая", "сетчатая", "столбчатая", "струйчатая", "шероховатая", "шиповватая", "ямчатая" ],
+                "relates_to_the_group": ["морфологические признаки"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "скульптура", 
+                "termNormalize": getTokensFromTexts(["скульптура"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": [],
+                "contains": ["бугорчатая", "гладкая", "зернистая", "морщинистая", "сетчатая", "столбчатая", "струйчатая", "шероховатая", "шиповватая", "ямчатая" ],
+                "relates_to_the_group": ["морфологические признаки"],    
+            },
+            {
+                "область": "палинология", 
+                "term": "поверхность_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["поверхность_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": [],
+                "contains": ["бугорчатая", "гладкая", "зернистая", "морщинистая", "сетчатая", "столбчатая", "струйчатая", "шероховатая", "шиповватая", "ямчатая" ],
+                "relates_to_the_group": ["морфологические признаки"],  
+            },
+            {
+                "область": "палинология", 
+                "term": "поверхность", 
+                "termNormalize": getTokensFromTexts(["поверхность"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": [],
+                "contains": ["бугорчатая", "гладкая", "зернистая", "морщинистая", "сетчатая", "столбчатая", "струйчатая", "шероховатая", "шиповватая", "ямчатая" ],
+                "relates_to_the_group": ["морфологические признаки"],  
+            },
+            {
+                "область": "палинология", 
+                "term": "бугорчатая", 
+                "termNormalize": getTokensFromTexts(["бугорчатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "гладкая", 
+                "termNormalize": getTokensFromTexts(["гладкая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            }
+            ,
+            {
+          
+                "область": "палинология", 
+                "term": "зернистая", 
+                "termNormalize": getTokensFromTexts(["зернистая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "морщинистая", 
+                "termNormalize": getTokensFromTexts(["морщинистая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "сетчатая", 
+                "termNormalize": getTokensFromTexts(["сетчатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "столбчатая", 
+                "termNormalize": getTokensFromTexts(["столбчатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "струйчатая", 
+                "termNormalize": getTokensFromTexts(["струйчатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "шероховатая", 
+                "termNormalize": getTokensFromTexts(["шероховатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "шиповатая", 
+                "termNormalize": getTokensFromTexts(["шиповатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "ямчатая", 
+                "termNormalize": getTokensFromTexts(["ямчатая"])[0],
+                "prevTerm": "cкульптура_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["поверхность_пыльцевого_зерна", "скульптура_пыльцевого_зерна"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "полярность_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["полярность_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["неполярное", "равнополярное", "разнополярное"],
+                "contains": ["неполярное", "равнополярное", "разнополярное"],
+                "relates_to_the_group": ["морфологические характеристики"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "полярность", 
+                "termNormalize": getTokensFromTexts(["полярность"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["неполярное", "равнополярное", "разнополярное"],
+                "contains": ["неполярное", "равнополярное", "разнополярное"],
+                "relates_to_the_group": ["морфологические характеристики"], 
+            },
+            {
+                "область": "палинология", 
+                "term": "неполярное",
+                "termNormalize": getTokensFromTexts(["неполярное"])[0],
+                "prevTerm": "полярность_пыльцевого_зерна",
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["полярность_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "равнополярное", 
+                "termNormalize": getTokensFromTexts(["равнополярное"])[0],
+                "prevTerm": "полярность_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["полярность_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "разнополярное", 
+                "termNormalize": getTokensFromTexts(["разнополярное"])[0],
+                "prevTerm": "полярность_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["полярность_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "проекция_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["проекция_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["полярная проекция", "экваториальная проекция"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "проекция", 
+                "termNormalize": getTokensFromTexts(["проекция"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["полярная проекция", "экваториальная проекция"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "полярная", 
+                "termNormalize": getTokensFromTexts(["полярная"])[0],
+                "prevTerm": "проекция_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["проекция_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "экваториальная", 
+                "termNormalize": getTokensFromTexts(["экваториальная"])[0],
+                "prevTerm": "проекция_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["проекция_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "размер_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["размер_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["мелкие", "очень мелкие", "средние", "крупные", "очень крупные", "гигантские"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "размер", 
+                "termNormalize": getTokensFromTexts(["размер"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["мелкие", "очень мелкие", "средние", "крупные", "очень крупные", "гигантские"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "мелкие", 
+                "termNormalize": getTokensFromTexts(["мелкие"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "очень_мелкие", 
+                "termNormalize": getTokensFromTexts(["очень_мелкие"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "средние", 
+                "termNormalize": getTokensFromTexts(["средние"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "крупные", 
+                "termNormalize": getTokensFromTexts(["крупные"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "очень_крупные", 
+                "termNormalize": getTokensFromTexts(["очень_крупные"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "гигантские", 
+                "termNormalize": getTokensFromTexts(["гигантские"])[0],
+                "prevTerm": "размер_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["размер_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "форма_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["форма_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["выпукло-вогнутая", "лопастая", "округлая", "округло-угловатая", "плосковыпуклая", "прямоугольная", "ромбическая", "сжато-прямоугольная", "сжато-эллиптическая", "сфероидальная", "угловатая", "эллиптическая"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "форма", 
+                "termNormalize": getTokensFromTexts(["форма"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["выпукло-вогнутая", "лопастая", "округлая", "округло-угловатая", "плосковыпуклая", "прямоугольная", "ромбическая", "сжато-прямоугольная", "сжато-эллиптическая", "сфероидальная", "угловатая", "эллиптическая"],
+                "contains": [],
+                "relates_to_the_group": ["морфологические_характеристики"],
+            },
+            {
+                "область": "палинология", 
+                "term": "выпукло-вогнутая", 
+                "termNormalize": getTokensFromTexts(["выпукло-вогнутая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "лопастая", 
+                "termNormalize": getTokensFromTexts(["лопастая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "округлая", 
+                "termNormalize": getTokensFromTexts(["округлая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "округло-угловатая", 
+                "termNormalize": getTokensFromTexts(["округло-угловатая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "плосковыпуклая", 
+                "termNormalize": getTokensFromTexts(["плосковыпуклая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "прямоугольная", 
+                "termNormalize": getTokensFromTexts(["прямоугольная"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "ромбическая", 
+                "termNormalize": getTokensFromTexts(["ромбическая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "сжато-прямоугольная", 
+                "termNormalize": getTokensFromTexts(["сжато-прямоугольная"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "сжато-эллиптическая", 
+                "termNormalize": getTokensFromTexts(["сжато-эллиптическая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "сфероидальная", 
+                "termNormalize": getTokensFromTexts(["сфероидальная"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "угловатая", 
+                "termNormalize": getTokensFromTexts(["угловатая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "эллиптическая", 
+                "termNormalize": getTokensFromTexts(["эллиптическая"])[0],
+                "prevTerm": "форма_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "клетки_пыльцевого_зерна", 
+                "termNormalize": getTokensFromTexts(["клетки_пыльцевого_зерна"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["вегетативные", "генеративные"],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "клетки", 
+                "termNormalize": getTokensFromTexts(["клетки"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["вегетативные", "генеративные"],
+                "contains": [],
+                "relates_to_the_group": ["форма_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "вегетативные", 
+                "termNormalize": getTokensFromTexts(["вегетативные"])[0],
+                "prevTerm": "клетки_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["клетки_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "генеративные", 
+                "termNormalize": getTokensFromTexts(["генеративные"])[0],
+                "prevTerm": "клетки_пыльцевого_зерна", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["клетки_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "ядро", 
+                "termNormalize": getTokensFromTexts(["ядро"])[0],
+                "prevTerm": "морфологические_характеристики", 
+                "moveToPrev": False,
+                "divided_in_groups": ["ядро вегетативной клетки", "ядро генеративной клетки"],
+                "contains": [],
+                "relates_to_the_group": ["клетки_пыльцевого_зерна"],
+            },
+            {
+                "область": "палинология", 
+                "term": "ядро_вегетативной_клетки",
+                "termNormalize": getTokensFromTexts(["ядро_вегетативной_клетки"])[0],
+                "prevTerm": "ядро", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["ядро"],
+            },
+            {
+                "область": "палинология", 
+                "term": "ядро_генеративной_клетки", 
+                "termNormalize": getTokensFromTexts(["ядро_генеративной_клетки"])[0],
+                "prevTerm": "ядро", 
+                "moveToPrev": True,
+                "divided_in_groups": [],
+                "contains": [],
+                "relates_to_the_group": ["ядро"],
+            },
         ]
 
         for item in listTerms:
@@ -1083,11 +1824,51 @@ class TestingService:
             
             newTerm.isTermOf = field
             newTerm.moveToPrev = item["moveToPrev"]
+            newTerm.termNormalize = item["termNormalize"][0]
             if item["prevTerm"] != "":
                 prevTerm = Термин(item["prevTerm"].replace(" ", "_"))
                 newTerm.hasPrevTerm = prevTerm
+            for t in item["divided_in_groups"]:
+                newTerm.divided_in_groups.append(t)
+            for t in item["contains"]:
+                newTerm.contains.append(t)
+            for t in item["relates_to_the_group"]:
+                newTerm.relates_to_the_group.append(t)
 
         self.onto.save(self.path) 
+
+    def getDividedInGroupsByTerm(self, term):
+        query = queries.getGroupsByTerm(term)
+        resultGroups = self.graph.query(query)
+        listGroups = []
+        for itemGroup in resultGroups:
+            group = str(itemGroup['group'].toPython())
+            group = re.sub(r'.*#',"", group)
+
+            listGroups.append({"answer": group, "correct": True})
+        
+        #print(listTerms)
+        return listGroups
+
+    def getAnswersByTypeTemplate(self, typeTemp, tokens, fieldObj):
+        listTerms, listTermsNormalize = self.getTermsNormilizeOfField(fieldObj)
+        for token in tokens:
+            if token in listTermsNormalize:
+                index = listTermsNormalize.index(token)
+                term = listTerms[index]
+                if typeTemp == typeTemplate.SubClasses.value:
+                    listGroups = self.getDividedInGroupsByTerm(term)
+                    return listGroups
+        return []
+
+    def getAnswersByTaskAuto(self, text, fieldObj):
+        autoGen = AutoGeneration()
+        print(text)
+        typeTemp, tokens = autoGen.toDetermineType(text)
+        listAnswers = []
+        if typeTemp != "":
+            listAnswers = self.getAnswersByTypeTemplate(typeTemp, tokens[0], fieldObj)
+        return listAnswers
 
 def main():
     ont = TestingService()
@@ -1099,7 +1880,6 @@ def main():
     #ont.getUser("OUXFGSzNAlOYes3UEbvo33kcGuE3")
     #ont.createTerms()
     #term = ont.getTermByTask({"question": "6.	Что такое лептома?"})
-
-
+    
 if __name__ == "__main__":
     main()

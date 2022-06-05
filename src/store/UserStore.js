@@ -1327,6 +1327,8 @@ export default class UserStore {
         this._curNewUser = {}
         this._curNewCourse = {}
         this._curEditAttempt = {}
+        this._curQuestion = {}
+        this._curFieldKey = 0
         this._uid = ""
         makeAutoObservable(this)
     }
@@ -1399,6 +1401,14 @@ export default class UserStore {
         this._curAttempts = attempts
     }
 
+    setCurQuestion(text) {
+        this._curQuestion = text
+    }
+
+    setCurFieldKey(key) {
+        this._curFieldKey = key
+    }
+
     get isAuth() {
         return this._isAuth
     }
@@ -1456,6 +1466,14 @@ export default class UserStore {
 
     get CurEditAttempt() {
         return this._curEditAttempt
+    }
+
+    get CurQuestion() {
+        return this._curQuestion
+    }
+
+    get СurFieldKey() {
+        return this._curFieldKey
     }
 
 }

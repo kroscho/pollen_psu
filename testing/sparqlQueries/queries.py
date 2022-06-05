@@ -152,10 +152,11 @@ def getStudentsCourse(courseObj):
 # запрос на получение модулей у курса
 def getModulesOfCourse(courseObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?moduleObj ?nameModule " \
+            "SELECT ?moduleObj ?nameModule ?subArea " \
             "WHERE { " \
             "tst:%s tst:has_module ?moduleObj. " \
             "?moduleObj tst:nameModule ?nameModule. " \
+            "?moduleObj tst:has_subject_area ?subArea. " \
             "}" % (courseObj)
     return query
 
@@ -173,11 +174,12 @@ def getTestsOfModule(moduleObj):
 # запрос на получение терминов у области
 def getTermsOfField(fieldObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?term ?prevTerm ?moveToPrev " \
+            "SELECT ?term ?prevTerm ?moveToPrev ?termNormalize " \
             "WHERE { " \
             "?term tst:isTermOf tst:%s. " \
             "?term tst:hasPrevTerm ?prevTerm. " \
             "?term tst:moveToPrev ?moveToPrev. " \
+            "?term tst:termNormalize ?termNormalize. " \
             "}" % (fieldObj)
     return query
 
@@ -193,17 +195,37 @@ def getTermByTask(taskObj):
 # запрос на получение терминов, которые студент знает
 def getKnownTermsByUser(userObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?term " \
+            "SELECT ?term ?subjectArea " \
             "WHERE { " \
             "tst:%s tst:knownTerm ?term. " \
+            "?term tst:isTermOf ?subjectArea" \
             "}" % (userObj)
     return query
 
 # запрос на получение терминов, которые студент знает
 def getUnknownTermsByUser(userObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?term " \
+            "SELECT ?term ?subjectArea " \
             "WHERE { " \
             "tst:%s tst:unknownTerm ?term. " \
+            "?term tst:isTermOf ?subjectArea" \
             "}" % (userObj)
+    return query
+
+# запрос на получение предметных областей
+def getSubjectAreas():
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?subArea " \
+            "WHERE { " \
+            "?subArea rdf:type tst:Область. " \
+            "}"
+    return query
+
+# запрос на получение групп, на которые делится термин
+def getGroupsByTerm(termObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?group " \
+            "WHERE { " \
+            "tst:%s tst:divided_in_groups ?group. " \
+            "}" % (termObj)
     return query

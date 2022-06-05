@@ -587,12 +587,56 @@ def api_edit_attempt():
     print(response)
     return response
 
+@app.post('/api/edit_module')
+def api_edit_module():
+    ont = TestingService()
+    _item = request.get_json()
+    _item = _item.get('module')
+    print("module: ", _item)
+    ont.editModule(_item)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
 @app.get('/api/get_terms_by_user')
 def api_get_terms_by_user():
     ont = TestingService()
     _userObj = request.args.get('_userObj', '')
     print("userObj: ", _userObj)
     data = ont.getTermsByUser(_userObj)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_subject_areas')
+def api_get_subject_areas():
+    ont = TestingService()
+    data = ont.getSubjectAreas()
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_answers_auto')
+def api_get_answers_auto():
+    ont = TestingService()
+    _subjectArea = request.args.get('_subjectArea', '')
+    _text = request.args.get('_text', '')
+    print("text, subjectArea: ", _text, _subjectArea)
+    data = ont.getAnswersByTaskAuto(_text, _subjectArea)
     print("data: ", data)
     
     response = make_response(json.dumps({

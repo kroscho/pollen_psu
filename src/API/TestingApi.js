@@ -177,10 +177,31 @@ export default class TestingApi {
         return response.data
     }
 
-    static async getTermsByUSer(userObj) {
+    static async editModule(module) {
+        console.log("module: ", module)
+        const response = await axios.post('http://localhost:5000/api/edit_module', { module })
+        return response.data
+    }
+
+    static async getTermsByUser(userObj) {
         const response = await axios.get('http://localhost:5000/api/get_terms_by_user', {
             params: {
                 _userObj: userObj,
+            }
+        })
+        return response.data
+    }
+
+    static async getSubjectAreas() {
+        const response = await axios.get('http://localhost:5000/api/get_subject_areas')
+        return response.data
+    }
+
+    static async getAnswersAuto(subjectArea, text) {
+        const response = await axios.get('http://localhost:5000/api/get_answers_auto', {
+            params: {
+                _text: text,
+                _subjectArea: subjectArea,
             }
         })
         return response.data

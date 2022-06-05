@@ -3,19 +3,20 @@ import 'antd/dist/antd.css';
 import { Modal, Button, Form, Input, Upload, Avatar, message, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { Context } from '../../..';
+import { deepEqual } from '../../utils/testing';
 import { useFetching } from '../../hooks/useFetching';
 import TestingApi from '../../../API/TestingApi';
 import Loader from '../../UI/Loader/Loader';
 import ErrorMessage from '../../UI/Messages/ErrorMessage';
 const { Option } = Select;
 
-const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
-    
+const ModuleEdit = ({isVisible, setIsVisible, onUpdate}) => {
+    const {userStore} = useContext(Context)
     const [url, setUrl] = useState("")
     const [subAreas, setSubAreas] = useState([])
+    const user = userStore.User;
+    const curModule = userStore.CurModule;
     const [form] = Form.useForm();
-
-    const {userStore} = useContext(Context)
 
     const [fetchSubjectAreas, isDataLoading, dataError] = useFetching(async () => {
         let response = await TestingApi.getSubjectAreas();
@@ -23,18 +24,18 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
         console.log(response.data)
     })
 
-    const [fetchCreateModule, isCreateLoading, createError] = useFetching(async () => {
-        const item = {module: userStore.CurModule, courseObj: userStore.CurCourse.courseObj}
-        let response = await TestingApi.createModule(item);
+    const [fetchEditModule, isEditLoading, editError] = useFetching(async () => {
+        let response = await TestingApi.editModule(userStore.CurModule);
         if (response.data === "ok") {
-            message.success('Модуль создан успешно');
+            message.success('Модуль изменен успешно');
+            let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
+            userStore.setCurCourse(response1.data)
+            onUpdate()
+            setIsVisible(false)
+        } else {
+            userStore.setCurModule(curModule);
         }
-        let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
-        userStore.setCurCourse(response1.data)
-        onUpdate()
         console.log(response.data)
-        userStore.setCurModule({})
-        setIsVisible(false);
     })
 
     useEffect(() => {
@@ -47,21 +48,6 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
 
     const handleCancel = () => {
         setIsVisible(false);
-    };
-
-    const onFinish = values => {
-        console.log('Received values of form:', values);
-        const item = {
-            nameModule: values.nameModule,
-            subjectArea: values.subjectArea,
-            avatar: url,
-            practice: [],
-            lectures: [],
-            tests: [],
-        }
-        userStore.setCurModule(item)
-        fetchCreateModule()
-        console.log(item)
     };
 
     const normFile = (e) => {
@@ -79,17 +65,36 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
         return e && e.fileList;
     };
 
+    const onFinish = values => {
+        values["moduleObj"] = curModule.moduleObj
+        console.log('Received values of form:', values);
+        const isEqual = deepEqual(values, curModule)
+        if (!isEqual) {
+            userStore.setCurModule(values);
+            fetchEditModule()
+        }
+    };
+
     const listAreas = subAreas.map((item) => {
         return (
-            <Option value={item}>{item}</Option>
+            <Option value="item">{item}</Option>
         )
-    }) 
+    })
 
     const View = () => {
         return (
             <>
-            <Modal title="Создание модуля" visible={isVisible} onOk={handleOk} onCancel={handleCancel}>
-                <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+            <Modal title="Редактирование модуля" visible={isVisible} onOk={handleOk} onCancel={handleCancel}>
+                <Form 
+                    form={form} 
+                    name="dynamic_form_nest_item" 
+                    onFinish={onFinish} 
+                    autoComplete="off"
+                    initialValues={{
+                        ["nameModule"]: curModule.nameModule,
+                        ["subjectArea"]: curModule.subjectArea,
+                    }}
+                >
                     <Form.Item name="nameModule" label="Название модуля" rules={[{ required: true, message: 'Не заполнено название модуля' }]}>
                         <Input />
                     </Form.Item>
@@ -110,7 +115,7 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
-                        Создать
+                        Сохранить изменения
                         </Button>
                     </Form.Item>
                 </Form>
@@ -119,9 +124,9 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
         );
     }
 
-    const spinner = isCreateLoading || isDataLoading ? <Loader/> : null;
-    const errorMessage = createError ? <ErrorMessage message={createError} /> : null;
-    const content = !(isCreateLoading || isDataLoading || dataError || createError) ? <View/> : null;
+    const spinner = isEditLoading || isDataLoading ? <Loader/> : null;
+    const errorMessage = editError ? <ErrorMessage message={editError} /> : null;
+    const content = !(isEditLoading || isDataLoading || dataError || editError) ? <View/> : null;
 
     return (
         <>
@@ -132,4 +137,4 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
     )
 };
 
-export default CreateModule;
+export default ModuleEdit;

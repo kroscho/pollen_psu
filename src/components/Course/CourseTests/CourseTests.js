@@ -13,6 +13,7 @@ import TestingApi from "../../../API/TestingApi";
 import { useFetching } from "../../hooks/useFetching";
 import Loader from "../../UI/Loader/Loader";
 import ErrorMessage from "../../UI/Messages/ErrorMessage";
+import ModuleEdit from "../ModalForms/EditModule";
 
 const CourseTests = () => {
     const {userStore} = useContext(Context)
@@ -22,6 +23,7 @@ const CourseTests = () => {
 
     const [isCreateTestFormVisible, setIsCreateTestFormVisible] = useState(false)
     const [isCreateModuleFormVisible, setIsCreateModuleFormVisible] = useState(false)
+    const [isEditModuleFormVisible, setIsEditModuleFormVisible] = useState(false)
 
     let listTests = []
     let listModules = []
@@ -48,7 +50,6 @@ const CourseTests = () => {
     }, [curCourse])
 
     const handleTest = (module, test) => {
-        console.log("Handle Test: ", test)
         userStore.setCurModule(module);
         userStore.setCurTest(test);
         history.push(COURSE_TESTS_TEST_VARIANTS_ROUTE);
@@ -66,6 +67,11 @@ const CourseTests = () => {
     const handleDeleteModule = (module) => {
         userStore.setCurModule(module);
         fetchDeleteModule()
+    }
+
+    const handleEditModule = (module) => {
+        userStore.setCurModule(module);
+        setIsEditModuleFormVisible(true)
     }
 
     if (curCourse.modules) {
@@ -108,6 +114,16 @@ const CourseTests = () => {
                     { isAdmin(user)
                         ?   <Button 
                             style={{verticalAlign: "bottom", marginLeft: '10px'}} 
+                            variant="outline-secondary"
+                            onClick={() => handleEditModule(item)}
+                            >
+                                Редактировать модуль
+                            </Button>
+                        : null
+                    }
+                    { isAdmin(user)
+                        ?   <Button 
+                            style={{verticalAlign: "bottom", marginLeft: '10px'}} 
                             variant="outline-danger"
                             onClick={() => handleDeleteModule(item)}
                             >
@@ -115,7 +131,7 @@ const CourseTests = () => {
                             </Button>
                         : null
                     }
-                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible} onUpdate={onUpdate}></CreateTestForm>                
+                    <CreateTestForm isVisible={isCreateTestFormVisible} setIsVisible={setIsCreateTestFormVisible} module={item} onUpdate={onUpdate}></CreateTestForm>                
                 </ListGroup.Item>
             )
         })
@@ -148,6 +164,7 @@ const CourseTests = () => {
                         }   
                     </Col>
                     <CreateModule isVisible={isCreateModuleFormVisible} setIsVisible={setIsCreateModuleFormVisible} onUpdate={onUpdate}></CreateModule>
+                    <ModuleEdit isVisible={isEditModuleFormVisible} setIsVisible={setIsEditModuleFormVisible} onUpdate={onUpdate}></ModuleEdit>
                 </Row>
             )
         } 

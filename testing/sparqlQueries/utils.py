@@ -70,6 +70,8 @@ stop_words = nltk.corpus.stopwords.words('russian')
 stop_words += ['—']
 stop_words += list(string.punctuation)
 stop_words = set(stop_words)
+stop_words.remove('по')
+stop_words.remove('какой')
 
 # токенизация текстов
 def tokenized_texts(texts):

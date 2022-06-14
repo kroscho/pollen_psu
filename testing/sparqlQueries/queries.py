@@ -24,10 +24,11 @@ def getCoursesNames():
 # запрос на получение заданий и их вопросов
 def getTasksQuestions(groupTask):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?task ?questText ?taskType ?quest " \
+            "SELECT ?task ?questText ?taskType ?quest ?term " \
             "WHERE { " \
             "?task tst:is_task_of tst:%s. " \
             "?task tst:task_has_question ?quest. " \
+            "?task tst:hasTerm ?term. " \
             "?quest tst:textQuestion ?questText. " \
             "?quest rdf:type ?taskType. " \
             "?taskType rdfs:subClassOf ?obj " \
@@ -171,6 +172,16 @@ def getTestsOfModule(moduleObj):
             "}" % (moduleObj)
     return query
 
+# запрос на получение лекций у модуля
+def getLecturesOfModule(moduleObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?lectureObj ?lectureName " \
+            "WHERE { " \
+            "tst:%s tst:has_lecture ?lectureObj. " \
+            "?lectureObj tst:lectureName ?lectureName. " \
+            "}" % (moduleObj)
+    return query
+
 # запрос на получение терминов у области
 def getTermsOfField(fieldObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
@@ -228,4 +239,16 @@ def getGroupsByTerm(termObj):
             "WHERE { " \
             "tst:%s tst:divided_in_groups ?group. " \
             "}" % (termObj)
+    return query
+
+# запрос на получение попыток для подсчета средней оценки по терминам
+def getLastAttemptsForAverageScoreByUser(userObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?attempt ?test ?date ?testName " \
+            "WHERE { " \
+            "tst:%s tst:has_attempt_to_pass_test ?attempt. " \
+            "?attempt tst:relates_to_test ?test. " \
+            "?test tst:testName ?testName. " \
+            "?attempt tst:dateAndTime ?date. " \
+            "} ORDER BY (?test) DESC(?date)" % (userObj)
     return query

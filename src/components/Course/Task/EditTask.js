@@ -4,6 +4,7 @@ import { Form, Input, Space, Checkbox, Button } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { TEXT_TASK_TYPE } from '../../../utils/consts';
 import { getWordAnswer } from '../../utils/testing';
+import TextArea from 'antd/lib/input/TextArea';
 
 const EditTask = ({field, form, tasks}) => {
 
@@ -35,7 +36,7 @@ const EditTask = ({field, form, tasks}) => {
                             }
                             
                             >
-                            <Input style={{borderRadius: '10px'}} />
+                                <TextArea rows={3} style={{borderRadius: '10px'}}></TextArea>
                             </Form.Item>
                             <Form.Item
                                 name={[fld.name, 'correct']}

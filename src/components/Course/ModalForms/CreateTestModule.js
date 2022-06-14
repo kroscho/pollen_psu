@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
 import { Modal, Button, Form, Input, Space, Select, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -6,7 +6,8 @@ import EditTask from '../Task/EditTask';
 import { useFetching } from '../../hooks/useFetching';
 import { Context } from '../../..';
 import TestingApi from '../../../API/TestingApi';
-import { MULTIPLE_TASK_TYPE, SINGLE_TASK_TYPE } from '../../../utils/consts';
+import { MULTIPLE_TASK_TYPE } from '../../../utils/consts';
+import TextArea from 'antd/lib/input/TextArea';
 
 const types = [
     { value: '1', label: 'Текстовый ответ' },
@@ -18,6 +19,7 @@ const types = [
 const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
     const {userStore} = useContext(Context)
     const [answers, setAnswers] = useState([])
+    const [terms, setTerms] = useState([])
     const [valueQuestion, setValueQuestion] = useState("")
     //const [fieldKey, setFieldKey] = useState(0)
     const [form] = Form.useForm();
@@ -28,6 +30,12 @@ const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
     const handleCancel = () => {
         setIsVisible(false);
     };
+
+    const [fetchTerms, isTermsLoading, termsError] = useFetching(async () => {
+        let response = await TestingApi.getTermsBySubjArea(userStore.CurModule.subjectArea);
+        setTerms(response.data)
+        console.log(response.data)
+    })
 
     const [fetchCreate, isCreateLoading, createError] = useFetching(async () => {
         const item = {test: userStore.CurTest, module: userStore.CurModule}
@@ -44,8 +52,12 @@ const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
 
     const [fetchAnswersAuto, isDataLoading, dataError] = useFetching(async () => {
         let response = await TestingApi.getAnswersAuto(userStore.CurModule.subjectArea, userStore.CurQuestion);
-        handle(response.data)
+        updateFormAnswers(response.data)
     })
+
+    useEffect(() => {
+        fetchTerms()
+    }, [])
 
     const onFinish = values => {
         userStore.setCurTest(values);
@@ -59,7 +71,7 @@ const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
         form.setFieldsValue({ fields })
     };
 
-    const handle = (data) => {
+    const updateFormAnswers = (data) => {
         const fieldKey = userStore.СurFieldKey
         console.log("fieldKey: ", fieldKey)
         let answersCopy = answers.slice()
@@ -78,6 +90,10 @@ const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
         }
     }
 
+    const listTerms = terms.map((item) => {
+        return {value: item.term, label: item.termStr}
+    })
+
     const handleGenerateAnswers = (field) => {
         console.log("fieldKey: ", field)
         userStore.setCurFieldKey(field)
@@ -85,73 +101,97 @@ const CreateTestForm = ({isVisible, setIsVisible, module, onUpdate}) => {
         fetchAnswersAuto()
     }
     
-    return (
-        <>
-        <Modal title="Создание теста" visible={isVisible} onOk={handleOk} onCancel={handleCancel} width={600}>
-            <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                <Form.Item name="testName" label="Название теста" rules={[{ required: true, message: 'Не заполнено название теста' }]}>
-                    <Input/>
-                </Form.Item>
-                <Form.List name="tasks">
-                    {(fields, { add, remove }) => (
-                    <>
-                        {fields.map(field => (
-                        <Space key={field.key} style={{display: 'flex', justifyContent: 'center'}}>
-                            { !isDataLoading
-                                ?   <Form.Item
-                                        style={{borderTop: '1px solid', width: "100%"}}
-                                        shouldUpdate={(prevValues, curValues) =>
-                                            prevValues.type !== curValues.type
-                                        }
-                                        >
-                                        {() => (
-                                            <>
-                                                <Form.Item
-                                                {...field}
-                                                label="Тип вопроса"
-                                                name={[field.name, 'type']}
-                                                rules={[{ required: true, message: 'Missing type' }]}
-                                                style={{ margin: '10px auto'}}
-                                                >
-                                                    <Select options={types} style={{ width: 200 }} onChange={handleChangeType} />
-                                                </Form.Item>
-                                                <Form.Item 
-                                                name={[field.name, 'question']} 
-                                                label="Текст вопроса" 
-                                                rules={[{ required: true, message: 'Не заполнен текст вопроса' }]}
-                                                >
-                                                    <Input value={valueQuestion} onChange={(e) => setValueQuestion(e.target.value)}/>
-                                                </Form.Item>
-                                                <Form.Item>
-                                                    <Button onClick={() => handleGenerateAnswers(field.key)} type="dashed">Сгенерировать ответы</Button>
-                                                </Form.Item>
-                                            <EditTask form={form} field={field}></EditTask>
-                                            </>
-                                        )}
+    if (isTermsLoading) {
+        return null;
+    } else {
+        return (
+            <>
+            <Modal title="Создание теста" visible={isVisible} onOk={handleOk} onCancel={handleCancel} width={500}>
+                <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+                    <Form.Item name="testName" label="Название теста" rules={[{ required: true, message: 'Не заполнено название теста' }]}>
+                        <Input style={{width: "50%"}}/>
+                    </Form.Item>
+                    <Form.List name="tasks" style={{width: "700px"}}>
+                        {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(field => (
+                            <Space key={field.key} style={{display: 'flex', justifyContent: 'center'}}>
+                                { !isDataLoading
+                                    ?   <Form.Item
+                                            style={{borderTop: '1px solid', width: "100%"}}
+                                            shouldUpdate={(prevValues, curValues) =>
+                                                prevValues.type !== curValues.type
+                                            }
+                                            >
+                                            {() => (
+                                                <>
+                                                    <Form.Item
+                                                    {...field}
+                                                    label="Тип вопроса"
+                                                    name={[field.name, 'type']}
+                                                    rules={[{ required: true, message: 'Missing type' }]}
+                                                    style={{ margin: '10px auto'}}
+                                                    >
+                                                        <Select options={types} style={{ width: 300 }} onChange={handleChangeType} />
+                                                    </Form.Item>
+                                                    <Form.Item 
+                                                    name={[field.name, 'question']} 
+                                                    label="Текст вопроса" 
+                                                    rules={[{ required: true, message: 'Не заполнен текст вопроса' }]}
+                                                    >
+                                                        <TextArea rows={4} value={valueQuestion} onChange={(e) => setValueQuestion(e.target.value)}></TextArea>
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                    label="Концепт: "
+                                                    name={[field.name, 'term']}
+                                                    rules={[{ required: true, message: 'Missing type' }]}
+                                                    style={{ margin: '10px auto'}}
+                                                    >
+                                                        <Select
+                                                        showSearch
+                                                        style={{
+                                                        width: 300,
+                                                        }}
+                                                        placeholder="Искать концепт"
+                                                        optionFilterProp="children"
+                                                        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
+                                                        filterSort={(optionA, optionB) =>
+                                                            optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                                        }
+                                                        options={listTerms}
+                                                        />
+                                                    </Form.Item>
+                                                    <Form.Item>
+                                                        <Button onClick={() => handleGenerateAnswers(field.key)} type="dashed">Сгенерировать ответы</Button>
+                                                    </Form.Item>
+                                                <EditTask form={form} field={field}></EditTask>
+                                                </>
+                                            )}
                                         </Form.Item>
-                                : null
-                            }
-                            <MinusCircleOutlined onClick={() => remove(field.name)} />
-                        </Space>
-                        ))}
-
-                        <Form.Item>
-                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                            Добавить задание
+                                    : null
+                                }
+                                <MinusCircleOutlined onClick={() => remove(field.name)} />
+                            </Space>
+                            ))}
+    
+                            <Form.Item>
+                            <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                Добавить задание
+                            </Button>
+                            </Form.Item>
+                        </>
+                        )}
+                    </Form.List>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                        Добавить
                         </Button>
-                        </Form.Item>
-                    </>
-                    )}
-                </Form.List>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                    Добавить
-                    </Button>
-                </Form.Item>
-            </Form>
-        </Modal>
-        </>
-    );
+                    </Form.Item>
+                </Form>
+            </Modal>
+            </>
+        );
+    }
 
     /*const View = () => {
         return (

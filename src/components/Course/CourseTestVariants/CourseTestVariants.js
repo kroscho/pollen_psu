@@ -73,13 +73,16 @@ const CourseTestVariants = () => {
             <>
                 <Divider orientation="left">{curTest.testName}</Divider>
                 <Row>
-                    <Button 
-                        style={{lineHeight: "0.8", margin: "30px 30px"}} 
-                        variant="outline-success"
-                        onClick={handleCheckWorksStudents}
-                    >
-                        Проверить работы студентов
-                    </Button>
+                    { isAdmin(user)
+                        ?<Button 
+                            style={{lineHeight: "0.8", margin: "30px 30px"}} 
+                            variant="outline-success"
+                            onClick={handleCheckWorksStudents}
+                        >
+                            Проверить работы студентов
+                        </Button>
+                        : null
+                    }
                 </Row>
                 <Row>
                     <Button 

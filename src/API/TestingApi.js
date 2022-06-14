@@ -42,6 +42,36 @@ export default class TestingApi {
         return response.data
     }
 
+    static async CreateSubjectArea(item) {
+        const response = await axios.post('http://localhost:5000/api/create_subject_area', { item })
+        return response.data
+    }
+
+    static async CreateTerm(item) {
+        const response = await axios.post('http://localhost:5000/api/create_term', { item })
+        return response.data
+    }
+
+    static async DeleteLecture(item) {
+        const response = await axios.post('http://localhost:5000/api/delete_lecture', { item })
+        return response.data
+    }
+
+    static async CreateLecture(item) {
+        const response = await axios.post('http://localhost:5000/api/create_lecture', { item })
+        return response.data
+    }
+
+    static async DowloadFile() {
+        const response = await axios.get('http://localhost:5000/api/dowload_file')
+        return response
+    }
+
+    static async DeleteTerm(item) {
+        const response = await axios.post('http://localhost:5000/api/delete_term', { item })
+        return response.data
+    }
+
     static async updateTest(updatedTest) {
         console.log("updatedTest: ", updatedTest)
         const response = await axios.post('http://localhost:5000/api/update_test', { updatedTest })
@@ -148,6 +178,15 @@ export default class TestingApi {
         return response.data
     }
 
+    static async getMaterialsByLecture(lectureObj) {
+        const response = await axios.get('http://localhost:5000/api/get_materials_by_lecture', {
+            params: {
+                _lectureObj: lectureObj,
+            }
+        })
+        return response.data
+    }
+
     static async createModule(item) {
         console.log("createdModule: ", item.createdModule, item.courseObj)
         const response = await axios.post('http://localhost:5000/api/create_module', { item })
@@ -183,10 +222,11 @@ export default class TestingApi {
         return response.data
     }
 
-    static async getTermsByUser(userObj) {
+    static async getTermsByUser(userObj, uid) {
         const response = await axios.get('http://localhost:5000/api/get_terms_by_user', {
             params: {
                 _userObj: userObj,
+                _uid: uid,
             }
         })
         return response.data
@@ -201,6 +241,15 @@ export default class TestingApi {
         const response = await axios.get('http://localhost:5000/api/get_answers_auto', {
             params: {
                 _text: text,
+                _subjectArea: subjectArea,
+            }
+        })
+        return response.data
+    }
+
+    static async getTermsBySubjArea(subjectArea) {
+        const response = await axios.get('http://localhost:5000/api/get_terms_by_subject_area', {
+            params: {
                 _subjectArea: subjectArea,
             }
         })

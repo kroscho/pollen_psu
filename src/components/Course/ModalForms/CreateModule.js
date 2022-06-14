@@ -81,7 +81,7 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
 
     const listAreas = subAreas.map((item) => {
         return (
-            <Option value={item}>{item}</Option>
+            <Option value={item.subjectAreaObj}>{item.subjectArea}</Option>
         )
     }) 
 

@@ -13,11 +13,10 @@ const TermsPage = () => {
     const {userStore} = useContext(Context)
     const [subAreas, setSubAreas] = useState([])
     const [terms, setTerms] = useState({})
-    const curCourse = userStore.CurCourse;
     const user = userStore.User;
 
     const [fetchTermsByUser, isDataLoading, dataError] = useFetching(async () => {
-        let response = await TestingApi.getTermsByUser(user.userObj);
+        let response = await TestingApi.getTermsByUser(user.userObj, user.uid);
         setTerms(response.data)
         console.log(response.data)
         let response1 = await TestingApi.getSubjectAreas();
@@ -33,24 +32,30 @@ const TermsPage = () => {
         const knownTerms = terms.knownTerms.filter(item => item.subjectArea === subjArea.subjectAreaObj)
         const unknownTerms = terms.unknownTerms.filter(item => item.subjectArea === subjArea.subjectAreaObj)
 
+        let header = subjArea.subjectArea
+        if (terms.sumScoresLite[subjArea.subjectAreaObj]) {
+            header = subjArea.subjectArea + " " + terms.sumScoresLite[subjArea.subjectAreaObj].sumCorrect + "/" + terms.sumScoresLite[subjArea.subjectAreaObj].sumCount
+
+        }
+
         return (
-            <Panel header={subjArea.subjectArea} key={ind}>
+            <Panel header={header} key={ind}>
                 <Divider orientation="left">Плохо изучены:</Divider>
                 <List
                     size="small"
                     bordered
+                    itemLayout="horizontal"
                     style={{borderColor: 'red'}}
                     dataSource={unknownTerms}
-                    renderItem={(term) => <List.Item>{term.term}</List.Item>}
+                    renderItem={(term) => <List.Item><List.Item.Meta title={term.term}/> <div>{term.sumCorrect} / {term.sumCount}</div></List.Item>}
                 />
                 <Divider orientation="left">Хорошо изучены:</Divider>
                 <List
                     size="small"
-                    header={<div>Хорошо знает</div>}
                     bordered
                     style={{borderColor: 'green'}}
                     dataSource={knownTerms}
-                    renderItem={(term) => <List.Item>{term.term}</List.Item>}
+                    renderItem={(term) => <List.Item><List.Item.Meta title={term.term}/> <div>{term.sumCorrect} / {term.sumCount}</div></List.Item>}
                 />
             </Panel>
         )
@@ -61,7 +66,7 @@ const TermsPage = () => {
             <>
                 <Row>
                     <Col>
-                        <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">Термины:</Divider>
+                        <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">Концепты:</Divider>
                         <Collapse accordion>
                             {listSubjAreas}
                         </Collapse>

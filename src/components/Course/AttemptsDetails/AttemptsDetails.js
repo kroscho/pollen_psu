@@ -9,6 +9,7 @@ import { useFetching } from "../../hooks/useFetching";
 import TestingApi from "../../../API/TestingApi";
 import ErrorMessage from "../../UI/Messages/ErrorMessage";
 import Loader from "../../UI/Loader/Loader";
+import TextArea from "antd/lib/input/TextArea";
 
 const AttemptsDetails = ({onUpdate, isCheck}) => {
     const {userStore} = useContext(Context)
@@ -133,7 +134,7 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
                                         label="Вопрос"
                                         style={{fontWeight: 'bolder'}}
                                         >
-                                            <Input style={{border: '2px solid #000000'}}/>
+                                            <TextArea rows={4} style={{border: '2px solid #000000'}}></TextArea>
                                         </Form.Item>
                                         <AttemptTask isCheck={isCheck} tasks={curAttempt.tasks} form={form} field={field}></AttemptTask>
                                     </>

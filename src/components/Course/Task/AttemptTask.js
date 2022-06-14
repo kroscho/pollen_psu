@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import { Form, Input, Space, Checkbox, InputNumber } from 'antd';
 import { TEXT_TASK_TYPE } from '../../../utils/consts';
 import { getWordAnswer } from '../../utils/testing';
+import TextArea from 'antd/lib/input/TextArea';
 
 const AttemptTask = ({field, tasks, isCheck}) => {    
     let questionType = ""
@@ -32,7 +33,7 @@ const AttemptTask = ({field, tasks, isCheck}) => {
                         name={[fld.name, 'answer']}
                         label={getWordAnswer(index)} 
                         >
-                        <Input style={getStyleInput(tasks[field.key].answers[index])} />
+                        <TextArea rows={3} style={getStyleInput(tasks[field.key].answers[index])}></TextArea>
                         </Form.Item>
                         { questionType === TEXT_TASK_TYPE
                             ?   <Form.Item label="Балл за ответ">

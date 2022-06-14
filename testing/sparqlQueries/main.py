@@ -74,7 +74,7 @@ class TestingService:
             if tTask == typeTask.Text.value:
                 newQuestion = Текстовый()
                 newQuestion.textQuestion = task['question']
-                term = self.getTermByTask(task)
+                #term = self.getTermByTask(task)
             else:
                 if tTask == typeTask.Single.value:
                     newQuestion = Единственный()
@@ -84,7 +84,7 @@ class TestingService:
                     newQuestion = Логический()
 
                 newQuestion.textQuestion = task['question']
-                term = self.getTermByTask(task)
+                #term = self.getTermByTask(task)
                 if "answers" in task:
                     listAnswers = task['answers']
                     for answ in listAnswers:
@@ -99,14 +99,38 @@ class TestingService:
                         newTask.task_has_answer.append(newAnswer)
             newTask.task_has_question = newQuestion
             newTask.is_task_of.append(newGroupOfTasks)
-            if term:
-                termObj = Термин(term["term"])
-                newTask.hasTerm = termObj
+            term = task["term"]
+            termObj = Термин(term)
+            newTask.hasTerm = termObj
         
         newTest.has_group_of_task.append(newGroupOfTasks)
         newGroupOfTasks.is_group_of_task.append(newTest)
         module.has_test.append(newTest)
         newTest.is_test_of.append(module)
+
+        self.onto.save(self.path) 
+
+    def createLecture(self, nameLecture, moduleObj, selectedTerms):
+
+        with self.onto:
+            class Модуль(Thing):
+                pass
+            class Лекция(Thing):
+                pass
+            class Термин(Thing):
+                pass
+
+        newLecture = Лекция()
+        module = Модуль(moduleObj)
+
+        newLecture.lectureName = nameLecture
+        newLecture.is_lecture_of.append(module)
+        module.has_lecture.append(newLecture)
+
+        for termObj in selectedTerms:
+            term = Термин(termObj)
+            newLecture.has_term.append(term)
+            term.is_term_of.append(newLecture)
 
         self.onto.save(self.path) 
 
@@ -213,7 +237,7 @@ class TestingService:
                 if tTask == typeTask.Text.value:
                     newQuestion = Текстовый()
                     newQuestion.textQuestion = task['question']
-                    term = self.getTermByTask(task)
+                    #term = self.getTermByTask(task)
                 else:
                     if tTask == typeTask.Single.value:
                         newQuestion = Единственный()
@@ -223,7 +247,7 @@ class TestingService:
                         newQuestion = Логический()
 
                     newQuestion.textQuestion = task['question']
-                    term = self.getTermByTask(task)
+                    #term = self.getTermByTask(task)
                     if "answers" in task:
                         listAnswers = task['answers']
                         for answ in listAnswers:
@@ -238,8 +262,10 @@ class TestingService:
                             newTask.task_has_answer.append(newAnswer)
                 newTask.task_has_question = newQuestion
                 newTask.is_task_of.append(groupTaskObj)
+                
+                term = task["term"]
                 if term:
-                    termObj = Термин(term["term"])
+                    termObj = Термин(term)
                     newTask.hasTerm = termObj
 
         print("Тест изменен!")
@@ -413,12 +439,14 @@ class TestingService:
                 task = {}
                 taskObj = str(itemTask['task'].toPython())
                 taskObj = re.sub(r'.*#',"", taskObj)
+                term = str(itemTask['term'].toPython())
+                term = re.sub(r'.*#',"", term)
                 questionText = str(itemTask['questText'].toPython())
                 questionText = re.sub(r'.*#',"", questionText)
                 typeQuestion = str(itemTask['taskType'].toPython())
                 typeQuestion = re.sub(r'.*#',"", typeQuestion)
 
-                task = {"taskObj": taskObj, "question": questionText, "type": getTypeTaskValue(typeQuestion)}
+                task = {"taskObj": taskObj, "question": questionText, "term": term, "type": getTypeTaskValue(typeQuestion)}
 
                 query = queries.getAnswersByTask(taskObj, groupTask)
                 resultAnswers = self.graph.query(query)
@@ -456,6 +484,70 @@ class TestingService:
         strDate = datetime(now.year, now.month, now.day, now.hour, now.minute, now.second).isoformat()
         objDate = datetime.strptime(strDate,"%Y-%m-%dT%H:%M:%S")
         return objDate
+
+    def getTermsScoresByLastAttempts(self, userObj, uid):
+        with self.onto:
+            class Термин(Thing):
+                pass
+            class Пользователь(Thing):
+                pass
+            class Задание(Thing):
+                pass 
+
+        user = Пользователь(userObj)
+        query = queries.getLastAttemptsForAverageScoreByUser(userObj)
+        resultAttempts = self.graph.query(query)
+        attempts = {}
+        termsScores = {}
+        listLastAttempts = []
+        for itemAttempt in resultAttempts:
+            testObj = str(itemAttempt['test'].toPython())
+            testObj = re.sub(r'.*#',"", testObj)
+            testName = str(itemAttempt['testName'].toPython())
+            testName = re.sub(r'.*#',"", testName)
+            attemptObj = str(itemAttempt['attempt'].toPython())
+            attemptObj = re.sub(r'.*#',"", attemptObj)
+            if testObj in attempts:
+                continue
+            else:
+                attempts[testObj] = {"testObj": testObj, "testName": testName, "attemptObj": attemptObj}       
+                listAllAttempts = self.getAttempts(uid, testName)
+                for attempt in listAllAttempts:
+                    if attempt["testName"] == testName and attempt["attemptObj"] == attemptObj:
+                        listLastAttempts.append(attempt)
+                    else:
+                        continue
+        #print(listLastAttempts)
+        for attempt in listLastAttempts:
+            tasks = attempt["tasks"]
+            for i in range(len(tasks)):
+                taskObj = tasks[i]["taskObj"]
+                task = Задание(taskObj)
+                query = queries.getTermByTask(taskObj)
+                resultTerm = self.graph.query(query)
+                termObj = ""
+                for itemTerm in resultTerm:
+                    termObj = str(itemTerm['term'].toPython())
+                    termObj = re.sub(r'.*#',"", termObj)
+                    if termObj != "":
+                        if termObj not in termsScores:
+                            termsScores[termObj] = {"sum": 1, "sumScore": 0}
+                        else:
+                            termsScores[termObj]["sum"] += 1
+                for answer in tasks[i]["answers"]:
+                    if termObj != "":
+                        termsScores[termObj]["sumScore"] += float(answer["score"])
+                        break
+        print("TermsSCORES: ", termsScores)
+        for termObj, term in termsScores.items():
+            termItem = Термин(termObj)
+            if term["sum"] != 0:
+                if term["sumScore"] / term["sum"] > 0.6:
+                    user.knownTerm.append(termItem)
+                else:
+                    user.unknownTerm.append(termItem)
+        return termsScores
+
 
     def createNewAttempt(self, test, userObj, userAnswers):
         with self.onto:
@@ -509,7 +601,7 @@ class TestingService:
             if userAnswers[i]["type"] != typeTask.Text.value:
                 result = checkAnswer(trueAnswers[i], userAnswers[i])
                 if termObj != "":
-                    termsScores[termObj]["sumScore"] += sum
+                    termsScores[termObj]["sumScore"] += result["sum"]
                 sum += result["sum"]
                 for j in range(len(result["answerObj"])):
                     #answ = Ответ(result["answerObj"][j])
@@ -577,6 +669,17 @@ class TestingService:
         newUser.uid = user['uid']
         newUser.role = 'student'
 
+        self.onto.save(self.path)
+
+    def createSubjectArea(self, nameSubjArea):
+        with self.onto:
+            class Предметная_область(Thing):
+                pass
+            class Область(Предметная_область):
+                pass
+
+        newSubhArea = Область(nameSubjArea)
+    
         self.onto.save(self.path)
 
     def getUser(self, user_uid):
@@ -686,7 +789,7 @@ class TestingService:
                     correctAnsw = True if correctAnsw == "True" else False
                     if taskType == "1":
                         answersCopy = [{"answerObj": answObj, "answer": answText, "correct": False, "correctByUser": correctAnsw, "score": answScore}]
-                        print("ASNWERSCOPY: ", answersCopy)
+                        #print("ASNWERSCOPY: ", answersCopy)
                     for j in range(len(answersCopy)):
                         if answersCopy[j]['answer'] == answText:
                             answersCopy[j]["correctByUser"] = correctAnsw
@@ -811,6 +914,21 @@ class TestingService:
         print("Tests: ", listTests)
         return listTests
 
+    def getLecturesOfModule(self, moduleObj):
+        query = queries.getLecturesOfModule(moduleObj)
+        resultLectures = self.graph.query(query)
+        listLectures = []
+        for itemLecture in resultLectures:
+            lectureObj = str(itemLecture['lectureObj'].toPython())
+            lectureObj = re.sub(r'.*#',"", lectureObj)
+            lectureName = str(itemLecture['lectureName'].toPython())
+            lectureName = re.sub(r'.*#',"", lectureName)
+            item = {"lectureObj": lectureObj, "lectureName": lectureName}
+            listLectures.append(item)
+        
+        print("Lectures: ", listLectures)
+        return listLectures
+
     def getModulesOfCourse(self, courseObj):
         query = queries.getModulesOfCourse(courseObj)
         resultModules = self.graph.query(query)
@@ -823,7 +941,8 @@ class TestingService:
             subArea = str(itemModule['subArea'].toPython())
             subArea = re.sub(r'.*#',"", subArea)
             listTests = self.getTestsOfModule(moduleObj)
-            item = {"moduleObj": moduleObj, "nameModule": nameModule, "subjectArea": subArea, "tests": listTests}
+            listLectures = self.getLecturesOfModule(moduleObj)
+            item = {"moduleObj": moduleObj, "nameModule": nameModule, "subjectArea": subArea, "tests": listTests, "lectures": listLectures}
             listModules.append(item)
         
         print(listModules)
@@ -948,7 +1067,7 @@ class TestingService:
                         sum += 1
                     elif answer["correctByUser"] == False:
                         maxSum += 1
-                if termObj != "":
+                if termObj != "" and maxSum != 0:
                     termsScores[termObj]["sumScore"] += (sum / maxSum)
 
         print("TERMSCORES: ", termsScores)
@@ -1014,10 +1133,14 @@ class TestingService:
         print(term)
         return term
 
-    def getKnownTermsByUser(self, userObj):
+    def getKnownTermsByUser(self, userObj, termsScores):
         query = queries.getKnownTermsByUser(userObj)
         resultTerms = self.graph.query(query)
         listTerms = []
+        sumCorr = {}
+        sumCou = {}
+        sumCorrect = 0
+        sumCount = 0
         for itemTerm in resultTerms:
             termObj = str(itemTerm['term'].toPython())
             termObj = re.sub(r'.*#',"", termObj)
@@ -1025,15 +1148,26 @@ class TestingService:
             subjectArea = re.sub(r'.*#',"", subjectArea)
             term = termObj.replace("_", " ")
             termStr = term[0].upper() + term[1:]
-            item = {"termObj": termObj, "term": termStr, "subjectArea": subjectArea}
-            listTerms.append(item)
+            if termObj in termsScores:
+                item = {"termObj": termObj, "term": termStr, "sumCount": termsScores[termObj]["sum"], "sumCorrect": termsScores[termObj]["sumScore"], "subjectArea": subjectArea}
+                listTerms.append(item)
+                if subjectArea not in sumCorr:
+                    sumCorr[subjectArea] = {"sumCorrect": termsScores[termObj]["sumScore"], "sumCount": termsScores[termObj]["sum"]}
+                else:
+                    sumCorr[subjectArea]["sumCorrect"] += termsScores[termObj]["sumScore"]
+                    sumCorr[subjectArea]["sumCount"] += termsScores[termObj]["sum"]
+                sumCorrect += termsScores[termObj]["sumScore"]
+                sumCount += termsScores[termObj]["sum"]
         
-        return listTerms
+        return listTerms, sumCorrect, sumCount, sumCorr
 
-    def getUnknownTermsByUser(self, userObj):
+    def getUnknownTermsByUser(self, userObj, termsScores):
         query = queries.getUnknownTermsByUser(userObj)
         resultTerms = self.graph.query(query)
         listTerms = []
+        sumCorr = {}
+        sumCorrect = 0
+        sumCount = 0
         for itemTerm in resultTerms:
             termObj = str(itemTerm['term'].toPython())
             termObj = re.sub(r'.*#',"", termObj)
@@ -1041,15 +1175,38 @@ class TestingService:
             subjectArea = re.sub(r'.*#',"", subjectArea)
             term = termObj.replace("_", " ")
             termStr = term[0].upper() + term[1:]
-            item = {"termObj": termObj, "term": termStr, "subjectArea": subjectArea}
-            listTerms.append(item)
+            if termObj in termsScores:
+                item = {"termObj": termObj, "term": termStr, "sumCount": termsScores[termObj]["sum"], "sumCorrect": termsScores[termObj]["sumScore"], "subjectArea": subjectArea}
+                listTerms.append(item)
+                if subjectArea not in sumCorr:
+                    sumCorr[subjectArea] = {"sumCorrect": termsScores[termObj]["sumScore"], "sumCount": termsScores[termObj]["sum"]}
+                else:
+                    sumCorr[subjectArea]["sumCorrect"] += termsScores[termObj]["sumScore"]
+                    sumCorr[subjectArea]["sumCount"] += termsScores[termObj]["sum"]
+                sumCorrect += termsScores[termObj]["sumScore"]
+                sumCount += termsScores[termObj]["sum"]
         
-        return listTerms
+        return listTerms, sumCorrect, sumCount, sumCorr
 
-    def getTermsByUser(self, userObj):
-        knownTerms = self.getKnownTermsByUser(userObj)
-        unknownTerms = self.getUnknownTermsByUser(userObj)
-        item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms}
+    def getTermsByUser(self, userObj, uid):
+        termsScores = self.getTermsScoresByLastAttempts(userObj, uid)
+        knownTerms, sumKnown, sumCountKnown, sumCorrKnown = self.getKnownTermsByUser(userObj, termsScores)
+        unknownTerms, sumUnknown, sumCountUnknown, sumCorrUnknown = self.getUnknownTermsByUser(userObj, termsScores)
+        sumScores = {}
+        for field in sumCorrKnown:
+            if field not in sumScores:
+                sumScores[field] = {"sumCorrect": sumCorrKnown[field]["sumCorrect"], "sumCount": sumCorrKnown[field]["sumCount"]}
+            else:
+                sumScores[field]["sumCorrect"] += sumCorrKnown[field]["sumCorrect"]
+                sumScores[field]["sumCount"] += sumCorrKnown[field]["sumCount"]
+        for field in sumCorrUnknown:
+            if field not in sumScores:
+                sumScores[field] = {"sumCorrect": sumCorrUnknown[field]["sumCorrect"], "sumCount": sumCorrUnknown[field]["sumCount"]}
+            else:
+                sumScores[field]["sumCorrect"] += sumCorrUnknown[field]["sumCorrect"]
+                sumScores[field]["sumCount"] += sumCorrUnknown[field]["sumCount"]
+        
+        item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms, "sumScores": sumKnown + sumUnknown, "sumCount": sumCountKnown + sumCountUnknown, "sumScoresLite": sumScores}
         return item
 
     def getSubjectAreas(self):
@@ -1062,12 +1219,58 @@ class TestingService:
 
             subjAreaStr = subjAreaObj.replace("_", " ")
             subjAreaStr = subjAreaStr[0].upper() + subjAreaStr[1:]
-
-            item = {"subjectAreaObj": subjAreaObj, "subjectArea": subjAreaStr}
+            terms = self.getTermsBySubjArea(subjAreaObj)
+            item = {"subjectAreaObj": subjAreaObj, "subjectArea": subjAreaStr, "terms": terms}
             listAreas.append(item)
         
         #print(listTerms)
         return listAreas
+
+    def createTerm(self, nameTerm, subjectArea):
+        with self.onto:
+            class Предметная_область(Thing):
+                pass
+            class Область(Предметная_область):
+                pass
+            class Термин(Предметная_область):
+                pass
+            
+        field = Область(subjectArea)
+        nameTerm = nameTerm.replace(" ", "_")
+        newTerm = Термин(nameTerm)
+
+        termNormalize = getTokensFromTexts([nameTerm])
+        prevTerm = Термин(subjectArea.replace(" ", "_"))
+
+        newTerm.termNormalize = termNormalize[0][0]
+        newTerm.isTermOf = field
+        newTerm.hasPrevTerm = prevTerm
+        newTerm.moveToPrev = False
+
+        self.onto.save(self.path)
+
+    def deleteTerm(self, nameTerm):
+        with self.onto:
+            class Предметная_область(Thing):
+                pass
+            class Термин(Предметная_область):
+                pass
+            
+        nameTerm = nameTerm.replace(" ", "_")
+        term = Термин(nameTerm)
+        destroy_entity(term)
+
+        self.onto.save(self.path)
+
+    def deleteLecture(self, lectureObj, moduleObj):
+        with self.onto:
+            class Лекция(Thing):
+                pass
+            
+        lecture = Лекция(lectureObj)
+        destroy_entity(lecture)
+
+        self.onto.save(self.path)
 
     def createTerms(self):
         with self.onto:
@@ -1870,16 +2073,43 @@ class TestingService:
             listAnswers = self.getAnswersByTypeTemplate(typeTemp, tokens[0], fieldObj)
         return listAnswers
 
+    def getTermsBySubjArea(self, fieldObj):
+        query = queries.getTermsOfField(fieldObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+        for itemTerm in resultTerms:
+            term = str(itemTerm['term'].toPython())
+            term = re.sub(r'.*#',"", term)
+            termNormalize = str(itemTerm['termNormalize'].toPython())
+            termNormalize = re.sub(r'.*#',"", termNormalize)
+            termStr = term.replace("_", " ")
+            termStr = termStr[0].upper() + termStr[1:]
+            item = {"term": term, "termNormalize": termNormalize, "termStr": termStr}
+            listTerms.append(item)
+        
+        listTerms.sort(key=lambda x:x["term"])
+        #print(listTerms)
+        return listTerms
+
+
 def main():
     ont = TestingService()
     #ont.createTest(testObj)
     #ont.getTestsWithAnswers()
-    #ont.updateTest({})
+    #ont.updateTest({'testName': 'Морфология пыльцевых зерен', 'tasks': [{'taskObj': 'задание16', 'question': 'На какие две группы можно разделить все апертуры?', 'type': '1', 'answers': [], 'term': 'апертура'}, {'taskObj': 'задание17', 'question': 'Чем сложная апертура отличается от простой? Приведи примеры сложных и простых апертур.', 'type': '1', 'answers': [], 'term': 'апертура'}, {'taskObj': 'задание18', 'question': 'Как называется оболочка пыльцевого зерна?', 'type': '2', 'answers': [{'answerObj': 'ответ19', 'answer': 'Спородерма', 'correct': True}, {'answerObj': 'ответ20', 'answer': 'Экзина', 'correct': False}, {'answerObj': 'ответ21', 'answer': 'Периспорий', 'correct': False}, {'answerObj': 'ответ22', 'answer': 'Экзоспорий', 'correct': False}], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание19', 'question': 'Как называется апертура, у которой отношение длины к ширине больше или равно 2?', 'type': '2', 'answers': [{'answerObj': 'ответ23', 'answer': 'Пора', 'correct': False}, {'answerObj': 'ответ24', 'answer': 'Ора', 'correct': False}, {'answerObj': 'ответ25', 'answer': 'Борозда', 'correct': True}, {'answerObj': 'ответ26', 'answer': 'Лептома', 'correct': False}], 'term': 'апертура'}, {'taskObj': 'задание20', 'question': 'К какой группе апертур относится ора?', 'type': '1', 'answers': [], 'term': 'апертура'}, {'taskObj': 'задание21', 'question': 'Что такое лептома?', 'type': '2', 'answers': [{'answerObj': 'ответ27', 'answer': 'Истончённая область спородермы на дистальной стороне п.з., выполняет функцию апертуры, характерна для голосеменных', 'correct': True}, {'answerObj': 'ответ28', 'answer': 'Поверхность зерна, ограниченная двумя соседними бороздами (порами)', 'correct': False}, {'answerObj': 'ответ29', 'answer': 'Внутренняя часть сложной апертуры, имеющая округлую или эллипсоидальную форму', 'correct': False}, {'answerObj': 'ответ30', 'answer': 'Простая апертура изогнутой формы.', 'correct': False}], 'term': 'апертура'}, {'taskObj': 'задание22', 'question': 'Как называется центральное утолщение поровой или бороздной мембраны?', 'type': '2', 'answers': [{'answerObj': 'ответ31', 'answer': 'Мезокольпиум', 'correct': False}, {'answerObj': 'ответ32', 'answer': 'Оперкулюм', 'correct': True}, {'answerObj': 'ответ33', 'answer': 'Мезопориум', 'correct': False}, {'answerObj': 'ответ34', 'answer': 'Апопориум', 'correct': False}], 'term': 'апертура'}, {'taskObj': 'задание23', 'question': 'Может ли пыльцевое зерно быть без апертуры?', 'type': '2', 'answers': [{'answerObj': 'ответ35', 'answer': 'Да', 'correct': True}, {'answerObj': 'ответ36', 'answer': 'Нет', 'correct': False}], 'term': 'апертура'}, {'taskObj': 'задание24', 'question': 'Что такое \
+#скульптура п.з., приведи примеры нескольких типов структур?', 'type': '1', 'answers': [], 'term': 'скульптура_пыльцевого_зерна'}, {'taskObj': 'задание25', 'question': 'На какие слои можно подразделить экзину?', 'type': '1', 'answers': [], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание26', 'question': 'На какие слои делится интина?', 'type': '1', 'answers': [], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание27', 'question': 'Что относится к типам текстуры?', 'type': '2', 'answers': [{'answerObj': 'ответ37', 'answer': 'Внутрисетчатая', 'correct': True}, {'answerObj': 'ответ38', 'answer': 'Столбчатая', 'correct': False}, {'answerObj': 'ответ39', 'answer': 'Бугорчатая', 'correct': False}, {'answerObj': 'ответ40', 'answer': 'Шиповатая', 'correct': False}], 'term': 'скульптура_пыльцевого_зерна'}, {'taskObj': 'задание28', 'question': 'За счет элементов какого слоя спородермы образована структура?', 'type': '2', 'answers': [{'answerObj': 'ответ41', 'answer': 'Экзина', 'correct': True}, {'answerObj': 'ответ42', 'answer': 'Интина', 'correct': False}, {'answerObj': 'ответ43', 'answer': 'Эндоспорий', 'correct': False}, {'answerObj': 'ответ44', 'answer': 'Гиалина', 'correct': False}], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание29', 'question': 'На какие группы делятся пыльцевые зерна по длине наибольшей оси?', 'type': '1', 'answers': [], 'term': 'размер_пыльцевого_зерна'}, {'taskObj': 'задание30', 'question': 'Для каких растений характерны щели? Выберете несколько ответов.', 'type': '3', 'answers': [{'answerObj': 'ответ45', 'answer': 'Мхов', 'correct': True}, {'answerObj': 'ответ46', 'answer': 'Лилейных', 'correct': False}, {'answerObj': 'ответ47', 'answer': 'Плаунов', 'correct': True}, {'answerObj': 'ответ48', 'answer': 'Злаковые', 'correct': False}, {'answerObj': 'ответ49', 'answer': 'Норичниковых', 'correct': False}, {'answerObj': 'ответ50', 'answer': 'Хвощей', 'correct': True}, {'answerObj': 'ответ51', 'answer': 'Папоротников', 'correct': True}], 'term': 'апертура'}, {'taskObj': 'задание31', 'question': 'Какие морфологические характеристики помогают определить таксономическую принадлежность пыльцевого зерна?', 'type': '1', 'answers': [], \
+#'term': 'морфологические_характеристики'}, {'taskObj': 'задание32', 'question': 'Как называется часть поверхности пыльцевого зерна, обращённая к центру тетрады?', 'type': '3', 'answers': [], 'term': 'поверхность_пыльцевого_зерна'}, {'taskObj': 'задание33', 'question': 'Как называется часть поверхности пыльцевого зерна, обращённая наружу и максимально удаленная от тетрады?', 'type': '2', 'answers': [{'answerObj': 'ответ56', 'answer': 'Дистальный полюс', 'correct': True}, {'answerObj': 'ответ57', 'answer': 'Проксимальный полюс', 'correct': False}, {'answerObj': 'ответ58', 'answer': 'Экваториальная ось', 'correct': False}, {'answerObj': 'ответ59', 'answer': 'Полярная ось', 'correct': False}], 'term': 'поверхность_пыльцевого_зерна'}, {'taskObj': 'задание34', 'question': 'Как называется линия, соединяющая проксимальный и дистальный полюса?', 'type': '2', 'answers': [{'answerObj': 'ответ60', 'answer': 'Дистальный полюс', 'correct': False}, {'answerObj': 'ответ61', 'answer': 'Проксимальный полюс', 'correct': False}, {'answerObj': 'ответ62', 'answer': 'Экваториальная ось', 'correct': False}, {'answerObj': 'ответ63', 'answer': 'Полярная ось', 'correct': True}], 'term': 'полярность_пыльцевого_зерна'}, {'taskObj': 'задание35', 'question': 'Что зависит от соотношения длины полярной оси к экваториальному диаметру (P/E)?', 'type': '2', 'answers': [{'answerObj': 'ответ64', 'answer': 'Симметрия пыльцевого зерна', 'correct': False}, {'answerObj': 'ответ65', 'answer': 'форма пыльцевого зерна', 'correct': True}, {'answerObj': 'ответ66', 'answer': 'размер пыльцевого зерна', 'correct': False}, {'answerObj': 'ответ67', 'answer': 'структура пыльцевого зерна', 'correct': False}], 'term': 'форма_пыльцевого_зерна'}], 'prevNameTest': 'Морфология пыльцевых зерен'})
     #ont.deleteAnswer("ss")
     #ont.getAttempts("Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1", "Test_10")
     #ont.getUser("OUXFGSzNAlOYes3UEbvo33kcGuE3")
     #ont.createTerms()
     #term = ont.getTermByTask({"question": "6.	Что такое лептома?"})
-    
+    user= {
+        "userObj": "пользователь1",
+        "uid": "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1",
+    }
+    ont.getTermsByUser("пользователь1", "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1")
+    #ont.getTermsScoresByLastAttempts(user)
+
 if __name__ == "__main__":
     main()

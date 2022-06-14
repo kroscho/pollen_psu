@@ -4,12 +4,12 @@ from enum import Enum
 from testing.sparqlQueries.utils import getTokensFromTexts
 
 class typeTemplate(Enum):
-    Name = "1" # название чего то
-    NameWithProperties = "2" # название по каким то свойствам
-    SubClasses = "3" # классы, подклассы, группы
-    SubClassesWithProperties = "4" # классы, подклассы, группы по признаку
-    Definition = "5" # определение
-    Relate = "6" # что то относится к чему то
+    Name = "1"                          # название чего то
+    NameWithProperties = "2"            # название по каким то свойствам
+    SubClasses = "3"                    # классы, подклассы, группы
+    SubClassesWithProperties = "4"      # классы, подклассы, группы по признаку
+    Definition = "5"                    # определение
+    Relate = "6"                        # что то относится к чему то
 
 class AutoGeneration:
     def __init__(self) -> None:

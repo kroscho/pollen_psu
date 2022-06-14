@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 from flask_httpauth import HTTPBasicAuth
+from werkzeug.utils import secure_filename
 auth = HTTPBasicAuth()
 import json
 import os, sys
@@ -16,7 +17,11 @@ sys.path.append(path_dir)
 
 from testing.sparqlQueries.main import TestingService
 
+UPLOAD_FOLDER = 'files/'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx'}
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
 @app.get('/api/pollen/books_by_name')
@@ -557,6 +562,23 @@ def api_get_users_who_passed_the_test():
     print(response)
     return response
 
+'''
+@app.get('/api/get_materials_by_lecture')
+def api_get_materials_by_lecture():
+    ont = TestingService()
+    lectureObj = request.args.get('_lectureObj', '')
+    print("lectureObj: ", lectureObj,)
+    data = ont.getMaterialsByLecture(lectureObj)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+'''
+
 @app.post('/api/edit_role')
 def api_edit_role():
     ont = TestingService()
@@ -602,12 +624,95 @@ def api_edit_module():
     print(response)
     return response
 
+@app.post('/api/create_subject_area')
+def api_create_subject_area():
+    ont = TestingService()
+    nameSubjArea = request.get_json()
+    nameSubjArea = nameSubjArea.get('item')
+    print("nameSubjArea: ", nameSubjArea)
+    ont.createSubjectArea(nameSubjArea)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/create_term')
+def api_create_term():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    nameTerm = item["nameTerm"]
+    subjectArea = item["subjectArea"]
+    print("item: ", nameTerm, subjectArea)
+    ont.createTerm(nameTerm, subjectArea)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/create_lecture')
+def api_create_lecture():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    nameLecture = item["nameLecture"]
+    module = item["module"]
+    print("item: ", nameLecture, module)
+    ont.createLecture(nameLecture, module)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/delete_term')
+def api_delete_term():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    nameTerm = item["nameTerm"]
+    print("item: ", nameTerm)
+    ont.deleteTerm(nameTerm)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/delete_lecture')
+def api_delete_lecture():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    lectureObj = item["lectureObj"]
+    moduleObj = item["moduleObj"]
+    print("item: ", lectureObj, moduleObj)
+    ont.deleteLecture(lectureObj, moduleObj)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
 @app.get('/api/get_terms_by_user')
 def api_get_terms_by_user():
     ont = TestingService()
     _userObj = request.args.get('_userObj', '')
-    print("userObj: ", _userObj)
-    data = ont.getTermsByUser(_userObj)
+    _uid = request.args.get('_uid', '')
+    print("userObj: ", _userObj, _uid)
+    data = ont.getTermsByUser(_userObj, _uid)
     print("data: ", data)
     
     response = make_response(json.dumps({
@@ -645,6 +750,68 @@ def api_get_answers_auto():
     })), 200
     print(response)
     return response
+
+@app.get('/api/get_terms_by_subject_area')
+def api_get_terms_by_subject_area():
+    ont = TestingService()
+    _subjectArea = request.args.get('_subjectArea', '')
+    print("subjectArea: ", _subjectArea)
+    data = ont.getTermsBySubjArea(_subjectArea)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.post('/api/upload_files/<moduleObj>/<selectedTerms>')
+def api_files(moduleObj, selectedTerms):
+    ont = TestingService()
+    selectedTerms = selectedTerms.split(',')
+    print("SELECTED TERMS:", selectedTerms)
+
+    if 'file' not in request.files:
+        response = make_response(json.dumps({
+            'statusCode': 422,
+            'data': "No file part",
+        })), 422
+    file = request.files['file']
+    print("mimetypes: ", file.mimetype)
+    if file.filename == '':
+        response = make_response(json.dumps({
+            'statusCode': 422,
+            'data': "No selected file",
+        })), 422
+    if file and allowed_file(file.filename):
+        #filename = secure_filename(file.filename)
+        filename = file.filename
+        ont.createLecture(filename, moduleObj, selectedTerms)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        response = make_response(json.dumps({
+            'statusCode': 200,
+            'data': "ok",
+        })), 200
+    
+    print("file: ", file)
+    #ont.deleteTerm(nameTerm)
+    
+    print(response)
+    return response
+
+from flask import send_from_directory
+
+#   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+@app.get('/api/dowload_file/<filename>')
+def api_download_file(filename):
+    print("FILENAME: ", filename)
+
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 app.env = 'development'
 

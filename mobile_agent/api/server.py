@@ -751,6 +751,22 @@ def api_get_answers_auto():
     print(response)
     return response
 
+@app.get('/api/get_lectures_by_terms/<terms>')
+def api_get_letures_by_terms(terms):
+    ont = TestingService()
+    terms = terms.split(',')
+    print("TERMS:", terms)
+    
+    data = ont.getLecturesByTerms(terms)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
 @app.get('/api/get_terms_by_subject_area')
 def api_get_terms_by_subject_area():
     ont = TestingService()

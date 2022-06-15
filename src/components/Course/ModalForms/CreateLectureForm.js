@@ -43,14 +43,14 @@ const CreateLectureForm = ({isVisible, setIsVisible, onUpdate}) => {
                 .then((res) => console.log(res))
                 .catch((err) => err1 = true);
             };
-            if (err1) alert("ошибка")
-            else alert("успешно")
+            if (err1) message.warning("ошибка")
+            else message.success("успешно")
         } else {
             message.warning('Выберите файл');
         }
-        onUpdate()
         setIsVisible(false);
-        setIsLoading(false)
+        setIsLoading(false);
+        onUpdate()
     }
 
     useEffect(() => {

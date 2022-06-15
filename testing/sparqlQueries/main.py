@@ -1165,6 +1165,7 @@ class TestingService:
         query = queries.getUnknownTermsByUser(userObj)
         resultTerms = self.graph.query(query)
         listTerms = []
+        listTermObj = []
         sumCorr = {}
         sumCorrect = 0
         sumCount = 0
@@ -1178,6 +1179,7 @@ class TestingService:
             if termObj in termsScores:
                 item = {"termObj": termObj, "term": termStr, "sumCount": termsScores[termObj]["sum"], "sumCorrect": termsScores[termObj]["sumScore"], "subjectArea": subjectArea}
                 listTerms.append(item)
+                listTermObj.append(termObj)
                 if subjectArea not in sumCorr:
                     sumCorr[subjectArea] = {"sumCorrect": termsScores[termObj]["sumScore"], "sumCount": termsScores[termObj]["sum"]}
                 else:
@@ -1185,13 +1187,14 @@ class TestingService:
                     sumCorr[subjectArea]["sumCount"] += termsScores[termObj]["sum"]
                 sumCorrect += termsScores[termObj]["sumScore"]
                 sumCount += termsScores[termObj]["sum"]
-        
-        return listTerms, sumCorrect, sumCount, sumCorr
+        lectures = self.getLecturesByTerms(listTermObj)
+
+        return listTerms, sumCorrect, sumCount, sumCorr, lectures
 
     def getTermsByUser(self, userObj, uid):
         termsScores = self.getTermsScoresByLastAttempts(userObj, uid)
         knownTerms, sumKnown, sumCountKnown, sumCorrKnown = self.getKnownTermsByUser(userObj, termsScores)
-        unknownTerms, sumUnknown, sumCountUnknown, sumCorrUnknown = self.getUnknownTermsByUser(userObj, termsScores)
+        unknownTerms, sumUnknown, sumCountUnknown, sumCorrUnknown, lectures = self.getUnknownTermsByUser(userObj, termsScores)
         sumScores = {}
         for field in sumCorrKnown:
             if field not in sumScores:
@@ -1206,7 +1209,7 @@ class TestingService:
                 sumScores[field]["sumCorrect"] += sumCorrUnknown[field]["sumCorrect"]
                 sumScores[field]["sumCount"] += sumCorrUnknown[field]["sumCount"]
         
-        item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms, "sumScores": sumKnown + sumUnknown, "sumCount": sumCountKnown + sumCountUnknown, "sumScoresLite": sumScores}
+        item = {"knownTerms": knownTerms, "unknownTerms": unknownTerms, "sumScores": sumKnown + sumUnknown, "sumCount": sumCountKnown + sumCountUnknown, "sumScoresLite": sumScores, "lectures": lectures}
         return item
 
     def getSubjectAreas(self):
@@ -2091,6 +2094,23 @@ class TestingService:
         #print(listTerms)
         return listTerms
 
+    def getLecturesByTerms(self, terms):
+        lectures = {}
+        for term in terms:
+            query = queries.getLecturesByTerm(term)
+            resultLectures = self.graph.query(query)
+            listLectures = []
+            for itemLecture in resultLectures:
+                lectureObj = str(itemLecture['lectureObj'].toPython())
+                lectureObj = re.sub(r'.*#',"", lectureObj)
+                lectureName = str(itemLecture['lectureName'].toPython())
+                lectureName = re.sub(r'.*#',"", lectureName)
+                item = {"lectureObj": lectureObj, "lectureName": lectureName}
+                listLectures.append(item)
+            lectures[term] = listLectures
+
+        #print(lectures)
+        return lectures
 
 def main():
     ont = TestingService()

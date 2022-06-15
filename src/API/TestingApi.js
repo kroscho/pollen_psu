@@ -67,6 +67,12 @@ export default class TestingApi {
         return response
     }
 
+    static async getLecturesByTerms(terms) {
+        const url = 'http://localhost:5000/api/get_lectures_by_terms/' + terms
+        const response = await axios.get(url)
+        return response.data
+    }
+
     static async DeleteTerm(item) {
         const response = await axios.post('http://localhost:5000/api/delete_term', { item })
         return response.data

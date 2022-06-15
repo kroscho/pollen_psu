@@ -214,6 +214,16 @@ def getKnownTermsByUser(userObj):
     return query
 
 # запрос на получение терминов, которые студент знает
+def getLecturesByTerm(term):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?lectureName ?lectureObj " \
+            "WHERE { " \
+            "?lectureObj tst:has_term tst:%s. " \
+            "?lectureObj tst:lectureName ?lectureName. " \
+            "}" % (term)
+    return query
+
+# запрос на получение терминов, которые студент знает
 def getUnknownTermsByUser(userObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
             "SELECT ?term ?subjectArea " \

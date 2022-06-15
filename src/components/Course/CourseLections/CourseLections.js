@@ -3,15 +3,12 @@ import 'antd/dist/antd.css';
 import { Divider, message } from "antd";
 import { Context } from "../../..";
 import {Row, Col, ListGroup, Button} from "react-bootstrap"
-import history from "../../../services/history";
-import { COURSE_LECTURE_ROUTE } from "../../../utils/consts";
 import { isAdmin } from "../../utils/testing";
 import { FormOutlined } from '@ant-design/icons';
 import CreateModule from "../ModalForms/CreateModule";
 import CreateLectureForm from "../ModalForms/CreateLectureForm";
 import TestingApi from "../../../API/TestingApi";
 import { useFetching } from "../../hooks/useFetching";
-import { saveAs } from 'file-saver';
 import Loader from "../../UI/Loader/Loader";
 
 const CourseLections = () => {
@@ -42,7 +39,7 @@ const CourseLections = () => {
         const item = {lectureObj: lecture.lectureObj, moduleObj: module.moduleObj}
         let response = await TestingApi.DeleteLecture(item);
         if (response.data === "ok") {
-            message.success('Концепт добавлен успешно');
+            message.success('Материал удален успешно');
         }
         onUpdate()
         setIsLoading(false)

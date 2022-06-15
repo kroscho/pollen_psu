@@ -253,6 +253,24 @@ def api_create_course():
         'data': "ok",
     })), 200
 
+@app.post('/api/edit_course')
+def api_edit_course():
+    _newCourse = request.get_json()
+    print("New course: ", _newCourse['createdCourse'])
+    _newCourse = _newCourse['createdCourse']
+    ont = TestingService()
+    isExistNameCourse = ont.checkNameCourse(_newCourse['title'])
+    if isExistNameCourse:
+        return make_response(json.dumps({
+            'statusCode': 422,
+            'error': 'Курс с таким названием уже существует'
+        })), 422
+    ont.editCourse(_newCourse)
+    return make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+
 @app.post('/api/create_module')
 def api_create_module():
     _item = request.get_json()

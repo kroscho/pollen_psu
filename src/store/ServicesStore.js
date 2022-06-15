@@ -24,7 +24,7 @@ export default class UserStore {
 
         this._menuCourse = [
             { id: "1", name: 'Информация', link: COURSE_INFO_ROUTE },
-            { id: "2", name: 'Лекции', link: COURSE_LECTIONS_ROUTE },
+            { id: "2", name: 'Материалы', link: COURSE_LECTIONS_ROUTE },
             { id: "3", name: 'Тесты', link: COURSE_TESTS_ROUTE },
             { id: "4", name: 'Литература', link: COURSE_LITERATURE_ROUTE },
             { id: "5", name: 'Концепты', link: COURSE_TERMS_ROUTE },
@@ -54,12 +54,7 @@ export default class UserStore {
             ],
             "/course/lections": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
-                {path: COURSE_LECTIONS_ROUTE, title: "Лекции", active: true},
-            ],
-            "/course/lectures/lecture": [
-                {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
-                {path: COURSE_LECTIONS_ROUTE, title: "Лекции", active: false},
-                {path: COURSE_LECTURE_ROUTE, title: "Лекция", active: true},
+                {path: COURSE_LECTIONS_ROUTE, title: "Материалы", active: true},
             ],
             "/course/tests": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 

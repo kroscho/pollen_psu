@@ -21,9 +21,9 @@ const CreateTerm = ({isVisible, setIsVisible, subjectArea, onUpdate}) => {
         if (response.data === "ok") {
             message.success('Концепт добавлен успешно');
         }
-        onUpdate()
         setIsVisible(false);
         setIsLoading(false)
+        onUpdate()
     }
 
     const handleCancel = () => {

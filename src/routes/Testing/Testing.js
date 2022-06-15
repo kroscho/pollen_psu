@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
 import { Layout, Menu } from 'antd';
@@ -31,7 +31,6 @@ const Testing = () => {
 
     const curCourse = userStore.CurCourse;
     const routes = services.Routes[history.location.pathname];
-    console.log(curCourse.title)
 
     const menuItems = isMenuCourses() ? services.MenuTesting : services.MenuCourse;
     const menuItemsList = menuItems.map((item) => {

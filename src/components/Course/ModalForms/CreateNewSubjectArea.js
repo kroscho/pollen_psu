@@ -20,9 +20,9 @@ const CreateSubjectArea = ({isVisible, setIsVisible, onUpdate}) => {
         if (response.data === "ok") {
             message.success('Предметная область добавлена успешно');
         }
-        onUpdate()
         setIsVisible(false);
-        setIsLoading(false)
+        setIsLoading(false);
+        onUpdate()
     }
 
     const handleCancel = () => {

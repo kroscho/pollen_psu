@@ -175,6 +175,12 @@ export default class TestingApi {
         return response.data
     }
 
+    static async editCourse(createdCourse) {
+        console.log("createdCourse: ", createdCourse)
+        const response = await axios.post('http://localhost:5000/api/edit_course', { createdCourse })
+        return response.data
+    }
+
     static async getCourseInfo(courseObj) {
         const response = await axios.get('http://localhost:5000/api/get_course_info', {
             params: {

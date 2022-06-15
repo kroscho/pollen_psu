@@ -12,6 +12,7 @@ import { isAdmin } from "../../utils/testing";
 import { TESTING_ALL_COURSES_ROUTE } from "../../../utils/consts";
 import history from "../../../services/history";
 import UsersList from "../Users/UsersList";
+import EditCourse from "../ModalForms/CourseEdit";
 
 const CourseInfo = () => {
     const {userStore} = useContext(Context)
@@ -19,12 +20,11 @@ const CourseInfo = () => {
     const [students, setStudents] = useState([])
     const [modules, setModules] = useState([])
     const [update, setUpdate] = useState(true)
+    const [isVisibleCourseEditForm, setIsVisibleCourseEditForm] = useState(false)
     const user = userStore.User;
 
     let listStudents = []
     let listModules = []
-    let countPractice = 0
-    let countLectures = 0
 
     const [fetchCourseInfo, isDataLoading, dataError] = useFetching(async () => {
         let response = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
@@ -42,7 +42,7 @@ const CourseInfo = () => {
         }
         let response2 = await TestingApi.getUserCourses(userStore.User.uid);
         userStore.setMyCourses(response2.data)
-        setUpdate(!update)
+        onUpdate()
     })
 
     const [fetchUnsubscribeCourse, isUnsubscribeLoading, unsubscribeError] = useFetching(async () => {
@@ -53,7 +53,7 @@ const CourseInfo = () => {
         }
         let response2 = await TestingApi.getUserCourses(userStore.User.uid);
         userStore.setMyCourses(response2.data)
-        setUpdate(!update)
+        onUpdate()
     })
 
     const [fetchDeleteCourse, isDeleteLoading, deleteError] = useFetching(async () => {
@@ -64,9 +64,17 @@ const CourseInfo = () => {
         history.push(TESTING_ALL_COURSES_ROUTE);
     })
 
+    const onUpdate = () => {
+        setUpdate(!update)
+    }
+
     useEffect(() => {
         fetchCourseInfo()
     }, [update])
+
+    const handleEditCourse = () => {
+        setIsVisibleCourseEditForm(true)
+    }
 
     const handleSubscribeCourse = () => {
         fetchSubscribeCourse()
@@ -103,13 +111,9 @@ const CourseInfo = () => {
     }
 
     if (modules) {
-        if (modules.practice) {
-            countPractice = curCourse.modules.practice.length
-        }
-        if (modules.lectures) {
-            countLectures = curCourse.modules.lectures.length
-        }
         listModules = modules.map((item, index) => {
+            //const countPractice = item.practice.length
+            const countLectures = item.lectures.length
             return (
                 <ListGroup.Item 
                     as="li"
@@ -121,7 +125,7 @@ const CourseInfo = () => {
                             <div className="fw-bold">{index+1}. {item.nameModule}</div>
                         </div> 
                         <Badge style={{color: 'black'}} bg="primary" pill>
-                           <BookOutlined style={{verticalAlign: 'bottom'}}/> 0/{countPractice} <BookOutlined/> 0/{countLectures}
+                           <BookOutlined/> Материалов: {countLectures}
                         </Badge>        
                     </>            
                 </ListGroup.Item>
@@ -139,10 +143,17 @@ const CourseInfo = () => {
                     </Col>
                 </Row>
                 <Row>
-                    { isAdmin(user)
-                        ? <Col><Button onClick={handleDeleteCourse} style={{margin: "15px 0 0 20px"}} variant="outline-danger">Удалить курс</Button></Col>
-                        : null
-                    }
+                    <Col>
+                        { isAdmin(user)
+                            ? <Button onClick={handleDeleteCourse} style={{lineHeight: "0.8", margin: "20px 0 0 20px"}} variant="outline-danger">Удалить курс</Button>
+                            : null
+                        }
+                        { isAdmin(user)
+                            ? <Button onClick={handleEditCourse} style={{lineHeight: "0.8", margin: "20px 0 0 20px"}} variant="outline-secondary">Редактировать курс</Button>
+                            : null
+                        }
+                    </Col>
+                    <EditCourse isVisible={isVisibleCourseEditForm} setIsVisible={setIsVisibleCourseEditForm} onUpdate={onUpdate}></EditCourse>
                 </Row>
                 <Row>
                     <Col xs={7}>

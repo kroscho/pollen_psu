@@ -1,18 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import 'antd/dist/antd.css';
-import { Button, Collapse, Divider, Form, Input, List, Select  } from "antd";
+import { Button, Form, Input, Select  } from "antd";
 import { Context } from "../../..";
-import {Row, Col } from "react-bootstrap"
 import TestingApi from "../../../API/TestingApi";
-import { useFetching } from "../../hooks/useFetching";
 import Loader from "../../UI/Loader/Loader";
-import ErrorMessage from "../../UI/Messages/ErrorMessage";
 import CreateSubjectArea from "../ModalForms/CreateNewSubjectArea";
 import { isAdmin } from "../../utils/testing";
 import ListTerms from "./ListTerms";
 import { UserOutlined } from '@ant-design/icons';
 import CreateTerm from "../ModalForms/CreateNewTerm";
-const { Panel } = Collapse;
 
 const OntologyPage = () => {
     const {userStore} = useContext(Context)
@@ -25,7 +21,6 @@ const OntologyPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
     const [filterTerms, setFilterTerms] = useState([])
-    const [terms, setTerms] = useState({})
     const curCourse = userStore.CurCourse;
     const user = userStore.User;
     const [form] = Form.useForm();
@@ -89,14 +84,11 @@ const OntologyPage = () => {
             >
                 <Form.Item
                 label="Предметная область"
-                name="subjectArea"
                 style={{ margin: '10px auto'}}
                 >
                     <Select
                     showSearch
-                    style={{
-                    width: 200,
-                    }}
+                    style={{width: 200,}}
                     placeholder="Искать предметную область"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}

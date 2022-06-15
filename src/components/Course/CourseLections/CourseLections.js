@@ -103,14 +103,12 @@ const CourseLections = () => {
             return module.lectures.map((lecture, index) => {
                 return (
                     <ListGroup.Item 
-                    as="li"
                     className="d-flex justify-content-between align-items-start"
                     style={{color: '#6287ab'}}
-                    key={index}
+                    key={lecture.lectureObj}
                     >
                         <div 
                         className="ms-2 me-auto" 
-                        key={lecture.lectureObj} 
                         > 
                             <FormOutlined/> {lecture.lectureName}
                         </div>
@@ -142,11 +140,13 @@ const CourseLections = () => {
                     as="li"
                     className="d-flex justify-content-between align-items-start"
                     style={{color: '#6287ab'}}
-                    key={index}
+                    key={item.moduleObj}
                 >
                     <div className="ms-2 me-auto">
                         <Divider style={{color: 'rgb(24 144 255)', fontSize: '20px'}} orientation="left">{item.nameModule}</Divider>
-                        {listLectures(item)}
+                        <ListGroup>
+                            {listLectures(item)}
+                        </ListGroup>
                     </div>
                     { isAdmin(user)
                         ?   <Button 
@@ -187,7 +187,9 @@ const CourseLections = () => {
                         >
                             Материалы
                         </Divider>
-                        {listModules}
+                        <ListGroup>
+                            {listModules}
+                        </ListGroup>
                         { isAdmin(user)
                             ?   <Button 
                                 style={{verticalAlign: "bottom", marginTop: "20px"}} 

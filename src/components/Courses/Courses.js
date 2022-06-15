@@ -46,23 +46,26 @@ const Courses = (props) => {
         console.log("POPOPO")
     }
 
-    const listItems = data.map((item) => {
-        return (
-            <ListGroup.Item 
-                as="li"
-                className="d-flex justify-content-between align-items-start"
-                style={{cursor: 'pointer'}}
-                onClick={() => handleCourse(item)}
-                key={item.courseName}
-            >
-                <Avatar src="https://joeschmoe.io/api/v1/random" style={{marginRight: "20px"}}/>
-                <div className="ms-2 me-auto">
-                    <div className="fw-bold">{item.courseName}</div>
-                    {item.courseDescription}
-                </div>                    
-            </ListGroup.Item>
-        )
-    })
+    let listItems = []
+
+    if (data) {
+        listItems = data.map((item, index) => {
+            return (
+                <ListGroup.Item 
+                    className="d-flex justify-content-between align-items-start"
+                    style={{cursor: 'pointer'}}
+                    onClick={() => handleCourse(item)}
+                    key={index}
+                >
+                    <Avatar src="https://joeschmoe.io/api/v1/random" style={{marginRight: "20px"}}/>
+                    <div className="ms-2 me-auto">
+                        <div className="fw-bold">{item.courseName}</div>
+                        {item.courseDescription}
+                    </div>                    
+                </ListGroup.Item>
+            )
+        })
+    }
 
     const View = () => {
         return (

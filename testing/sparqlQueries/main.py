@@ -147,6 +147,19 @@ class TestingService:
         
         self.onto.save(self.path) 
 
+    def editCourse(self, courseObj):
+        with self.onto:
+            class Курс(Thing):
+                pass
+
+        newCourse = Курс(courseObj['courseObj'])
+        
+        newCourse.nameCourse = courseObj['title']
+        newCourse.descriptionCourse = courseObj['description']
+        newCourse.infoCourse = courseObj['info']
+        
+        self.onto.save(self.path) 
+
     def createModule(self, module, courseObj):
         with self.onto:
             class Курс(Thing):

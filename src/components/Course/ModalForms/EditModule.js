@@ -39,7 +39,9 @@ const ModuleEdit = ({isVisible, setIsVisible, onUpdate}) => {
     })
 
     useEffect(() => {
-        fetchSubjectAreas()
+        if (isVisible) {
+            fetchSubjectAreas()
+        }
     }, [])
 
     const handleOk = () => {
@@ -77,7 +79,7 @@ const ModuleEdit = ({isVisible, setIsVisible, onUpdate}) => {
 
     const listAreas = subAreas.map((item) => {
         return (
-            <Option value="item">{item}</Option>
+            <Option key={item.subjectAreaObj} value="item">{item}</Option>
         )
     })
 

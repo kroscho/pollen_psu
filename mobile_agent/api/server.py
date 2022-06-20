@@ -308,6 +308,17 @@ def api_get_test():
     print(response)
     return response
 
+@app.get('/api/get_templates')
+def api_get_templates():
+    ont = TestingService()
+    data = ont.getTemplates()
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
 @app.get('/api/get_all_courses')
 def api_get_all_courses():
     ont = TestingService()
@@ -537,6 +548,21 @@ def api_get_course_info():
     print(response)
     return response 
 
+@app.get('/api/get_info_term')
+def api_get_info_term():
+    ont = TestingService()
+    termObj = request.args.get('termObj', '')
+    print("termObj: ", termObj,)
+    data = ont.getInfoByTerm(termObj)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response 
+
 @app.post('/api/edit_profile')
 def api_edit_profile():
     ont = TestingService()
@@ -662,10 +688,38 @@ def api_create_term():
     ont = TestingService()
     item = request.get_json()
     item = item.get('item')
-    nameTerm = item["nameTerm"]
-    subjectArea = item["subjectArea"]
-    print("item: ", nameTerm, subjectArea)
-    ont.createTerm(nameTerm, subjectArea)
+    print("item: ", item)
+    ont.createTerm(item)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/update_term')
+def api_update_term():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    print("item: ", item)
+    ont.updateTerm(item)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/create_template')
+def api_create_template():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    print("item: ", item)
+    ont.createTemplate(item)
     
     response = make_response(json.dumps({
         'statusCode': 200,
@@ -699,6 +753,22 @@ def api_delete_term():
     nameTerm = item["nameTerm"]
     print("item: ", nameTerm)
     ont.deleteTerm(nameTerm)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': "ok",
+    })), 200
+    print(response)
+    return response
+
+@app.post('/api/delete_template')
+def api_delete_template():
+    ont = TestingService()
+    item = request.get_json()
+    item = item.get('item')
+    tempObj = item["tempObj"]
+    print("tempObj: ", tempObj)
+    ont.deleteTemplate(tempObj)
     
     response = make_response(json.dumps({
         'statusCode': 200,
@@ -753,13 +823,28 @@ def api_get_subject_areas():
     print(response)
     return response
 
-@app.get('/api/get_answers_auto')
+@app.post('/api/get_answers_auto')
 def api_get_answers_auto():
     ont = TestingService()
-    _subjectArea = request.args.get('_subjectArea', '')
-    _text = request.args.get('_text', '')
-    print("text, subjectArea: ", _text, _subjectArea)
-    data = ont.getAnswersByTaskAuto(_text, _subjectArea)
+    #_subjectArea = request.args.get('_subjectArea', '')
+    #_text = request.args.get('_text', '')
+    item = request.get_json()
+    item = item.get('item')
+    print("ITEMSS: ", item)
+    data = ont.getAnswersByTaskAuto(item)
+    print("data: ", data)
+    
+    response = make_response(json.dumps({
+        'statusCode': 200,
+        'data': data,
+    })), 200
+    print(response)
+    return response
+
+@app.get('/api/get_answers_by_templates')
+def api_get_answers_by_templates():
+    ont = TestingService()
+    data = ont.getAnswersByTemplates()
     print("data: ", data)
     
     response = make_response(json.dumps({

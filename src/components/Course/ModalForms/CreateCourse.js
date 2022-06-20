@@ -97,36 +97,21 @@ const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
                 <Form.Item
                     name="name"
                     label="Название курса"
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Заполните поле',
-                        },
-                    ]}
+                    rules={[{required: true, message: 'Заполните поле'}]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     name="description"
                     label="Описание курса"
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Заполните поле',
-                        },
-                    ]}
+                    rules={[{required: true, message: 'Заполните поле'}]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     name="info"
                     label="Информация о курсе"
-                    rules={[
-                        {
-                        required: true,
-                        message: 'Заполните поле',
-                        },
-                    ]}
+                    rules={[{required: true, message: 'Заполните поле'}]}
                 >
                     <Input />
                 </Form.Item>

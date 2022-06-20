@@ -5,7 +5,7 @@ import { TEXT_TASK_TYPE } from '../../../utils/consts';
 import { getWordAnswer } from '../../utils/testing';
 import TextArea from 'antd/lib/input/TextArea';
 
-const AttemptTask = ({field, tasks, isCheck}) => {    
+const AttemptTask = ({field, tasks, widthForm, isCheck}) => {    
     let questionType = ""
     if (tasks[field.key] && tasks[field.key].type) {
         questionType = tasks[field.key].type
@@ -14,11 +14,11 @@ const AttemptTask = ({field, tasks, isCheck}) => {
     }
 
     const getStyleInput = (answ) => {
-        let styleInput = {borderRadius: '10px', borderColor: "black"}
+        let styleInput = {borderRadius: '10px', borderColor: "black", minWidth: widthForm + 'px'}
         if (answ?.correctByUser == undefined) {
             return styleInput
         }
-        styleInput = answ?.correctByUser ? {borderRadius: '10px', borderColor: "green", borderWidth: "medium"} : {borderRadius: '10px', borderColor: "red", borderWidth: "medium"};
+        styleInput = answ?.correctByUser ? {borderRadius: '10px', borderColor: "green", borderWidth: "medium", minWidth: widthForm + 'px'} : {borderRadius: '10px', borderColor: "red", borderWidth: "medium", minWidth: widthForm + 'px'};
         return styleInput
     }
 
@@ -33,7 +33,7 @@ const AttemptTask = ({field, tasks, isCheck}) => {
                         name={[fld.name, 'answer']}
                         label={getWordAnswer(index)} 
                         >
-                        <TextArea rows={3} style={getStyleInput(tasks[field.key].answers[index])}></TextArea>
+                        <TextArea rows={2} style={getStyleInput(tasks[field.key].answers[index])}></TextArea>
                         </Form.Item>
                         { questionType === TEXT_TASK_TYPE
                             ?   <Form.Item label="Балл за ответ">

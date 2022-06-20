@@ -62,7 +62,7 @@ export default class UserStore {
             ],
             "/course/terms": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 
-                {path: COURSE_TERMS_ROUTE, title: "Термины", active: true},
+                {path: COURSE_TERMS_ROUTE, title: "Концепты", active: true},
             ],
             "/course/ontology": [
                 {path: TESTING_COURSES_ROUTE, title: "Мои курсы", active: false}, 

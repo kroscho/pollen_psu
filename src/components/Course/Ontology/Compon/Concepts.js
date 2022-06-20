@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import 'antd/dist/antd.css';
 import { Button, Form, Input, Select  } from "antd";
-import { Context } from "../../..";
-import TestingApi from "../../../API/TestingApi";
-import Loader from "../../UI/Loader/Loader";
-import CreateSubjectArea from "../ModalForms/CreateNewSubjectArea";
-import { isAdmin } from "../../utils/testing";
-import ListTerms from "./ListTerms";
+import TestingApi from "../../../../API/TestingApi";
+import Loader from "../../../UI/Loader/Loader";
+import CreateSubjectArea from "../../ModalForms/CreateNewSubjectArea";
+import { isAdmin } from "../../../utils/testing";
 import { UserOutlined } from '@ant-design/icons';
-import CreateTerm from "../ModalForms/CreateNewTerm";
+import CreateTerm from "../../ModalForms/CreateNewTerm";
+import ListTerms from "./ListTerms";
+import { Context } from "../../../..";
+import EditTerm from "../../ModalForms/EditTerm";
 
-const OntologyPage = () => {
+const Concepts = ({updatePage}) => {
     const {userStore} = useContext(Context)
     const [subAreas, setSubAreas] = useState([])
     const [curSubjectArea, setCursubjectArea] = useState("")
@@ -35,8 +36,9 @@ const OntologyPage = () => {
     }
 
     useEffect(() => {  
+        console.log("EFFECT CONCEPTS")
         fetchSubjectAreas()
-    }, [update])
+    }, [update, updatePage])
 
     const onUpdate = () => {
         setOnUpdate(!update)
@@ -124,7 +126,7 @@ const OntologyPage = () => {
                                 style={{ width: '50%'}} 
                                 onChange={onChangeTerm}
                             />
-                            <ListTerms onUpdate={onUpdate} terms={filterTerms}></ListTerms>
+                            <ListTerms onUpdate={onUpdate} subjectArea={curSubjectArea} terms={filterTerms}></ListTerms>
                             { isAdmin(user)
                                 ?   <Button 
                                     style={{verticalAlign: "bottom", marginTop: "20px"}} 
@@ -138,37 +140,11 @@ const OntologyPage = () => {
                      </Form.Item>
                     : null
                 }
-                <CreateTerm isVisible={isVisibleCreateTermForm} setIsVisible={setIsVisibleCreateTermForm} subjectArea={curSubjectArea} onUpdate={onUpdate}></CreateTerm>   
+                <CreateTerm isVisible={isVisibleCreateTermForm} setIsVisible={setIsVisibleCreateTermForm} subjectArea={curSubjectArea} onUpdate={onUpdate}></CreateTerm>  
                 <CreateSubjectArea isVisible={isVisibleCreateSubjectAreaForm} setIsVisible={setIsVisibleCreateSubjectAreaForm} onUpdate={onUpdate}></CreateSubjectArea>
             </Form>
         )
     }
-
-    /*
-    const View = () => {
-        return (
-            <>
-                <Row>
-                    <Col>
-                        <Select options={listSubjectAreas} style={{ width: 200 }} onChange={(e) => onChangeSubjArea(e)} />
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
-    const spinner = isDataLoading ? <Loader/> : null;
-    const errorMessage = dataError ? <ErrorMessage message={dataError} /> : null;
-    const content = !(isDataLoading || dataError) ? <View1/> : null;
-
-    return (
-        <>
-            {spinner}
-            {errorMessage}
-            {content}
-        </>
-    )
-    */
 }
 
-export default OntologyPage;
+export default Concepts;

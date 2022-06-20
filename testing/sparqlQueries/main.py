@@ -58,6 +58,8 @@ class TestingService:
                 pass
             class Термин(Thing):
                 pass
+            class ШаблонВопроса(Thing):
+                pass
 
         newTest = Тест()
         newGroupOfTasks = Группа_заданий()
@@ -74,6 +76,12 @@ class TestingService:
             if tTask == typeTask.Text.value:
                 newQuestion = Текстовый()
                 newQuestion.textQuestion = task['question']
+                if "answer" in task:
+                    newAnswer = Ответ()
+                    newAnswer.textAnswer = task['answer']
+                    newQuestion.has_correct_answer.append(newAnswer)
+                    newAnswer.is_correct_answer_of.append(newQuestion)
+                    newTask.task_has_answer.append(newAnswer)
                 #term = self.getTermByTask(task)
             else:
                 if tTask == typeTask.Single.value:
@@ -97,7 +105,13 @@ class TestingService:
                             newQuestion.has_wrong_answer.append(newAnswer)
                             newAnswer.is_wrong_answer_of.append(newQuestion)
                         newTask.task_has_answer.append(newAnswer)
+            selectedTerms = task['concepts']
+            for term in selectedTerms:
+                if term != "#":
+                    newTask.task_has_term.append(Термин(term))
             newTask.task_has_question = newQuestion
+            if task["template"] != "#":
+                newTask.task_has_template = ШаблонВопроса(task['template'])
             newTask.is_task_of.append(newGroupOfTasks)
             term = task["term"]
             termObj = Термин(term)
@@ -222,6 +236,8 @@ class TestingService:
                 pass
             class Термин(Thing):
                 pass
+            class ШаблонВопроса(Thing):
+                pass
         
         term = {}
         query = queries.getTestsNames()
@@ -250,6 +266,12 @@ class TestingService:
                 if tTask == typeTask.Text.value:
                     newQuestion = Текстовый()
                     newQuestion.textQuestion = task['question']
+                    if "answer" in task:
+                        newAnswer = Ответ()
+                        newAnswer.textAnswer = task['answer']
+                        newQuestion.has_correct_answer.append(newAnswer)
+                        newAnswer.is_correct_answer_of.append(newQuestion)
+                        newTask.task_has_answer.append(newAnswer)
                     #term = self.getTermByTask(task)
                 else:
                     if tTask == typeTask.Single.value:
@@ -273,6 +295,13 @@ class TestingService:
                                 newQuestion.has_wrong_answer.append(newAnswer)
                                 newAnswer.is_wrong_answer_of.append(newQuestion)
                             newTask.task_has_answer.append(newAnswer)
+                selectedTerms = task['concepts']
+                for term in selectedTerms:
+                    if term != "#":
+                        newTask.task_has_term.append(Термин(term))
+
+                if task["template"] != "#":
+                    newTask.task_has_template = ШаблонВопроса(task['template'])
                 newTask.task_has_question = newQuestion
                 newTask.is_task_of.append(groupTaskObj)
                 
@@ -454,12 +483,29 @@ class TestingService:
                 taskObj = re.sub(r'.*#',"", taskObj)
                 term = str(itemTask['term'].toPython())
                 term = re.sub(r'.*#',"", term)
+                template = "#"
                 questionText = str(itemTask['questText'].toPython())
                 questionText = re.sub(r'.*#',"", questionText)
                 typeQuestion = str(itemTask['taskType'].toPython())
                 typeQuestion = re.sub(r'.*#',"", typeQuestion)
 
-                task = {"taskObj": taskObj, "question": questionText, "term": term, "type": getTypeTaskValue(typeQuestion)}
+                query = queries.getTemplateByTask(taskObj)
+                resultsTemplate = self.graph.query(query)
+                for itemTemplate in resultsTemplate:
+                    template = str(itemTemplate['template'].toPython())
+                    template = re.sub(r'.*#',"", template)
+
+                query = queries.getSelectedTerms(taskObj)
+                resultsSelectedTerms = self.graph.query(query)
+                listSelectedTerms = ['#']
+                for itemTerm in resultsSelectedTerms:
+                    selectedTerm = str(itemTerm['term'].toPython())
+                    selectedTerm = re.sub(r'.*#',"", selectedTerm)
+                    listSelectedTerms.append(selectedTerm)
+                if len(listSelectedTerms) > 1:
+                    listSelectedTerms.remove('#')
+
+                task = {"taskObj": taskObj, "question": questionText, "term": term, "template": template, "concepts": listSelectedTerms, "type": getTypeTaskValue(typeQuestion)}
 
                 query = queries.getAnswersByTask(taskObj, groupTask)
                 resultAnswers = self.graph.query(query)
@@ -471,13 +517,22 @@ class TestingService:
                     correct = str(correctAnsw['answObj'].toPython())
                     correct = re.sub(r'.*#',"", correct)
                     listCorrects.append(correct)
+                item = {}
                 for itemAnsw in resultAnswers:
                     answerObj = str(itemAnsw['answObj'].toPython())
                     answerObj = re.sub(r'.*#',"", answerObj)
                     answerText = str(itemAnsw['answText'].toPython())
                     answerText = re.sub(r'.*#',"", answerText)
-                    listAnswers.append({"answerObj": answerObj, "answer": answerText, "correct": checkCorrectAnswer(answerObj, listCorrects)})
-                task["answers"] = listAnswers
+                    item = {"answerObj": answerObj, "answer": answerText, "correct": checkCorrectAnswer(answerObj, listCorrects)}
+                    listAnswers.append(item)
+                if getTypeTaskValue(typeQuestion) == typeTask.Text.value:
+                    task["answer"] = ""
+                    for answ in listAnswers:
+                        task["answer"] += answ["answer"] + ", "
+                    if task["answer"] != "":
+                        task["answer"] = task["answer"].strip(', ')
+                else:
+                    task["answers"] = listAnswers
                 listTasks.append(task)
             testItem["tasks"] = listTasks
             listTests.append(testItem)
@@ -784,7 +839,8 @@ class TestingService:
             resultTestElements = self.graph.query(query)
             i = 0
             for itemTestElement in resultTestElements:
-                answersCopy = tasksCopy[i]["answers"]
+                print("TasksCopy: ", tasksCopy)
+                answersCopy = []
                 taskType = tasksCopy[i]["type"]
                 testElementObj = str(itemTestElement['testElem'].toPython())
                 testElementObj = re.sub(r'.*#',"", testElementObj)
@@ -800,15 +856,17 @@ class TestingService:
                     answScore = str(itemAnswByTestElem['score'].toPython())
                     answScore = re.sub(r'.*#',"", answScore)
                     correctAnsw = True if correctAnsw == "True" else False
-                    if taskType == "1":
+                    if taskType == typeTask.Text.value:
                         answersCopy = [{"answerObj": answObj, "answer": answText, "correct": False, "correctByUser": correctAnsw, "score": answScore}]
                         #print("ASNWERSCOPY: ", answersCopy)
-                    for j in range(len(answersCopy)):
-                        if answersCopy[j]['answer'] == answText:
-                            answersCopy[j]["correctByUser"] = correctAnsw
-                        if "correctByUser" not in answersCopy[j]:
-                            answersCopy[j]["correctByUser"] = None
-                        answersCopy[j]["score"] = answScore
+                    else:
+                        answersCopy = tasksCopy[i]["answers"]
+                        for j in range(len(answersCopy)):
+                            if answersCopy[j]['answer'] == answText:
+                                answersCopy[j]["correctByUser"] = correctAnsw
+                            if "correctByUser" not in answersCopy[j]:
+                                answersCopy[j]["correctByUser"] = None
+                            answersCopy[j]["score"] = answScore
                     testCopy["tasks"][i]["answers"] = answersCopy
                 i += 1
             listAttempts.append(testCopy)
@@ -971,6 +1029,27 @@ class TestingService:
 
         print("COURSE ITEM: ", courseItem)
         return courseItem
+
+    def getTemplates(self):
+        query = queries.getTemplates()
+        resultTemplates = self.graph.query(query)
+        listTemplates = []
+        item = {"tempObj": "#", "tempTitle": "нет шаблона", "tempProperty": "", "tempName": ""}
+        listTemplates.append(item)
+        for itemTemplate in resultTemplates:
+            tempObj = str(itemTemplate['tempObj'].toPython())
+            tempObj = re.sub(r'.*#',"", tempObj)
+            tempTitle = str(itemTemplate['tempTitle'].toPython())
+            tempTitle = re.sub(r'.*#',"", tempTitle)
+            tempName = str(itemTemplate['tempName'].toPython())
+            tempName = re.sub(r'.*#',"", tempName)
+            #tempProperty = str(itemTemplate['tempProperty'].toPython())
+            #tempProperty = re.sub(r'.*#',"", tempProperty)
+            item = {"tempObj": tempObj, "tempTitle": tempTitle, "tempName": tempName}
+            listTemplates.append(item)
+        
+        print("Templates: ", listTemplates)
+        return listTemplates
 
     def editProfile(self, userItem):
         with self.onto:
@@ -1242,28 +1321,85 @@ class TestingService:
         #print(listTerms)
         return listAreas
 
-    def createTerm(self, nameTerm, subjectArea):
+    def createTerm(self, item):
         with self.onto:
-            class Предметная_область(Thing):
+            class Область(Thing):
                 pass
-            class Область(Предметная_область):
+            class Термин(Thing):
                 pass
-            class Термин(Предметная_область):
+            class ОтветНаШаблонВопроса(Thing):
+                pass
+            class ШаблонВопроса(Thing):
                 pass
             
-        field = Область(subjectArea)
-        nameTerm = nameTerm.replace(" ", "_")
+        field = Область(item["subjectArea"])
+        nameTerm = item["nameTerm"].replace(" ", "_")
         newTerm = Термин(nameTerm)
+        template = ШаблонВопроса(item["template"])
 
         termNormalize = getTokensFromTexts([nameTerm])
-        prevTerm = Термин(subjectArea.replace(" ", "_"))
+        prevTerm = Термин(item["subjectArea"].replace(" ", "_"))
 
         newTerm.termNormalize = termNormalize[0][0]
         newTerm.isTermOf = field
         newTerm.hasPrevTerm = prevTerm
         newTerm.moveToPrev = False
 
+        newAnswer = ОтветНаШаблонВопроса()
+
+        newAnswer.answ_has_term = newTerm
+        newAnswer.answ_has_template = template
+        newAnswer.isMultipleAnswer = item["isMultipleAnswer"]
+
+        if item["isMultipleAnswer"]:
+            for answ in item["answers"]:
+                newAnswer.answer.append(answ["answer"])
+        else:
+            newAnswer.answer.append(item["answer"])
+
         self.onto.save(self.path)
+
+    def updateTerm(self, item):
+        with self.onto:
+            class Область(Thing):
+                pass
+            class Термин(Thing):
+                pass
+            class ОтветНаШаблонВопроса(Thing):
+                pass
+            class ШаблонВопроса(Thing):
+                pass
+            
+        field = Область(item["subjectArea"])
+        nameTerm = item["nameTerm"].replace(" ", "_")
+        term = Термин(nameTerm)
+
+        templates = self.getTemplatesByTerm(nameTerm)
+        for temp in templates:
+            listAnswers = self.getAnswersByTaskAuto({"template": temp, "concepts": [nameTerm]})  
+            for answ in listAnswers:
+                newAnswer = ОтветНаШаблонВопроса(answ["answerObj"])
+                destroy_entity(newAnswer)
+
+        for t in item["list"]:
+            t["subjectArea"] = item["subjectArea"]
+            t["nameTerm"] = nameTerm
+            self.createTerm(t)
+
+        self.onto.save(self.path)
+
+    def getTemplatesByTerm(self, term):
+        query = queries.getTemplatesByTerm(term)
+        resultTemplates = self.graph.query(query)
+        listTemplates = []
+        for itemTemplate in resultTemplates:
+            template = str(itemTemplate['template'].toPython())
+            template = re.sub(r'.*#',"", template)
+
+            listTemplates.append(template)
+        
+        #print(listTerms)
+        return listTemplates
 
     def deleteTerm(self, nameTerm):
         with self.onto:
@@ -1275,6 +1411,28 @@ class TestingService:
         nameTerm = nameTerm.replace(" ", "_")
         term = Термин(nameTerm)
         destroy_entity(term)
+
+        self.onto.save(self.path)
+
+    def deleteTemplate(self, tempObj):
+        with self.onto:
+            class ШаблонВопроса(Thing):
+                pass
+            
+        template = ШаблонВопроса(tempObj)
+        destroy_entity(template)
+
+        self.onto.save(self.path)
+
+    def createTemplate(self, item):
+        with self.onto:
+            class ШаблонВопроса(Thing):
+                pass
+
+        newTemplate = ШаблонВопроса()
+        newTemplate.titleTemplate = item["titleTemplate"]
+        newTemplate.nameTemplate = item["nameTemplate"]
+        #newTemplate.propertyTemplate = item["propertyTemplate"].replace(" ", "_")
 
         self.onto.save(self.path)
 
@@ -2080,19 +2238,77 @@ class TestingService:
                     return listGroups
         return []
 
-    def getAnswersByTaskAuto(self, text, fieldObj):
-        autoGen = AutoGeneration()
+    def getAnswersByTemplates(self):
+        listAnswers = []
+        query = queries.getAnswersByTemplates()
+        resultAnswers = self.graph.query(query)
+        for itemAnswer in resultAnswers:
+            templateObj = str(itemAnswer['templateObj'].toPython())
+            templateObj = re.sub(r'.*#',"", templateObj)
+            termObj = str(itemAnswer['termObj'].toPython())
+            termObj = re.sub(r'.*#',"", termObj)
+            item = {"templateObj": templateObj, "termObj": termObj}
+            listAnswers.append(item)
+            
+        #print(listTerms)
+        return listAnswers
+
+    def getAnswersByTaskAuto(self, item):
+        '''autoGen = AutoGeneration()
         print(text)
         typeTemp, tokens = autoGen.toDetermineType(text)
         listAnswers = []
         if typeTemp != "":
             listAnswers = self.getAnswersByTypeTemplate(typeTemp, tokens[0], fieldObj)
         return listAnswers
+        '''
+        listAnswers = []
+        for concept in item['concepts']:
+            query = queries.getAnswersByTaskAuto(item['template'], concept)
+            resultAnswers = self.graph.query(query)
+            for itemAnswer in resultAnswers:
+                answerObj = str(itemAnswer['answerObj'].toPython())
+                answerObj = re.sub(r'.*#',"", answerObj)
+                answer = str(itemAnswer['answer'].toPython())
+                answer = re.sub(r'.*#',"", answer)
+                isMultipleAnswer = str(itemAnswer['isMultipleAnswer'].toPython())
+                isMultipleAnswer = re.sub(r'.*#',"", isMultipleAnswer)
+                item = {"answerObj": answerObj, "answer": answer, "isMultipleAnswer": isMultipleAnswer}
+                listAnswers.append(item)
+            
+        #print(listTerms)
+        return listAnswers
+
+    def getInfoByTerm(self, termObj):
+        query = queries.getInfoByTerm(termObj)
+        resultTerms = self.graph.query(query)
+        listTerms = []
+
+        for itemTerm in resultTerms:
+            templateObj = str(itemTerm['templateObj'].toPython())
+            templateObj = re.sub(r'.*#',"", templateObj)
+            listAnswers = self.getAnswersByTaskAuto({"template": templateObj, "concepts": [termObj]})
+            
+            for answ in listAnswers:
+                isMultiple = True if answ["isMultipleAnswer"] == "True" else False 
+                if not isMultiple:
+                    item = {"nameTerm": termObj, "isMultipleAnswer": isMultiple, "template": templateObj, "answers": [], "answer": answ["answer"]}        
+                    listTerms.append(item)
+                else:
+                    item = {"nameTerm": termObj, "isMultipleAnswer": isMultiple, "template": templateObj, "answers": listAnswers, "answer": ""}
+                    listTerms.append(item)
+                    break
+        item = {"nameTerm": termObj, "list": listTerms}
+
+        return item
 
     def getTermsBySubjArea(self, fieldObj):
         query = queries.getTermsOfField(fieldObj)
         resultTerms = self.graph.query(query)
         listTerms = []
+        item = {"term": "#", "termNormalize": "#", "termStr": "нет концепта"}
+        listTerms.append(item)
+
         for itemTerm in resultTerms:
             term = str(itemTerm['term'].toPython())
             term = re.sub(r'.*#',"", term)
@@ -2133,7 +2349,7 @@ def main():
 #скульптура п.з., приведи примеры нескольких типов структур?', 'type': '1', 'answers': [], 'term': 'скульптура_пыльцевого_зерна'}, {'taskObj': 'задание25', 'question': 'На какие слои можно подразделить экзину?', 'type': '1', 'answers': [], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание26', 'question': 'На какие слои делится интина?', 'type': '1', 'answers': [], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание27', 'question': 'Что относится к типам текстуры?', 'type': '2', 'answers': [{'answerObj': 'ответ37', 'answer': 'Внутрисетчатая', 'correct': True}, {'answerObj': 'ответ38', 'answer': 'Столбчатая', 'correct': False}, {'answerObj': 'ответ39', 'answer': 'Бугорчатая', 'correct': False}, {'answerObj': 'ответ40', 'answer': 'Шиповатая', 'correct': False}], 'term': 'скульптура_пыльцевого_зерна'}, {'taskObj': 'задание28', 'question': 'За счет элементов какого слоя спородермы образована структура?', 'type': '2', 'answers': [{'answerObj': 'ответ41', 'answer': 'Экзина', 'correct': True}, {'answerObj': 'ответ42', 'answer': 'Интина', 'correct': False}, {'answerObj': 'ответ43', 'answer': 'Эндоспорий', 'correct': False}, {'answerObj': 'ответ44', 'answer': 'Гиалина', 'correct': False}], 'term': 'оболочка_пыльцевого_зерна'}, {'taskObj': 'задание29', 'question': 'На какие группы делятся пыльцевые зерна по длине наибольшей оси?', 'type': '1', 'answers': [], 'term': 'размер_пыльцевого_зерна'}, {'taskObj': 'задание30', 'question': 'Для каких растений характерны щели? Выберете несколько ответов.', 'type': '3', 'answers': [{'answerObj': 'ответ45', 'answer': 'Мхов', 'correct': True}, {'answerObj': 'ответ46', 'answer': 'Лилейных', 'correct': False}, {'answerObj': 'ответ47', 'answer': 'Плаунов', 'correct': True}, {'answerObj': 'ответ48', 'answer': 'Злаковые', 'correct': False}, {'answerObj': 'ответ49', 'answer': 'Норичниковых', 'correct': False}, {'answerObj': 'ответ50', 'answer': 'Хвощей', 'correct': True}, {'answerObj': 'ответ51', 'answer': 'Папоротников', 'correct': True}], 'term': 'апертура'}, {'taskObj': 'задание31', 'question': 'Какие морфологические характеристики помогают определить таксономическую принадлежность пыльцевого зерна?', 'type': '1', 'answers': [], \
 #'term': 'морфологические_характеристики'}, {'taskObj': 'задание32', 'question': 'Как называется часть поверхности пыльцевого зерна, обращённая к центру тетрады?', 'type': '3', 'answers': [], 'term': 'поверхность_пыльцевого_зерна'}, {'taskObj': 'задание33', 'question': 'Как называется часть поверхности пыльцевого зерна, обращённая наружу и максимально удаленная от тетрады?', 'type': '2', 'answers': [{'answerObj': 'ответ56', 'answer': 'Дистальный полюс', 'correct': True}, {'answerObj': 'ответ57', 'answer': 'Проксимальный полюс', 'correct': False}, {'answerObj': 'ответ58', 'answer': 'Экваториальная ось', 'correct': False}, {'answerObj': 'ответ59', 'answer': 'Полярная ось', 'correct': False}], 'term': 'поверхность_пыльцевого_зерна'}, {'taskObj': 'задание34', 'question': 'Как называется линия, соединяющая проксимальный и дистальный полюса?', 'type': '2', 'answers': [{'answerObj': 'ответ60', 'answer': 'Дистальный полюс', 'correct': False}, {'answerObj': 'ответ61', 'answer': 'Проксимальный полюс', 'correct': False}, {'answerObj': 'ответ62', 'answer': 'Экваториальная ось', 'correct': False}, {'answerObj': 'ответ63', 'answer': 'Полярная ось', 'correct': True}], 'term': 'полярность_пыльцевого_зерна'}, {'taskObj': 'задание35', 'question': 'Что зависит от соотношения длины полярной оси к экваториальному диаметру (P/E)?', 'type': '2', 'answers': [{'answerObj': 'ответ64', 'answer': 'Симметрия пыльцевого зерна', 'correct': False}, {'answerObj': 'ответ65', 'answer': 'форма пыльцевого зерна', 'correct': True}, {'answerObj': 'ответ66', 'answer': 'размер пыльцевого зерна', 'correct': False}, {'answerObj': 'ответ67', 'answer': 'структура пыльцевого зерна', 'correct': False}], 'term': 'форма_пыльцевого_зерна'}], 'prevNameTest': 'Морфология пыльцевых зерен'})
     #ont.deleteAnswer("ss")
-    #ont.getAttempts("Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1", "Test_10")
+    #ont.getAttempts("Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1", "Морфология пыльцевых зерен")
     #ont.getUser("OUXFGSzNAlOYes3UEbvo33kcGuE3")
     #ont.createTerms()
     #term = ont.getTermByTask({"question": "6.	Что такое лептома?"})
@@ -2141,8 +2357,9 @@ def main():
         "userObj": "пользователь1",
         "uid": "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1",
     }
-    ont.getTermsByUser("пользователь1", "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1")
+    #ont.getTermsByUser("пользователь1", "Ey0mfGCJ4kSVCNEZa2KzPGM8BYn1")
     #ont.getTermsScoresByLastAttempts(user)
+    ont.getInfoByTerm("руги")
 
 if __name__ == "__main__":
     main()

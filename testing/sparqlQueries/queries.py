@@ -24,15 +24,34 @@ def getCoursesNames():
 # запрос на получение заданий и их вопросов
 def getTasksQuestions(groupTask):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
-            "SELECT ?task ?questText ?taskType ?quest ?term " \
+            "SELECT ?task ?questText ?taskType ?quest ?term ?template " \
             "WHERE { " \
             "?task tst:is_task_of tst:%s. " \
             "?task tst:task_has_question ?quest. " \
+            "?task tst:hasTerm ?term. " \
             "?task tst:hasTerm ?term. " \
             "?quest tst:textQuestion ?questText. " \
             "?quest rdf:type ?taskType. " \
             "?taskType rdfs:subClassOf ?obj " \
             "}" % (groupTask)
+    return query
+
+# запрос на получение шаблона для задания
+def getTemplateByTask(taskObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?template " \
+            "WHERE { " \
+            "tst:%s tst:task_has_template ?template. " \
+            "}" % (taskObj)
+    return query
+
+# запрос на получение выделенных концептов для задания
+def getSelectedTerms(taskObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?term " \
+            "WHERE { " \
+            "tst:%s tst:task_has_term ?term. " \
+            "}" % (taskObj)
     return query
 
 # запрос на получение ответов на задание
@@ -224,6 +243,16 @@ def getLecturesByTerm(term):
     return query
 
 # запрос на получение терминов, которые студент знает
+def getTemplates():
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?tempObj ?tempTitle ?tempProperty ?tempName " \
+            "WHERE { " \
+            "?tempObj tst:titleTemplate ?tempTitle. " \
+            "?tempObj tst:nameTemplate ?tempName. " \
+            "}"
+    return query
+
+# запрос на получение терминов, которые студент знает
 def getUnknownTermsByUser(userObj):
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
             "SELECT ?term ?subjectArea " \
@@ -233,6 +262,38 @@ def getUnknownTermsByUser(userObj):
             "}" % (userObj)
     return query
 
+# запрос на получение информации о концепте
+def getInfoByTerm(termObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?templateObj ?answer " \
+            "WHERE { " \
+            "?answerObj tst:answ_has_term tst:%s. " \
+            "?answerObj tst:answ_has_template ?templateObj. " \
+            "}" % (termObj)
+    return query
+
+# запрос на получение информации о концепте
+def getAnswersByTemplates():
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?templateObj ?termObj " \
+            "WHERE { " \
+            "?answerObj tst:answ_has_term ?termObj. " \
+            "?answerObj tst:answ_has_template ?templateObj. " \
+            "}"
+    return query
+
+# запрос на получение терминов, которые студент знает
+def getAnswersByTaskAuto(template, concept):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?answerObj ?answer ?isMultipleAnswer " \
+            "WHERE { " \
+            "?answerObj tst:answ_has_term tst:%s. " \
+            "?answerObj tst:answ_has_template tst:%s. " \
+            "?answerObj tst:answer ?answer. " \
+            "?answerObj tst:isMultipleAnswer ?isMultipleAnswer. " \
+            "}" % (concept, template)
+    return query
+
 # запрос на получение предметных областей
 def getSubjectAreas():
     query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
@@ -240,6 +301,16 @@ def getSubjectAreas():
             "WHERE { " \
             "?subArea rdf:type tst:Область. " \
             "}"
+    return query
+
+# запрос на получение предметных областей
+def getTemplatesByTerm(termObj):
+    query = "PREFIX tst: <http://www.semanticweb.org/nike0/ontologies/2022/4/untitled-ontology-16#>" \
+            "SELECT ?template " \
+            "WHERE { " \
+            "?answerObj tst:answ_has_term tst:%s. " \
+            "?answerObj tst:answ_has_template ?template. " \
+            "}" % termObj
     return query
 
 # запрос на получение групп, на которые делится термин

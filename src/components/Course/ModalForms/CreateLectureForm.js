@@ -98,7 +98,7 @@ const CreateLectureForm = ({isVisible, setIsVisible, onUpdate}) => {
                 </Button>
               ]}    
             >
-                <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+                <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} layout='vertical' autoComplete="off">
                     <Form.Item
                         name="upload"
                         label="Загрузить файл/файлы"

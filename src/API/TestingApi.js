@@ -6,6 +6,11 @@ export default class TestingApi {
         return response.data
     }
 
+    static async getAnswersByTemplates() {
+        const response = await axios.get('http://localhost:5000/api/get_answers_by_templates')
+        return response.data
+    }
+
     static async getTest(testName) {
         console.log("testName: ", testName)
         const response = await axios.get('http://localhost:5000/api/get_test', {
@@ -37,7 +42,6 @@ export default class TestingApi {
     }
 
     static async createTest(item) {
-        console.log("test and module: ", item.test, item.module)
         const response = await axios.post('http://localhost:5000/api/create_test', { item })
         return response.data
     }
@@ -49,6 +53,16 @@ export default class TestingApi {
 
     static async CreateTerm(item) {
         const response = await axios.post('http://localhost:5000/api/create_term', { item })
+        return response.data
+    }
+
+    static async updateTerm(item) {
+        const response = await axios.post('http://localhost:5000/api/update_term', { item })
+        return response.data
+    }
+
+    static async CreateTemplate(item) {
+        const response = await axios.post('http://localhost:5000/api/create_template', { item })
         return response.data
     }
 
@@ -75,6 +89,11 @@ export default class TestingApi {
 
     static async DeleteTerm(item) {
         const response = await axios.post('http://localhost:5000/api/delete_term', { item })
+        return response.data
+    }
+
+    static async DeleteTemplate(item) {
+        const response = await axios.post('http://localhost:5000/api/delete_template', { item })
         return response.data
     }
 
@@ -133,6 +152,20 @@ export default class TestingApi {
                 _uid: uid,
             }
         })
+        return response.data
+    }
+
+    static async getInfoByTerm(termObj) {
+        const response = await axios.get('http://localhost:5000/api/get_info_term', {
+            params: {
+                termObj: termObj,
+            }
+        })
+        return response.data
+    }
+
+    static async getTemplates() {
+        const response = await axios.get('http://localhost:5000/api/get_templates')
         return response.data
     }
 
@@ -249,13 +282,8 @@ export default class TestingApi {
         return response.data
     }
 
-    static async getAnswersAuto(subjectArea, text) {
-        const response = await axios.get('http://localhost:5000/api/get_answers_auto', {
-            params: {
-                _text: text,
-                _subjectArea: subjectArea,
-            }
-        })
+    static async getAnswersAuto(item) {
+        const response = await axios.post('http://localhost:5000/api/get_answers_auto', { item })
         return response.data
     }
 

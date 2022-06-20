@@ -21,7 +21,7 @@ import CourseLecture from '../../components/Course/CourseLecture/CourseLecture';
 import AttemptsDetails from '../../components/Course/AttemptsDetails/AttemptsDetails';
 import CheckWorks from '../../components/Course/CheckWorsk/CheckWorks';
 import TermsPage from '../../components/Course/Terms/Terms';
-import OntologyPage from '../../components/Course/Ontology/Ontology';
+import OntologyPage from '../../components/Course/Ontology/OntologyPage';
 
 const { Header, Content, Sider } = Layout;
 

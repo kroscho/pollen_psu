@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Form, Input, Space, message, List, Divider } from 'antd';
+import { Modal, Button, Form, List, Divider } from 'antd';
 import { Context } from '../../..';
-import Loader from '../../UI/Loader/Loader';
-import ErrorMessage from '../../UI/Messages/ErrorMessage';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const SelectTerms = ({isVisible, setIsVisible, updateFormTerms, field, terms}) => {

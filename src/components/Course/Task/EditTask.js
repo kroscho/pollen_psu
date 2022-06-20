@@ -57,7 +57,15 @@ const EditTask = ({field, form, tasks}) => {
                 </Form.List>
             );
         } else {
-            return null
+            return (
+                <Form.Item
+                name={[field.name, 'answer']}
+                label="Ответ: "
+                rules={[{ required: true, message: 'Не заполнен ответ' }]}                
+                >
+                    <TextArea rows={3} style={{borderRadius: '10px'}}></TextArea>
+                </Form.Item>
+            )
         }
     } else {
         return null

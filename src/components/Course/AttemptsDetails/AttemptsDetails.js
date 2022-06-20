@@ -17,9 +17,12 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
     const [viewDetails, setViewDetails] = useState(false)
     const [curAttempt, setCurAttempt] = useState({})
     const curAttempts = userStore.CurAttempts;
+
+    const widthForm = window.innerWidth * 0.45
+    console.log(window.innerWidth, widthForm)
     const [form] = Form.useForm();
     let listAttempts = []
-    
+
     const [fetchEditAttempt, isEditLoading, editError] = useFetching(async () => {
         let response = await TestingApi.editAttempt(userStore.CurEditAttempt);
         if (response.data === "ok") {
@@ -93,6 +96,7 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
                 style={{border: '1px solid #cbcccd'}}
                 onFinish={onFinish} 
                 autoComplete="off"
+                layout="vertical"
                 initialValues={{
                     ["testName"]: curAttempt.nameTest,
                     ["tasks"]: curAttempt.tasks,
@@ -119,10 +123,10 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
                     <Form.List name="tasks">
                         {(fields) => (
                         <>
-                            {fields.map(field => (
-                            <Space key={field.key} style={{display: 'flex', justifyContent: 'center'}} align="baseline">
+                            {fields.map((field, index) => (
+                            <Space key={field.key} style={{display: 'flex', justifyContent: 'center'}}>
                                 <Form.Item
-                                style={{borderTop: '1px solid', paddingTop: "10px"}}
+                                style={{borderTop: '2px solid', paddingTop: "10px"}}
                                 shouldUpdate={(prevValues, curValues) =>
                                     prevValues.nameTest !== curValues.nameTest || prevValues.type !== curValues.type
                                 }
@@ -131,12 +135,12 @@ const AttemptsDetails = ({onUpdate, isCheck}) => {
                                     <>
                                         <Form.Item 
                                         name={[field.name, 'question']} 
-                                        label="Вопрос"
+                                        label={`Вопрос ${index + 1}`}
                                         style={{fontWeight: 'bolder'}}
                                         >
-                                            <TextArea rows={4} style={{border: '2px solid #000000'}}></TextArea>
+                                            <TextArea rows={3} style={{border: '2px solid #000000', minWidth: widthForm + 'px'}}></TextArea>
                                         </Form.Item>
-                                        <AttemptTask isCheck={isCheck} tasks={curAttempt.tasks} form={form} field={field}></AttemptTask>
+                                        <AttemptTask isCheck={isCheck} tasks={curAttempt.tasks} form={form} widthForm={widthForm} field={field}></AttemptTask>
                                     </>
                                 )}
                                 </Form.Item>

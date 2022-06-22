@@ -3,7 +3,6 @@ import 'antd/dist/antd.css';
 import { Modal, Button, Form, Input, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import TestingApi from '../../../API/TestingApi';
-import { useFetching } from '../../hooks/useFetching';
 import { Context } from '../../..';
 
 const layout = {
@@ -25,20 +24,31 @@ const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
     
     const [url, setUrl] = useState("")
     const [form] = Form.useForm();
+    const [isLoading, setIsLoading] = useState(false)
     const {userStore} = useContext(Context)
 
-    const [fetchCreateCourse, isCreateLoading, createError] = useFetching(async () => {
-        let response = await TestingApi.createCourse(userStore.CurNewCourse);
-        console.log(response.data)
-        if (response.data === "ok") {
-            message.success('Курс создан успешно');
+    const fetchCreateCourse = async (course) => {
+        setIsLoading(true)
+        try {
+            let response = await TestingApi.createCourse(course);
+            if (response.data === "ok") {
+                message.success('Курс создан успешно');
+            }
+            userStore.setCurTest({})
+            if (update) {
+                setUpdate(!update)
+            }
+            setIsVisible(false)
+        } catch (err) {
+            let errMessage = "";
+            if (err instanceof Error) {
+                errMessage = err.message;
+            }
+            console.log(errMessage);
+            message.error("Курс с таким названием существует")
         }
-        userStore.setCurTest({})
-        if (update) {
-            setUpdate(!update)
-        }
-        setIsVisible(false)
-    })
+        setIsLoading(false)
+    }
 
     const handleOk = () => {
         setIsVisible(false);
@@ -51,7 +61,7 @@ const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
     const onReset = () => {
         form.resetFields();
     };
-    
+
     const onFill = () => {
         form.setFieldsValue({
           name: 'Курс1',
@@ -70,25 +80,8 @@ const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
             students: [],
             modules: [],
         }
-        userStore.setCurNewCourse(item)
-        fetchCreateCourse()
-        console.log(item)
+        fetchCreateCourse(item)
     };
-
-    const normFile = (e) => {
-        if (e.fileList && e.fileList[0] && e.fileList[0].thumbUrl) {
-            //console.log('Upload event:', e.fileList[0].thumbUrl);
-            setUrl(e.fileList[0].thumbUrl)
-        } else {
-            setUrl("")
-        }
-      
-        if (Array.isArray(e)) {
-          return e;
-        }
-      
-        return e && e.fileList;
-      };
 
     return (
         <>
@@ -114,16 +107,6 @@ const CreateCourse = ({isVisible, setIsVisible, update, setUpdate}) => {
                     rules={[{required: true, message: 'Заполните поле'}]}
                 >
                     <Input />
-                </Form.Item>
-                <Form.Item
-                    name="upload"
-                    label="Upload"
-                    valuePropName="fileList"
-                    getValueFromEvent={normFile}
-                >
-                    <Upload name="logo" listType="picture">
-                        <Button icon={<UploadOutlined />}>Click to upload</Button>
-                    </Upload>
                 </Form.Item>
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">

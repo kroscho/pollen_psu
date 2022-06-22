@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useState } from "react";
 
 export const useFetching = (callback:any) => {
@@ -14,6 +15,7 @@ export const useFetching = (callback:any) => {
                 errMessage = err.message;
             }
             console.log(errMessage);
+            message.error(errMessage);
             setErrror(errMessage)
         } finally {
             setIsLoading(false);

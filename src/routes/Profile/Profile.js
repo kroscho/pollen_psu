@@ -1,5 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
-import { Context } from "../../index"
+import React, { useEffect, useState} from "react";
 import { Button, Table } from "react-bootstrap";
 import { Col, Divider, Input, Row } from "antd";
 import ProfileEdit from "../../components/Course/ModalForms/ProfileEdit";
@@ -8,22 +7,22 @@ import Loader from "../../components/UI/Loader/Loader";
 import { useFetching } from "../../components/hooks/useFetching";
 import UsersList from "../../components/Course/Users/UsersList";
 import { UserOutlined } from '@ant-design/icons';
+import { getLocalStorage } from "../../components/utils/testing";
+import { USER_STORAGE } from "../../utils/consts";
 
 const Profile = () => {
-    
-    const {userStore} = useContext(Context);
     const [isProfileEditFormVisible, setIsProfileEditFormVisible] = useState(false)
     const [users, setUsers] = useState([])
     const [filterUsers, setFilterUsers] = useState([])
-    const user = userStore.User;
     const [searchUser, setSearchUser] = useState("")
     const [update, setUpdate] = useState(false)
+
+    const user = getLocalStorage(USER_STORAGE);
 
     const [fetchUsers, isDataLoading, dataError] = useFetching(async () => {
         let response = await TestingApi.getUsers();
         setUsers(response.data)
         setFilterUsers(response.data)
-        console.log(response.data)
     })
 
     const handleEditProfile = () => {

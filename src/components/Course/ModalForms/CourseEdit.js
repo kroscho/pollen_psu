@@ -1,11 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Form, Input, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Modal, Button, Form, Input, message } from 'antd';
 import TestingApi from '../../../API/TestingApi';
-import { useFetching } from '../../hooks/useFetching';
-import { Context } from '../../..';
 import Loader from '../../UI/Loader/Loader';
+import { getLocalStorage } from '../../utils/testing';
+import { CUR_COURSE_STORAGE } from '../../../utils/consts';
 
 const layout = {
     labelCol: {
@@ -23,23 +22,30 @@ const tailLayout = {
 };
 
 const EditCourse = ({isVisible, setIsVisible, onUpdate}) => {
-    
-    const [url, setUrl] = useState("")
     const [form] = Form.useForm();
-    const {userStore} = useContext(Context)
-    const curCourse = userStore.CurCourse;
-    console.log(curCourse)
+    const [isLoading, setIsLoading] = useState(false)
+    
+    const curCourse = getLocalStorage(CUR_COURSE_STORAGE);
 
-    const [fetchEditCourse, isCreateLoading, createError] = useFetching(async () => {
-        let response = await TestingApi.editCourse(userStore.CurNewCourse);
-        console.log(response.data)
-        if (response.data === "ok") {
-            message.success('Курс отредактирован успешно');
+    const fetchEditCourse = async (course) => {
+        setIsLoading(true)
+        try {
+            let response = await TestingApi.editCourse(course);
+            if (response.data === "ok") {
+                message.success('Курс отредактирован успешно');
+            }
+            setIsVisible(false)
+            onUpdate()
+        } catch (err) {
+            let errMessage = "";
+            if (err instanceof Error) {
+                errMessage = err.message;
+            }
+            console.log(errMessage);
+            message.error(errMessage)
         }
-        userStore.setCurTest({})
-        onUpdate()
-        setIsVisible(false)
-    })
+        setIsLoading(false)
+    }
 
     const handleCancel = () => {
         setIsVisible(false);
@@ -57,27 +63,10 @@ const EditCourse = ({isVisible, setIsVisible, onUpdate}) => {
             description: values.description,
             info: values.info,
         }
-        userStore.setCurNewCourse(item)
-        fetchEditCourse()
-        console.log(item)
+        fetchEditCourse(item)
     };
 
-    const normFile = (e) => {
-        if (e.fileList && e.fileList[0] && e.fileList[0].thumbUrl) {
-            //console.log('Upload event:', e.fileList[0].thumbUrl);
-            setUrl(e.fileList[0].thumbUrl)
-        } else {
-            setUrl("")
-        }
-      
-        if (Array.isArray(e)) {
-          return e;
-        }
-      
-        return e && e.fileList;
-      };
-
-    if (isCreateLoading) {
+    if (isLoading) {
         return <Loader/>
     } else {
         return (
@@ -121,16 +110,6 @@ const EditCourse = ({isVisible, setIsVisible, onUpdate}) => {
                         rules={[{ required: true, message: 'Заполните поле',},]}
                     >
                         <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="upload"
-                        label="Upload"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                    >
-                        <Upload name="logo" listType="picture">
-                            <Button icon={<UploadOutlined />}>Click to upload</Button>
-                        </Upload>
                     </Form.Item>
                     <Form.Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">

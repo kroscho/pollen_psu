@@ -26,13 +26,11 @@ const CourseLectureEditForm = ({isVisible, setIsVisible}) => {
             title: values.nameLecture,
             materials : curLecture.materials.concat(values.upload),
         }
-        console.log(item)
         userStore.setCurLecture(item)
         userStore.setLectures(item)
     };
 
     const normFile = (e) => {
-        console.log(e)
         if (e.fileList && e.fileList[0] && e.fileList[0].thumbUrl) {
             //console.log('Upload event:', e.fileList[0].thumbUrl);
             setUrl(e.fileList[0].thumbUrl)

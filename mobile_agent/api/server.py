@@ -429,10 +429,9 @@ def api_get_result_attempt():
 @app.post('/api/create_user')
 def api_create_user():
     ont = TestingService()
-    _user = request.get_json()
-    _user = _user.get('user')
-    print("Email: ", _user['email'])
-    ont.createUser(_user)
+    user = request.get_json()
+    user = user.get('user')
+    ont.createUser(user)
     
     response = make_response(json.dumps({
         'statusCode': 200,

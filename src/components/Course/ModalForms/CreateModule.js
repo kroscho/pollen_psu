@@ -1,47 +1,56 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Modal, Button, Form, Input, Upload, Avatar, message, Select } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { Context } from '../../..';
+import { Modal, Button, Form, Input, message, Select } from 'antd';
 import { useFetching } from '../../hooks/useFetching';
 import TestingApi from '../../../API/TestingApi';
 import Loader from '../../UI/Loader/Loader';
-import ErrorMessage from '../../UI/Messages/ErrorMessage';
+import { CUR_COURSE_STORAGE } from '../../../utils/consts';
+import { getLocalStorage, setLocalStorage } from '../../utils/testing';
 const { Option } = Select;
 
 const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
     
     const [url, setUrl] = useState("")
     const [subAreas, setSubAreas] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
     const [form] = Form.useForm();
 
-    const {userStore} = useContext(Context)
+    const curCourse = getLocalStorage(CUR_COURSE_STORAGE)
 
     const [fetchSubjectAreas, isDataLoading, dataError] = useFetching(async () => {
         let response = await TestingApi.getSubjectAreas();
         setSubAreas(response.data)
-        console.log(response.data)
     })
 
-    const [fetchCreateModule, isCreateLoading, createError] = useFetching(async () => {
-        const item = {module: userStore.CurModule, courseObj: userStore.CurCourse.courseObj}
-        let response = await TestingApi.createModule(item);
-        if (response.data === "ok") {
-            message.success('Модуль создан успешно');
+    const fetchCreateModule = async (module) => {
+        setIsLoading(true)
+        try {
+            const item = {module: module, courseObj: curCourse.courseObj}
+            let response = await TestingApi.createModule(item);
+            if (response.data === "ok") {
+                message.success('Модуль создан успешно');
+            }
+            let response1 = await TestingApi.getCourseInfo(curCourse.courseObj);
+            setLocalStorage(CUR_COURSE_STORAGE,response1.data)
+            setIsVisible(false);
+            onUpdate()
+        } catch (err) {
+            let errMessage = "";
+            if (err instanceof Error) {
+                errMessage = err.message;
+            }
+            console.log(errMessage);
+            message.error(errMessage)
         }
-        let response1 = await TestingApi.getCourseInfo(userStore.CurCourse.courseObj);
-        userStore.setCurCourse(response1.data)
-        onUpdate()
-        console.log(response.data)
-        userStore.setCurModule({})
-        setIsVisible(false);
-    })
+        setIsLoading(false)
+    }
 
     useEffect(() => {
         if (isVisible) {
             fetchSubjectAreas()
         }
-    }, [])
+    }, [isVisible])
 
     const handleOk = () => {
         setIsVisible(false);
@@ -61,24 +70,7 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
             lectures: [],
             tests: [],
         }
-        userStore.setCurModule(item)
-        fetchCreateModule()
-        console.log(item)
-    };
-
-    const normFile = (e) => {
-        if (e.fileList && e.fileList[0] && e.fileList[0].thumbUrl) {
-            //console.log('Upload event:', e.fileList[0].thumbUrl);
-            setUrl(e.fileList[0].thumbUrl)
-        } else {
-            setUrl("")
-        }
-      
-        if (Array.isArray(e)) {
-          return e;
-        }
-      
-        return e && e.fileList;
+        fetchCreateModule(item)
     };
 
     const listAreas = subAreas.map((item) => {
@@ -87,7 +79,9 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
         )
     }) 
 
-    const View = () => {
+    if (isDataLoading || isLoading) {
+        return <Loader/>
+    } else {
         return (
             <>
             <Modal title="Создание модуля" visible={isVisible} onOk={handleOk} onCancel={handleCancel}>
@@ -100,16 +94,6 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
                             {listAreas}
                         </Select>
                     </Form.Item>
-                    <Form.Item
-                        name="upload"
-                        label="Загрузить изображение"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                    >
-                        <Upload name="logo" listType="picture">
-                            <Button icon={<UploadOutlined />}>Загрузить фото</Button>
-                        </Upload>
-                    </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
                         Создать
@@ -120,18 +104,6 @@ const CreateModule = ({isVisible, setIsVisible, onUpdate}) => {
             </>
         );
     }
-
-    const spinner = isCreateLoading || isDataLoading ? <Loader/> : null;
-    const errorMessage = createError ? <ErrorMessage message={createError} /> : null;
-    const content = !(isCreateLoading || isDataLoading || dataError || createError) ? <View/> : null;
-
-    return (
-        <>
-            {spinner}
-            {errorMessage}
-            {content}
-        </>
-    )
 };
 
 export default CreateModule;
